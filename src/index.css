@@ -1,0 +1,238 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&display=swap");
+
+@import "tailwindcss";
+
+/* ─── Design System Tokens ─────────────────────────────────────── */
+@theme {
+  /* Colors */
+  --color-bg: #0A0A0B;
+  --color-surface: #131316;
+  --color-border: #232327;
+  --color-fg: #F2F2F0;
+  --color-muted: #8C8C91;
+  --color-accent: #C9A227;
+  --color-accent-dim: #A07E1A;
+
+  /* Fonts */
+  --font-sans: "Geist", "Inter", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  /* Type scale */
+  --text-2xs: 0.625rem;
+  /* 10px */
+  --text-xs: 0.75rem;
+  /* 12px */
+  --text-sm: 0.875rem;
+  /* 14px */
+  --text-base: 1rem;
+  /* 16px */
+  --text-lg: 1.125rem;
+  /* 18px */
+  --text-xl: 1.25rem;
+  /* 20px */
+  --text-2xl: 1.5rem;
+  /* 24px */
+  --text-3xl: 1.875rem;
+  /* 30px */
+  --text-4xl: 2.25rem;
+  /* 36px */
+  --text-5xl: 3rem;
+  /* 48px */
+  --text-6xl: 3.75rem;
+  /* 60px */
+  --text-7xl: 4.5rem;
+  /* 72px */
+
+  /* Radius */
+  --radius-sm: 4px;
+  --radius: 5px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+
+  /* Shadows — elevation only, never decorative */
+  --shadow-card: 0 1px 3px rgb(0 0 0 / 0.4), 0 4px 12px rgb(0 0 0 / 0.3);
+  --shadow-float: 0 8px 32px rgb(0 0 0 / 0.5);
+}
+
+/* ─── Base Reset & Body ─────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: 1.6;
+  min-height: 100vh;
+
+  /* Hairline dot-grid texture — structural nod, very low opacity */
+  background-image: radial-gradient(circle,
+      #ffffff08 1px,
+      transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* ─── Layout Shell ──────────────────────────────────────────────── */
+.shell-fluid {
+  width: 100%;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+@media (min-width: 768px) {
+  .shell-fluid {
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+}
+
+/* ─── Nav ───────────────────────────────────────────────────────── */
+.nav-list {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-link {
+  display: block;
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.01em;
+  color: var(--color-muted);
+  text-decoration: none;
+  transition: color 160ms ease, border-color 160ms ease;
+}
+
+.nav-link:hover {
+  color: var(--color-fg);
+  border-color: var(--color-border);
+}
+
+.nav-link.active {
+  color: var(--color-accent);
+  border-color: var(--color-border);
+}
+
+/* ─── Typography Base ───────────────────────────────────────────── */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--color-fg);
+  line-height: 1.15;
+}
+
+p {
+  color: var(--color-muted);
+  font-family: var(--font-body);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+code,
+kbd,
+samp,
+pre {
+  font-family: var(--font-mono);
+}
+
+/* ─── Scrollbar ─────────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-muted);
+}
+
+/* ─── Selection ─────────────────────────────────────────────────── */
+::selection {
+  background: var(--color-accent);
+  color: var(--color-bg);
+}
+
+/* ─── Custom Card & Hover Utilities ─────────────────────────────── */
+.dp-card-base {
+  border: 1px solid var(--color-border);
+}
+
+.dp-card {
+  transition: border-color 160ms ease, transform 160ms ease;
+}
+
+.dp-card:hover {
+  border-color: var(--color-accent-dim);
+  transform: translateY(-2px);
+}
+
+.dp-copy-base {
+  border: 1px solid var(--color-border);
+  color: var(--color-fg);
+}
+
+.dp-copy-btn {
+  transition: border-color 160ms ease, color 160ms ease;
+}
+
+.dp-copy-btn:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.workflow-row-base {
+  border: 1px solid var(--color-border);
+}
+
+.workflow-row {
+  transition: border-color 160ms ease;
+}
+
+.workflow-row:hover {
+  border-color: var(--color-accent-dim);
+}
+
+.detail-back-link {
+  color: var(--color-muted);
+  transition: color 160ms ease;
+}
+
+.detail-back-link:hover {
+  color: var(--color-accent);
+}
