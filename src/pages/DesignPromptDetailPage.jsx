@@ -139,60 +139,53 @@ const DesignPromptDetailPage = () => {
           >
             Live Preview
           </h2>
-          <button
-            onClick={() => setIsPreviewOpen(true)}
-            style={{
-              display: "block",
-              position: "relative",
-              width: "100%",
-              /* 16:9 aspect ratio */
-              paddingTop: "56.25%",
-              overflow: "hidden",
-              border: "1px solid var(--color-border)",
-              borderRadius: "var(--radius-sm)",
-              backgroundColor: "var(--color-surface)",
-              cursor: "pointer",
-              padding: 0,
-            }}
-            aria-label="Expand preview"
-          >
+          <div className="preview-frame">
             <iframe
               src={prompt.previewUrl}
               loading="lazy"
-              tabIndex={-1}
               title={`${prompt.name} live preview`}
-              style={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                width: "400%",
-                height: "400%",
-                border: "none",
-                transform: "scale(0.25)",
-                transformOrigin: "top left",
-                pointerEvents: "none",
-              }}
+              className="preview-iframe"
+              tabIndex={-1}
             />
             <div
-              style={{
-                position: "absolute",
-                bottom: "16px",
-                right: "16px",
-                backgroundColor: "var(--color-bg)",
-                border: "1px solid var(--color-border)",
-                borderRadius: "var(--radius-sm)",
-                padding: "8px 12px",
-                fontFamily: "var(--font-mono)",
-                fontSize: "10px",
-                color: "var(--color-fg)",
-                textTransform: "uppercase",
-                letterSpacing: "0.06em",
-                boxShadow: "var(--shadow-card)",
-              }}
+              className="preview-fallback"
+              style={{ backgroundColor: prompt.palette.background }}
             >
-              Tap to expand
+              <span
+                style={{
+                  fontFamily: "var(--font-sans)",
+                  fontWeight: 800,
+                  fontSize: "20px",
+                  letterSpacing: "-0.02em",
+                  color: prompt.palette.foreground,
+                }}
+              >
+                {prompt.name}
+              </span>
+              <div style={{ display: "flex", gap: "6px" }}>
+                {paletteEntries.map(([key, value]) => (
+                  <div
+                    key={key}
+                    style={{
+                      width: "12px",
+                      height: "12px",
+                      borderRadius: "2px",
+                      border: "1px solid rgba(0,0,0,0.2)",
+                      backgroundColor: value,
+                    }}
+                  />
+                ))}
+              </div>
             </div>
-          </button>
+            <button
+              type="button"
+              className="preview-expand-overlay"
+              aria-label="Expand preview"
+              onClick={() => setIsPreviewOpen(true)}
+            >
+              <span className="preview-expand-label">Tap to expand</span>
+            </button>
+          </div>
         </div>
       )}
 
@@ -446,12 +439,7 @@ const DesignPromptDetailPage = () => {
             <iframe
               src={prompt.previewUrl}
               title={`${prompt.name} full preview`}
-              style={{
-                width: "100%",
-                height: "100%",
-                border: "none",
-                display: "block",
-              }}
+              className="preview-modal-iframe"
             />
           </div>
         </div>

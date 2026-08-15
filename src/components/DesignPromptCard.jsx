@@ -37,35 +37,45 @@ const DesignPromptCard = ({ prompt }) => {
         style={{ display: "block", color: "inherit", textDecoration: "none" }}
       >
         {prompt.previewUrl ? (
-          /* ── Live iframe preview ── */
-          <div
-            style={{
-              position: "relative",
-              width: "100%",
-              /* 16:10 aspect ratio */
-              paddingTop: "62.5%",
-              overflow: "hidden",
-              borderBottom: "1px solid var(--color-border)",
-              backgroundColor: prompt.palette.background,
-            }}
-          >
+          /* ── Live iframe preview with mobile fallback ── */
+          <div className="preview-frame">
             <iframe
               src={prompt.previewUrl}
               loading="lazy"
               title={`${prompt.name} design system preview`}
-              style={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                width: "200%",
-                height: "200%",
-                border: "none",
-                /* Scale the full-size page down to fit the 50% container */
-                transform: "scale(0.5)",
-                transformOrigin: "top left",
-                pointerEvents: "none",
-              }}
+              className="preview-iframe"
+              tabIndex={-1}
             />
+            <div
+              className="preview-fallback"
+              style={{ backgroundColor: prompt.palette.background }}
+            >
+              <span
+                style={{
+                  fontFamily: "var(--font-sans)",
+                  fontWeight: 800,
+                  fontSize: "20px",
+                  letterSpacing: "-0.02em",
+                  color: prompt.palette.foreground,
+                }}
+              >
+                {prompt.name}
+              </span>
+              <div style={{ display: "flex", gap: "6px" }}>
+                {paletteColors.map((color, index) => (
+                  <div
+                    key={index}
+                    style={{
+                      width: "12px",
+                      height: "12px",
+                      borderRadius: "2px",
+                      border: "1px solid rgba(0,0,0,0.2)",
+                      backgroundColor: color,
+                    }}
+                  />
+                ))}
+              </div>
+            </div>
           </div>
         ) : (
           /* ── Swatch preview (unchanged) ── */

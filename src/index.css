@@ -464,6 +464,80 @@ button:focus-visible {
   border-width: 0;
 }
 
+/* ─── Preview frame system ──────────────────────────────────────── */
+.preview-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+
+.preview-frame iframe.preview-iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+  pointer-events: none;
+  background: transparent;
+}
+
+.preview-fallback {
+  position: absolute;
+  inset: 0;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.preview-expand-overlay {
+  position: absolute;
+  inset: 0;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  padding: 0;
+  display: block;
+}
+
+.preview-expand-label {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-fg);
+  box-shadow: var(--shadow-card);
+}
+
+.preview-modal-iframe {
+  width: 100%;
+  min-height: 100%;
+  border: 0;
+  display: block;
+}
+
+@media (max-width: 639px) {
+  .preview-iframe {
+    display: none;
+  }
+
+  .preview-fallback {
+    display: flex;
+  }
+}
+
 /* ─── Mobile sidebar toggle ─────────────────────────────────────── */
 .mobile-sidebar-toggle {
   display: none;
@@ -501,4 +575,4 @@ button:focus-visible {
   .docs-sidebar.open {
     display: block;
   }
-}
+}
