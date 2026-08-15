@@ -33,6 +33,9 @@ const DesignPromptCard = ({ prompt }) => {
         backgroundColor: "var(--color-surface)",
         borderRadius: "var(--radius-sm)",
         overflow: "hidden",
+        display: "flex",
+        flexDirection: "column",
+        height: "100%",
       }}
       className="dp-card-base dp-card"
     >
@@ -142,8 +145,9 @@ const DesignPromptCard = ({ prompt }) => {
       </Link>
 
       {/* Body Area — identical for all cards */}
-      <div style={{ padding: "16px" }}>
-        <Link to={`/design-prompts/${prompt.slug}`} style={{ color: "inherit", textDecoration: "none" }}>
+      <div style={{ padding: "16px", display: "flex", flexDirection: "column", flex: 1 }}>
+        <div style={{ display: "flex", flexDirection: "column", flex: 1 }}>
+          <Link to={`/design-prompts/${prompt.slug}`} style={{ color: "inherit", textDecoration: "none" }}>
           <h3
             style={{
               fontFamily: "var(--font-sans)",
@@ -186,6 +190,7 @@ const DesignPromptCard = ({ prompt }) => {
               {tag}
             </span>
           ))}
+        </div>
         </div>
 
         {/* Copy Button */}
