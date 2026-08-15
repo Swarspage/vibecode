@@ -17,7 +17,7 @@ const App = () => {
         <Route path="/design-prompts" element={<DesignPromptsPage />} />
         <Route path="/design-prompts/:slug" element={<DesignPromptDetailPage />} />
 
-        {/* Workflow Prompts: sidebar+outlet docs pattern — untouched */}
+        {/* Workflow Prompts: docs pattern with sidebar + nested detail outlet */}
         <Route path="/workflow-prompts" element={<WorkflowPromptsPage />}>
           <Route
             index

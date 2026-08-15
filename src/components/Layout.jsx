@@ -14,15 +14,6 @@ const Layout = () => {
       <main id="main-content" style={{ flex: 1 }}>
         <div className="shell-fluid">
           <Outlet />
-
-          {/* Placeholder rule — remove when content sections land */}
-          <div
-            aria-hidden="true"
-            style={{
-              borderTop: "1px solid var(--color-border)",
-              marginBottom: "96px",
-            }}
-          />
         </div>
       </main>
 

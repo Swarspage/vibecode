@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import { workflowPrompts } from "../data/workflowPrompts";
 
@@ -10,6 +11,8 @@ const categories = [
 ];
 
 const WorkflowPromptsPage = () => {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
   return (
     <section style={{ paddingTop: "var(--space-page-top)", paddingBottom: "96px" }}>
       {/* Page Header */}
@@ -69,7 +72,19 @@ const WorkflowPromptsPage = () => {
 
       {/* Docs Layout */}
       <div className="docs-layout">
-        <aside className="docs-sidebar">
+        <button
+          type="button"
+          className="mobile-sidebar-toggle"
+          aria-expanded={sidebarOpen}
+          aria-controls="workflow-sidebar-nav"
+          onClick={() => setSidebarOpen((open) => !open)}
+        >
+          {sidebarOpen ? "Close prompts" : "Browse prompts"}
+        </button>
+        <aside
+          id="workflow-sidebar-nav"
+          className={`docs-sidebar${sidebarOpen ? " open" : ""}`}
+        >
           <nav aria-label="Workflow prompt navigation">
             {categories.map((cat) => {
               const prompts = workflowPrompts.filter(
@@ -88,6 +103,7 @@ const WorkflowPromptsPage = () => {
                           ? "docs-sidebar-link docs-sidebar-link-nested active"
                           : "docs-sidebar-link docs-sidebar-link-nested"
                       }
+                      onClick={() => setSidebarOpen(false)}
                     >
                       {prompt.number < 10 ? `0${prompt.number}` : prompt.number}{" "}
                       {prompt.title}

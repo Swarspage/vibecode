@@ -306,17 +306,6 @@ pre {
   color: var(--color-accent);
 }
 
-.workflow-row-base {
-  border: 1px solid var(--color-border);
-}
-
-.workflow-row {
-  transition: border-color 160ms ease;
-}
-
-.workflow-row:hover {
-  border-color: var(--color-accent-dim);
-}
 
 .detail-back-link {
   display: inline-flex;
@@ -349,16 +338,12 @@ pre {
   max-width: 760px;
 }
 
-.workflow-row {
-  width: 100%;
-}
-
 /* ─── Docs Layout ────────────────────────────────────────────────── */
 .docs-layout {
   display: flex;
   flex-direction: column;
   gap: 32px;
-  margin-top: 48px;
+  margin-top: 40px;
 }
 
 @media (min-width: 768px) {
@@ -454,7 +439,6 @@ pre {
 .docs-sidebar-link:focus-visible,
 .dp-card:focus-visible,
 .dp-copy-btn:focus-visible,
-.workflow-row:focus-visible,
 .detail-back-link:focus-visible,
 a:focus-visible,
 button:focus-visible {
@@ -478,4 +462,43 @@ button:focus-visible {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border-width: 0;
+}
+
+/* ─── Mobile sidebar toggle ─────────────────────────────────────── */
+.mobile-sidebar-toggle {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .mobile-sidebar-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 0 16px;
+    margin-bottom: 16px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    cursor: pointer;
+    transition: color 160ms ease, border-color 160ms ease;
+  }
+
+  .mobile-sidebar-toggle:hover {
+    color: var(--color-fg);
+    border-color: var(--color-accent);
+  }
+
+  .docs-sidebar {
+    display: none;
+  }
+
+  .docs-sidebar.open {
+    display: block;
+  }
 }
