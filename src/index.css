@@ -602,6 +602,105 @@ button:focus-visible {
   display: block;
 }
 
+/* ─── Preview loading shimmer ─────────────────────────────────── */
+
+.preview-skeleton {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 28px 24px;
+  background: var(--color-surface);
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity 450ms ease;
+}
+
+.preview-skeleton-glow {
+  box-shadow:
+    0 0 32px -8px rgba(255, 255, 255, 0.12),
+    0 0 64px -24px rgba(201, 162, 39, 0.10);
+}
+
+.preview-skeleton-shimmer {
+  position: relative;
+  overflow: hidden;
+  background-color: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: var(--radius-sm);
+}
+
+.preview-skeleton-shimmer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.16),
+    rgba(255, 255, 255, 0.08),
+    transparent
+  );
+  animation: preview-shimmer 1.9s ease-in-out infinite;
+}
+
+.preview-skeleton-title {
+  width: 38%;
+  max-width: 180px;
+  height: 22px;
+}
+
+.preview-skeleton-line {
+  width: 56%;
+  max-width: 240px;
+  height: 11px;
+}
+
+.preview-skeleton-dots {
+  display: flex;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.preview-skeleton-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+@keyframes preview-shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.preview-frame.is-loading iframe.preview-iframe {
+  opacity: 0;
+  transform: scale(1.015);
+}
+
+.preview-frame.is-ready iframe.preview-iframe {
+  opacity: 1;
+  transform: scale(1);
+  transition:
+    opacity 450ms ease,
+    transform 900ms ease;
+}
+
+.preview-frame.is-loading .preview-skeleton {
+  opacity: 1;
+}
+
+.preview-frame.is-ready .preview-skeleton {
+  opacity: 0;
+}
+
 @media (max-width: 639px) {
   .preview-iframe {
     display: none;

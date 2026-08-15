@@ -1,8 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 const DesignPromptCard = ({ prompt }) => {
   const [copied, setCopied] = useState(false);
+  const [iframeLoaded, setIframeLoaded] = useState(false);
+
+  useEffect(() => {
+    setIframeLoaded(false);
+  }, [prompt.previewUrl]);
 
   const handleCopy = async () => {
     try {
@@ -38,14 +43,31 @@ const DesignPromptCard = ({ prompt }) => {
       >
         {prompt.previewUrl ? (
           /* ── Live iframe preview with mobile fallback ── */
-          <div className="preview-frame">
+          <div
+            className={`preview-frame${iframeLoaded ? " is-ready" : " is-loading"}`}
+          >
             <iframe
               src={prompt.previewUrl}
               loading="lazy"
               title={`${prompt.name} design system preview`}
               className="preview-iframe"
               tabIndex={-1}
+              onLoad={() => setIframeLoaded(true)}
             />
+
+            <div className="preview-skeleton preview-skeleton-glow" aria-hidden="true">
+              <div className="preview-skeleton-shimmer preview-skeleton-title" />
+              <div className="preview-skeleton-shimmer preview-skeleton-line" />
+              <div className="preview-skeleton-dots">
+                {paletteColors.map((color, index) => (
+                  <div
+                    key={index}
+                    className="preview-skeleton-shimmer preview-skeleton-dot"
+                    style={{ backgroundColor: color }}
+                  />
+                ))}
+              </div>
+            </div>
             <div
               className="preview-fallback"
               style={{ backgroundColor: prompt.palette.background }}

@@ -7,6 +7,11 @@ const DesignPromptDetailPage = () => {
   const [copied, setCopied] = useState(false);
   const [copyError, setCopyError] = useState(false);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [previewLoaded, setPreviewLoaded] = useState(false);
+
+  useEffect(() => {
+    setPreviewLoaded(false);
+  }, [prompt?.previewUrl]);
 
   useEffect(() => {
     if (isPreviewOpen) {
@@ -139,14 +144,31 @@ const DesignPromptDetailPage = () => {
           >
             Live Preview
           </h2>
-          <div className="preview-frame">
+          <div
+            className={`preview-frame${previewLoaded ? " is-ready" : " is-loading"}`}
+          >
             <iframe
               src={prompt.previewUrl}
               loading="lazy"
               title={`${prompt.name} live preview`}
               className="preview-iframe"
               tabIndex={-1}
+              onLoad={() => setPreviewLoaded(true)}
             />
+
+            <div className="preview-skeleton preview-skeleton-glow" aria-hidden="true">
+              <div className="preview-skeleton-shimmer preview-skeleton-title" />
+              <div className="preview-skeleton-shimmer preview-skeleton-line" />
+              <div className="preview-skeleton-dots">
+                {Object.values(prompt.palette).map((color, index) => (
+                  <div
+                    key={index}
+                    className="preview-skeleton-shimmer preview-skeleton-dot"
+                    style={{ backgroundColor: color }}
+                  />
+                ))}
+              </div>
+            </div>
             <div
               className="preview-fallback"
               style={{ backgroundColor: prompt.palette.background }}
