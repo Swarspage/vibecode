@@ -10,6 +10,9 @@ const Hero = () => {
 
   useGSAP(
     () => {
+      // Respect user's motion preference — skip animation entirely if reduced motion is requested
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
       const tl = gsap.timeline({ defaults: { ease: "power2.out" } });
 
       tl.from("[data-hero-el]", {

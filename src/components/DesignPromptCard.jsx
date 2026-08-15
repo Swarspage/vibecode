@@ -162,7 +162,7 @@ const DesignPromptCard = ({ prompt }) => {
           style={{
             marginTop: "16px",
             width: "100%",
-            height: "36px",
+            height: "44px",
             fontFamily: "var(--font-mono)",
             fontSize: "12px",
             backgroundColor: "var(--color-surface)",

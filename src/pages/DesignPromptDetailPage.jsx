@@ -5,12 +5,13 @@ import { designPrompts } from "../data/designPrompts";
 const DesignPromptDetailPage = () => {
   const { slug } = useParams();
   const [copied, setCopied] = useState(false);
+  const [copyError, setCopyError] = useState(false);
 
   const prompt = designPrompts.find((p) => p.slug === slug);
 
   if (!prompt) {
     return (
-      <section style={{ paddingTop: "80px", paddingBottom: "96px" }}>
+      <section style={{ paddingTop: "var(--space-page-top)", paddingBottom: "96px" }}>
         <div style={{ marginBottom: "16px" }}>
           <span
             style={{
@@ -57,7 +58,8 @@ const DesignPromptDetailPage = () => {
       setCopied(true);
       setTimeout(() => setCopied(false), 1500);
     } catch {
-      setCopied(false);
+      setCopyError(true);
+      setTimeout(() => setCopyError(false), 1500);
     }
   };
 
@@ -65,7 +67,7 @@ const DesignPromptDetailPage = () => {
   const typographyEntries = Object.entries(prompt.typography);
 
   return (
-    <section style={{ paddingTop: "80px", paddingBottom: "96px" }}>
+    <section style={{ paddingTop: "var(--space-page-top)", paddingBottom: "96px" }}>
       {/* Top Area */}
       <div style={{ marginBottom: "48px" }}>
         <div style={{ marginBottom: "12px" }}>
@@ -130,7 +132,7 @@ const DesignPromptDetailPage = () => {
               overflow: "hidden",
               border: "1px solid var(--color-border)",
               borderRadius: "var(--radius-sm)",
-              backgroundColor: "#F9F9F7",
+              backgroundColor: "var(--color-surface)",
             }}
           >
             <iframe
@@ -275,10 +277,14 @@ const DesignPromptDetailPage = () => {
           </h2>
           <button
             onClick={handleCopy}
-            className={copied ? "dp-copy-btn" : "dp-copy-btn dp-copy-base"}
+            className={
+              copied || copyError
+                ? "dp-copy-btn"
+                : "dp-copy-btn dp-copy-base"
+            }
             style={{
               minWidth: "120px",
-              height: "36px",
+              height: "44px",
               fontFamily: "var(--font-mono)",
               fontSize: "12px",
               backgroundColor: "var(--color-surface)",
@@ -288,10 +294,22 @@ const DesignPromptDetailPage = () => {
                 border: "1px solid var(--color-accent)",
                 color: "var(--color-accent)",
               }),
+              ...(copyError && {
+                border: "1px solid var(--color-border)",
+                color: "var(--color-muted)",
+              }),
             }}
           >
-            {copied ? "Copied" : "Copy Prompt"}
+            {copied ? "Copied" : copyError ? "Copy failed" : "Copy Prompt"}
           </button>
+          {/* aria-live region — visible to screen readers, hidden visually */}
+          <span
+            aria-live="polite"
+            aria-atomic="true"
+            className="sr-only"
+          >
+            {copied ? "Copied to clipboard" : ""}
+          </span>
         </div>
         <pre
           style={{

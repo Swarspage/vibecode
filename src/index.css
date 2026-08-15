@@ -54,6 +54,9 @@
   /* Shadows — elevation only, never decorative */
   --shadow-card: 0 1px 3px rgb(0 0 0 / 0.4), 0 4px 12px rgb(0 0 0 / 0.3);
   --shadow-float: 0 8px 32px rgb(0 0 0 / 0.5);
+
+  /* Spacing */
+  --space-page-top: 80px;
 }
 
 /* ─── Base Reset & Body ─────────────────────────────────────────── */
@@ -101,6 +104,93 @@ body {
 }
 
 /* ─── Nav ───────────────────────────────────────────────────────── */
+.nav-list-desktop {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .nav-list-desktop {
+    display: block;
+  }
+}
+
+.nav-hamburger {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 44px;
+  height: 44px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  gap: 5px;
+}
+
+@media (min-width: 768px) {
+  .nav-hamburger {
+    display: none;
+  }
+}
+
+.ham-bar {
+  width: 20px;
+  height: 2px;
+  background-color: var(--color-fg);
+  transition: all 0.2s ease-in-out;
+}
+
+.ham-bar.open:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.ham-bar.open:nth-child(2) {
+  opacity: 0;
+}
+
+.ham-bar.open:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+.nav-mobile-menu {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 56px;
+  left: 0;
+  width: 100%;
+  background-color: var(--color-bg);
+  border-bottom: 1px solid var(--color-border);
+  padding: 8px 24px 24px;
+}
+
+@media (min-width: 768px) {
+  .nav-mobile-menu {
+    display: none;
+  }
+}
+
+.nav-mobile-link {
+  display: block;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--color-border);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--color-muted);
+  text-decoration: none;
+  transition: color 160ms ease;
+}
+
+.nav-mobile-link:last-child {
+  border-bottom: none;
+}
+
+.nav-mobile-link.active,
+.nav-mobile-link:hover {
+  color: var(--color-fg);
+}
+
 .nav-list {
   display: flex;
   align-items: center;
@@ -229,6 +319,9 @@ pre {
 }
 
 .detail-back-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   color: var(--color-muted);
   transition: color 160ms ease;
 }
@@ -307,7 +400,7 @@ pre {
 
 .docs-sidebar-link {
   display: block;
-  padding: 6px 10px;
+  padding: 12px 10px;
   border-left: 2px solid transparent;
   font-family: var(--font-mono);
   font-size: 12px;
@@ -315,6 +408,12 @@ pre {
   text-decoration: none;
   transition: color 160ms ease, border-color 160ms ease,
     background-color 160ms ease;
+}
+
+@media (min-width: 768px) {
+  .docs-sidebar-link {
+    padding: 6px 10px;
+  }
 }
 
 .docs-sidebar-link:hover {
@@ -337,3 +436,46 @@ pre {
   min-width: 0;
   max-width: 800px;
 }
+
+/* ─── Focus-Visible Ring System ─────────────────────────────────── */
+/*
+ * Hard reset: remove browser default outlines everywhere.
+ * We restore them selectively via :focus-visible below.
+ */
+*:focus {
+  outline: none;
+}
+
+/*
+ * Accent ring — applied to every interactive element class.
+ * :focus-visible fires only on keyboard navigation, not mouse clicks.
+ */
+.nav-link:focus-visible,
+.docs-sidebar-link:focus-visible,
+.dp-card:focus-visible,
+.dp-copy-btn:focus-visible,
+.workflow-row:focus-visible,
+.detail-back-link:focus-visible,
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* ─── Screen-reader-only utility ───────────────────────────────── */
+/*
+ * Used for aria-live regions (e.g. "Copied to clipboard" announcements)
+ * that should be heard by screen readers but not visible on screen.
+ */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}

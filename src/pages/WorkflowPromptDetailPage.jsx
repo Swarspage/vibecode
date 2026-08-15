@@ -3,17 +3,17 @@ import { useParams, Link } from "react-router-dom";
 import { workflowPrompts } from "../data/workflowPrompts";
 
 const categoryLabels = {
-  understand: "Understand",
+  orient: "Orient",
+  investigate: "Investigate",
   build: "Build",
   debug: "Debug",
-  review: "Review",
-  refactor: "Refactor",
   ship: "Ship",
 };
 
 const WorkflowPromptDetailPage = () => {
   const { slug } = useParams();
   const [copied, setCopied] = useState(false);
+  const [copyError, setCopyError] = useState(false);
 
   const prompt = workflowPrompts.find((p) => p.slug === slug);
 
@@ -62,7 +62,8 @@ const WorkflowPromptDetailPage = () => {
       setCopied(true);
       setTimeout(() => setCopied(false), 1500);
     } catch {
-      setCopied(false);
+      setCopyError(true);
+      setTimeout(() => setCopyError(false), 1500);
     }
   };
 
@@ -155,10 +156,14 @@ const WorkflowPromptDetailPage = () => {
           </h2>
           <button
             onClick={handleCopy}
-            className={copied ? "dp-copy-btn" : "dp-copy-btn dp-copy-base"}
+            className={
+              copied || copyError
+                ? "dp-copy-btn"
+                : "dp-copy-btn dp-copy-base"
+            }
             style={{
               minWidth: "120px",
-              height: "36px",
+              height: "44px",
               fontFamily: "var(--font-mono)",
               fontSize: "12px",
               backgroundColor: "var(--color-surface)",
@@ -168,10 +173,22 @@ const WorkflowPromptDetailPage = () => {
                 border: "1px solid var(--color-accent)",
                 color: "var(--color-accent)",
               }),
+              ...(copyError && {
+                border: "1px solid var(--color-border)",
+                color: "var(--color-muted)",
+              }),
             }}
           >
-            {copied ? "Copied" : "Copy Prompt"}
+            {copied ? "Copied" : copyError ? "Copy failed" : "Copy Prompt"}
           </button>
+          {/* aria-live region — visible to screen readers, hidden visually */}
+          <span
+            aria-live="polite"
+            aria-atomic="true"
+            className="sr-only"
+          >
+            {copied ? "Copied to clipboard" : ""}
+          </span>
         </div>
         <pre
           style={{

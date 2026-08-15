@@ -2,17 +2,16 @@ import { NavLink, Outlet } from "react-router-dom";
 import { workflowPrompts } from "../data/workflowPrompts";
 
 const categories = [
-  { id: "understand", label: "Understand" },
+  { id: "orient", label: "Orient" },
+  { id: "investigate", label: "Investigate" },
   { id: "build", label: "Build" },
   { id: "debug", label: "Debug" },
-  { id: "review", label: "Review" },
-  { id: "refactor", label: "Refactor" },
   { id: "ship", label: "Ship" },
 ];
 
 const WorkflowPromptsPage = () => {
   return (
-    <section style={{ paddingTop: "80px", paddingBottom: "96px" }}>
+    <section style={{ paddingTop: "var(--space-page-top)", paddingBottom: "96px" }}>
       {/* Page Header */}
       <div>
         <div style={{ marginBottom: "12px" }}>

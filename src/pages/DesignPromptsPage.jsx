@@ -3,7 +3,7 @@ import DesignPromptCard from "../components/DesignPromptCard";
 
 const DesignPromptsPage = () => {
   return (
-    <section style={{ paddingTop: "80px", paddingBottom: "96px" }}>
+    <section style={{ paddingTop: "var(--space-page-top)", paddingBottom: "96px" }}>
       {/* Page Header */}
       <div style={{ marginBottom: "48px" }}>
         <div style={{ marginBottom: "12px" }}>

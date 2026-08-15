@@ -18,7 +18,7 @@ export const workflowPrompts = [
     number: 1,
     title: "Exploring a New Codebase",
     slug: "exploring-new-codebase",
-    category: "understand",
+    category: "orient",
     summary: "First-pass repo review: stack, folder tree, key files, run commands.",
     tags: ["onboarding", "architecture", "readme"],
     prompt: exploringNewCodebase
@@ -28,7 +28,7 @@ export const workflowPrompts = [
     number: 2,
     title: "Understanding the Architecture",
     slug: "understanding-architecture",
-    category: "understand",
+    category: "orient",
     summary: "Map layers, communication paths, and architecture violations.",
     tags: ["architecture", "layers", "dependencies"],
     prompt: understandingArchitecture
@@ -48,7 +48,7 @@ export const workflowPrompts = [
     number: 4,
     title: "Tracing How the Backend Works",
     slug: "tracing-backend",
-    category: "understand",
+    category: "investigate",
     summary: "Follow an endpoint from route definition to final response.",
     tags: ["backend", "trace", "execution"],
     prompt: tracingBackend
@@ -58,7 +58,7 @@ export const workflowPrompts = [
     number: 5,
     title: "Understanding How APIs Are Running",
     slug: "understanding-apis",
-    category: "understand",
+    category: "investigate",
     summary: "Catalog every API endpoint and flag security/consistency issues.",
     tags: ["api", "endpoints", "security"],
     prompt: understandingApis
@@ -78,7 +78,7 @@ export const workflowPrompts = [
     number: 7,
     title: "Reviewing a PR You Did Not Write",
     slug: "reviewing-pr",
-    category: "review",
+    category: "ship",
     summary: "Strict senior-engineer PR review with prioritized findings.",
     tags: ["review", "pull-request", "quality"],
     prompt: reviewingPr
@@ -88,7 +88,7 @@ export const workflowPrompts = [
     number: 8,
     title: "Onboarding a Legacy Codebase",
     slug: "onboarding-legacy",
-    category: "understand",
+    category: "orient",
     summary: "Inherit an undocumented system and map fragile areas.",
     tags: ["legacy", "onboarding", "risk"],
     prompt: onboardingLegacy
@@ -98,7 +98,7 @@ export const workflowPrompts = [
     number: 9,
     title: "Finding Where a Behavior Is Implemented",
     slug: "finding-behavior",
-    category: "understand",
+    category: "investigate",
     summary: "Locate exact implementation of a behavior, not just filenames.",
     tags: ["search", "call-chain", "behavior"],
     prompt: findingBehavior
@@ -108,7 +108,7 @@ export const workflowPrompts = [
     number: 10,
     title: "Refactoring Without Breaking Hidden Dependencies",
     slug: "refactoring",
-    category: "refactor",
+    category: "build",
     summary: "Map all dependents before refactoring, then plan safe steps.",
     tags: ["refactor", "dependencies", "safety"],
     prompt: refactoring
@@ -118,7 +118,7 @@ export const workflowPrompts = [
     number: 11,
     title: "Understanding How Data Flows",
     slug: "data-flow",
-    category: "understand",
+    category: "investigate",
     summary: "Trace a specific piece of data from creation to storage and display.",
     tags: ["data", "flow", "trace"],
     prompt: dataFlow

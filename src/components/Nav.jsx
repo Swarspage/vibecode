@@ -1,6 +1,10 @@
+import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 
 const Nav = () => {
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const closeMenu = () => setMenuOpen(false);
   return (
     <header
       id="site-nav"
@@ -68,8 +72,8 @@ const Nav = () => {
           </span>
         </Link>
 
-        {/* Nav links */}
-        <nav aria-label="Primary navigation">
+        {/* Desktop nav links — hidden on mobile */}
+        <nav aria-label="Primary navigation" className="nav-list-desktop">
           <ul className="nav-list">
             <li>
               <NavLink
@@ -95,7 +99,49 @@ const Nav = () => {
             </li>
           </ul>
         </nav>
+
+        {/* Hamburger toggle — visible on mobile only */}
+        <button
+          className="nav-hamburger"
+          onClick={() => setMenuOpen((o) => !o)}
+          aria-expanded={menuOpen}
+          aria-controls="nav-mobile-menu"
+          aria-label={menuOpen ? "Close menu" : "Open menu"}
+        >
+          {/* Simple 3-bar / X icon via CSS */}
+          <span className={menuOpen ? "ham-bar ham-bar-top open" : "ham-bar ham-bar-top"} />
+          <span className={menuOpen ? "ham-bar ham-bar-mid open" : "ham-bar ham-bar-mid"} />
+          <span className={menuOpen ? "ham-bar ham-bar-bot open" : "ham-bar ham-bar-bot"} />
+        </button>
       </div>
+
+      {/* Mobile menu drawer */}
+      {menuOpen && (
+        <nav
+          id="nav-mobile-menu"
+          aria-label="Mobile navigation"
+          className="nav-mobile-menu"
+        >
+          <NavLink
+            to="/design-prompts"
+            className={({ isActive }) =>
+              isActive ? "nav-mobile-link active" : "nav-mobile-link"
+            }
+            onClick={closeMenu}
+          >
+            Design Prompts
+          </NavLink>
+          <NavLink
+            to="/workflow-prompts"
+            className={({ isActive }) =>
+              isActive ? "nav-mobile-link active" : "nav-mobile-link"
+            }
+            onClick={closeMenu}
+          >
+            Workflow Prompts
+          </NavLink>
+        </nav>
+      )}
     </header>
   );
 };
