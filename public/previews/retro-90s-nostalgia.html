@@ -1,115 +1,236 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Retro / 90s Nostalgia — Design System Preview</title>
+  
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=VT323&display=block');
-
+    /* RESET & GLOBAL */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --bg-teal:   #008080;
-      --win-gray:  #c0c0c0;
-      --win-blue:  #000080;
-      --win-black: #000000;
-      --win-white: #ffffff;
-      --border-light: #dfdfdf;
-      --border-dark:  #808080;
-      --border-darker:#000000;
-      
-      --win-out: inset 1px 1px 0px var(--border-light), inset -1px -1px 0px var(--border-darker), inset 2px 2px 0px var(--win-white), inset -2px -2px 0px var(--border-dark);
-      --win-in:  inset 1px 1px 0px var(--border-darker), inset -1px -1px 0px var(--border-light), inset 2px 2px 0px var(--border-dark), inset -2px -2px 0px var(--win-white);
+    
+    body {
+      background-color: #C0C0C0;
+      background-image: 
+        radial-gradient(circle at 2px 2px, #fff 1px, transparent 1px),
+        radial-gradient(circle at 2px 2px, #808080 1px, transparent 1px);
+      background-size: 8px 8px;
+      background-position: 0 0, 4px 4px;
+      color: #000;
+      font-family: "MS Sans Serif", "Segoe UI", Tahoma, sans-serif;
+      font-size: 16px;
+      line-height: 1.4;
+      overflow-x: hidden;
+      min-height: 100vh;
     }
 
-    html, body { min-height:100%; background:var(--bg-teal); color:var(--win-black); font-family:"MS Sans Serif", "Segoe UI", Tahoma, sans-serif; font-size:12px; }
-
-    .desktop { padding:32px; display:flex; flex-direction:column; align-items:center; gap:32px; }
-
-    /* WINDOW */
-    .window { background:var(--win-gray); box-shadow:var(--win-out); padding:2px; min-width:600px; max-width:800px; }
-    .title-bar { background:var(--win-blue); color:var(--win-white); padding:3px 4px 4px 4px; display:flex; justify-content:space-between; align-items:center; font-weight:bold; letter-spacing:1px; margin-bottom:4px; }
-    .title-buttons { display:flex; gap:2px; }
-    .btn-sys { width:16px; height:14px; background:var(--win-gray); box-shadow:var(--win-out); display:flex; align-items:center; justify-content:center; color:var(--win-black); font-weight:bold; font-size:10px; cursor:pointer; }
-    .btn-sys:active { box-shadow:var(--win-in); }
-
-    /* MENU */
-    .menu-bar { display:flex; gap:12px; padding:2px 8px 6px; border-bottom:1px solid var(--border-dark); margin-bottom:8px; }
-    .menu-bar span { font-size:12px; }
-    .menu-bar span::first-letter { text-decoration:underline; }
-
-    /* CONTENT */
-    .window-content { padding:16px; display:flex; flex-direction:column; gap:24px; }
-    h1 { font-family:"Arial Black", Impact, sans-serif; font-size:32px; margin:0; text-transform:uppercase; color:var(--win-black); }
-    p { font-size:14px; line-height:1.5; }
-
-    .inset-box { background:var(--win-white); box-shadow:var(--win-in); padding:16px; font-family:"Courier New", monospace; }
-
-    /* BUTTONS */
-    .btn-group { display:flex; gap:16px; }
-    .btn-win { background:var(--win-gray); box-shadow:var(--win-out); border:none; padding:6px 24px; font-family:"MS Sans Serif", sans-serif; font-size:12px; color:var(--win-black); cursor:pointer; font-weight:bold; outline:none; }
-    .btn-win:active { box-shadow:var(--win-in); padding:7px 23px 5px 25px; } /* shift text */
-    .btn-win:focus::after { content:''; position:absolute; inset:3px; border:1px dotted var(--win-black); pointer-events:none; }
-    .btn-win { position:relative; }
-
-    /* ICONS */
-    .desktop-icon { display:flex; flex-direction:column; align-items:center; gap:8px; color:var(--win-white); font-family:monospace; position:absolute; cursor:pointer; }
-    .desktop-icon img { width:32px; height:32px; image-rendering:pixelated; background:var(--win-gray); box-shadow:var(--win-out); }
-    .desktop-icon span { background:var(--win-blue); padding:2px 4px; border:1px dotted transparent; }
-    .desktop-icon:active span { border:1px dotted var(--win-white); }
+    /* TYPOGRAPHY */
+    h1, h2, h3, h4 { font-family: "Arial Black", Impact, sans-serif; margin-bottom: 8px; text-transform: uppercase; }
+    .mono { font-family: "Courier New", monospace; }
     
-    .icon-1 { top:32px; left:32px; }
-    .icon-2 { top:100px; left:32px; }
+    a { color: #0000FF; text-decoration: underline; cursor: pointer; }
+    a:visited { color: #800080; }
+    a:hover { color: #FF0000; }
+    
+    a:focus-visible, button:focus-visible, input:focus-visible { outline: 1px dotted #000; outline-offset: -2px; }
 
+    /* COMPONENTS */
+    .bevel-outset {
+      background: #C0C0C0;
+      border-style: solid;
+      border-width: 2px;
+      border-color: #FFF #808080 #808080 #FFF;
+    }
+    
+    .bevel-inset {
+      background: #FFF;
+      border-style: solid;
+      border-width: 2px;
+      border-color: #808080 #FFF #FFF #808080;
+    }
+    
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 6px 16px; font-family: "MS Sans Serif", Tahoma, sans-serif; font-size: 14px;
+      color: #000; text-decoration: none !important; cursor: default;
+      background: #C0C0C0; border-style: solid; border-width: 2px; border-color: #FFF #808080 #808080 #FFF;
+    }
+    .btn:active {
+      border-color: #808080 #FFF #FFF #808080; padding: 7px 15px 5px 17px;
+    }
+
+    .window {
+      max-width: 900px; margin: 40px auto; position: relative; z-index: 10;
+    }
+    
+    .title-bar {
+      background: linear-gradient(90deg, #000080, #1084D0);
+      color: #FFF; font-weight: bold; padding: 4px 8px; display: flex; justify-content: space-between; align-items: center;
+    }
+    .title-text { display: flex; align-items: center; gap: 8px; }
+    .title-icon { width: 16px; height: 16px; background: #C0C0C0; border: 1px solid #FFF; }
+    
+    .window-controls { display: flex; gap: 4px; }
+    .win-btn { width: 18px; height: 18px; font-size: 10px; font-weight: bold; line-height: 1; padding: 0; font-family: "MS Sans Serif", sans-serif; }
+    
+    .menu-bar { padding: 4px 8px; border-bottom: 1px solid #808080; box-shadow: 0 1px 0 #FFF; margin-bottom: 12px; }
+    .menu-item { display: inline-block; padding: 2px 6px; cursor: default; }
+    .menu-item::first-letter { text-decoration: underline; }
+    .menu-item:hover { background: #000080; color: #FFF; }
+
+    .window-content { padding: 16px; }
+
+    /* EFFECTS */
+    .rainbow-text {
+      background: linear-gradient(90deg, #FF0000, #FF7F00, #FFFF00, #00FF00, #0000FF, #4B0082, #9400D3, #FF0000);
+      background-size: 200% auto;
+      color: transparent;
+      -webkit-background-clip: text; background-clip: text;
+      animation: rainbow 3s linear infinite;
+    }
+    @keyframes rainbow { to { background-position: -200% center; } }
+    
+    .marquee {
+      width: 100%; overflow: hidden; white-space: nowrap; background: #000; color: #00FF00;
+      border-top: 2px solid #000; border-bottom: 2px solid #000; padding: 4px 0; font-weight: bold;
+    }
+    .marquee-content { display: inline-block; animation: scroll 15s linear infinite; }
+    @keyframes scroll { 0% { transform: translateX(100vw); } 100% { transform: translateX(-100%); } }
+
+    .construction {
+      background: repeating-linear-gradient(45deg, #FFFF00, #FFFF00 20px, #000 20px, #000 40px);
+      padding: 16px; text-align: center; border: 4px solid #000; margin: 40px 0;
+    }
+    .construction h2 { background: #000; color: #FFFF00; display: inline-block; padding: 8px 16px; margin: 0; }
+
+    /* LAYOUT */
+    .desktop-icon { position: absolute; text-align: center; width: 80px; cursor: default; z-index: 1; }
+    .di-icon { width: 32px; height: 32px; background: #008080; margin: 0 auto 4px; border: 2px solid #FFF; }
+    .di-label { font-size: 12px; color: #FFF; background: #000080; padding: 2px 4px; border: 1px dotted transparent; }
+    .desktop-icon:active .di-icon { filter: invert(1); }
+    .desktop-icon:active .di-label { background: #000080; border-color: #FFFF00; color: #FFF; }
+    
+    .terminal-inset { background: #000; color: #C0C0C0; padding: 12px; margin: 24px 0; font-size: 14px; }
+    .terminal-inset .ok { color: #00FF00; }
+    
+    .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 32px 0; }
+    .f-card { background: #C0C0C0; display: flex; flex-direction: column; }
+    .fc-title { background: #000080; color: #FFF; padding: 2px 6px; font-weight: bold; font-size: 14px; }
+    .fc-body { padding: 12px; font-size: 14px; flex-grow: 1; }
+    .fc-alt { background: #FFFFCC; }
+    
+    .stats-box { background: #000; border-radius: 4px; padding: 8px 16px; display: inline-block; text-align: center; margin-top: 32px; }
+    .stats-val { font-size: 24px; color: #00FF00; font-weight: bold; letter-spacing: 2px; }
+    .stats-label { color: #FFF; font-size: 12px; }
+
+    .groove { border: none; border-top: 2px solid #808080; border-bottom: 2px solid #FFF; margin: 32px 0; }
+    
+    footer { display: flex; justify-content: space-between; font-size: 12px; padding: 16px; background: #C0C0C0; border-top: 1px solid #808080; box-shadow: inset 0 1px 0 #FFF; }
+
+    @media (max-width: 800px) {
+      .window { margin: 16px; }
+      .features-grid { grid-template-columns: 1fr; }
+      .desktop-icon { display: none; }
+    }
   </style>
 </head>
 <body>
+
+  <div class="desktop-icon" style="top: 20px; left: 20px;">
+    <div class="di-icon"></div>
+    <div class="di-label">My Computer</div>
+  </div>
   
-  <div class="desktop-icon icon-1">
-    <div class="img"></div>
-    <span>My_Computer</span>
-  </div>
-  <div class="desktop-icon icon-2">
-    <div class="img"></div>
-    <span>Recycle_Bin</span>
+  <div class="desktop-icon" style="top: 100px; left: 20px;">
+    <div class="di-icon" style="background: #808000;"></div>
+    <div class="di-label">Recycle Bin</div>
   </div>
 
-  <div class="desktop">
-    <div class="window">
-      <div class="title-bar">
-        <span>Scaffold_Prompt_Directory.exe</span>
-        <div class="title-buttons">
-          <div class="btn-sys">_</div>
-          <div class="btn-sys">□</div>
-          <div class="btn-sys">X</div>
-        </div>
+  <div class="window bevel-outset">
+    <div class="title-bar">
+      <div class="title-text">
+        <div class="title-icon"></div>
+        Scaffold_Prompt_Directory.exe
       </div>
-      <div class="menu-bar">
-        <span>File</span>
-        <span>Edit</span>
-        <span>View</span>
-        <span>Help</span>
-      </div>
-      
-      <div class="window-content">
-        <h1>Retro / 90s Nostalgia</h1>
-        <p>Embrace the raw, unfiltered aesthetic of the early web and Windows 95. This design system strips away modern gradients and soft shadows in favor of unapologetic brutalist pixels, high-contrast borders, and classic system fonts.</p>
-        
-        <div class="inset-box">
-          > C:\SCAFFOLD\PROMPTS\RETRO.EXE<br>
-          > Loading components... [OK]<br>
-          > Loading MS Sans Serif... [OK]<br>
-          > Applying #C0C0C0 gray... [OK]
-        </div>
-
-        <div class="btn-group">
-          <button class="btn-win">Copy Prompt</button>
-          <button class="btn-win">Cancel</button>
-        </div>
+      <div class="window-controls">
+        <button class="btn win-btn">_</button>
+        <button class="btn win-btn">□</button>
+        <button class="btn win-btn" style="font-weight: 900;">X</button>
       </div>
     </div>
+    
+    <div class="menu-bar">
+      <span class="menu-item">File</span>
+      <span class="menu-item">Edit</span>
+      <span class="menu-item">View</span>
+      <span class="menu-item">Help</span>
+    </div>
+
+    <div class="window-content">
+      <div style="text-align: center; margin-bottom: 24px;">
+        <h1 class="rainbow-text" style="font-size: 3rem; margin-bottom: 16px;">WEB SURFING 1997</h1>
+        <p style="font-weight: bold; font-size: 18px; margin-bottom: 24px;">Welcome to the ultimate retro web experience!</p>
+        <div style="display: flex; gap: 16px; justify-content: center;">
+          <a href="#" class="btn" style="font-weight: bold;">CLICK HERE!</a>
+          <a href="#" class="btn">Cancel</a>
+        </div>
+      </div>
+
+      <div class="terminal-inset bevel-inset mono">
+        C:\SCAFFOLD\PROMPTS\RETRO.EXE<br>
+        Loading components... <span class="ok">[OK]</span><br>
+        Loading MS Sans Serif... <span class="ok">[OK]</span><br>
+        Applying #C0C0C0 gray... <span class="ok">[OK]</span><br>
+        Initializing Marquee... <span class="ok">[OK]</span>
+      </div>
+
+      <div class="marquee bevel-inset" style="border-width: 3px; background: #FFFF00; color: #FF0000;">
+        <div class="marquee-content">
+          ★ ★ ★ NEW! ★ ★ ★ CHECK OUT THE BEVELED BUTTONS ★ ★ ★ RAINBOW TEXT INSIDE ★ ★ ★ BEST VIEWED IN NETSCAPE NAVIGATOR ★ ★ ★
+        </div>
+      </div>
+
+      <div class="features-grid">
+        <div class="f-card bevel-outset">
+          <div class="fc-title">System Fonts</div>
+          <div class="fc-body bevel-inset">
+            Use standard system fonts like Arial Black, Times New Roman, and Courier New.
+          </div>
+        </div>
+        <div class="f-card bevel-outset">
+          <div class="fc-title">Beveled Everything</div>
+          <div class="fc-body bevel-inset fc-alt">
+            Every button, window, and form field needs a 3D outset or inset border.
+          </div>
+        </div>
+        <div class="f-card bevel-outset">
+          <div class="fc-title">Marquee Energy</div>
+          <div class="fc-body bevel-inset">
+            Draw attention with scrolling text, blinking badges, and under-construction tape.
+          </div>
+        </div>
+      </div>
+
+      <div class="construction">
+        <h2>UNDER CONSTRUCTION</h2>
+      </div>
+
+      <div style="text-align: center;">
+        <p>Check out my <a href="#">Links Page</a> or sign my <a href="#">Guestbook</a>!</p>
+        <div class="stats-box bevel-inset">
+          <div class="stats-label mono">VISITORS:</div>
+          <div class="stats-val mono">0001234</div>
+          <div class="stats-label mono">SINCE 1997</div>
+        </div>
+      </div>
+
+    </div>
   </div>
+
+  <footer>
+    <div>scaffold — prompt directory</div>
+    <div>Retro 90s Nostalgia System</div>
+  </footer>
 
 </body>
 </html>

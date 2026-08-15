@@ -4,85 +4,524 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Bitcoin DeFi — Design System Preview</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=block');
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=block" rel="stylesheet">
 
+  <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:      #030304;
-      --surface: #0F1115;
-      --fg:      #FFFFFF;
-      --muted:   #94A3B8;
-      --border:  #1E293B;
-      --orange:  #F7931A;
-      --gold:    #FFB347;
+      --bg:           #030304;
+      --surface:      #0F1115;
+      --fg:           #FFFFFF;
+      --muted:        #94A3B8;
+      --border:       #1E293B;
+      --orange:       #F7931A;
+      --burnt-orange: #EA580C;
+      --gold:         #FFD600;
+      
+      --gradient-brand: linear-gradient(135deg, var(--orange) 0%, var(--gold) 100%);
+      --gradient-btn:   linear-gradient(135deg, var(--orange) 0%, var(--burnt-orange) 100%);
+      
+      --glow-orange: 0 0 20px rgba(247, 147, 26, 0.4);
+      --glow-subtle: 0 0 10px rgba(247, 147, 26, 0.2);
+      
+      --transition-fast: 200ms ease-out;
+      --transition-med:  400ms ease-out;
     }
 
-    html, body { min-height:100%; background:var(--bg); color:var(--fg); font-family:'Space Grotesk',sans-serif; font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased; }
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
 
-    .container { max-width:1200px; margin:0 auto; padding:0 32px; }
+    html, body { 
+      min-height: 100%; 
+      background: var(--bg); 
+      color: var(--fg); 
+      font-family: 'Inter', sans-serif; 
+      font-size: 16px; 
+      line-height: 1.6; 
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
 
-    /* NAV */
-    header { background:rgba(3,3,4,.8); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); padding:16px 32px; position:sticky; top:0; z-index:50; display:flex; justify-content:space-between; align-items:center; }
-    .logo { font-size:22px; font-weight:700; color:var(--fg); text-decoration:none; letter-spacing:-.02em; display:flex; align-items:center; gap:8px; }
-    .logo-icon { width:24px; height:24px; background:var(--orange); border-radius:50%; display:inline-block; }
-    nav ul { list-style:none; display:flex; gap:32px; }
-    nav a { font-size:14px; font-weight:500; color:var(--muted); text-decoration:none; transition:color .2s; }
-    nav a:hover { color:var(--fg); }
-    .btn-connect { background:var(--surface); border:1px solid var(--border); color:var(--fg); font-family:inherit; font-size:14px; font-weight:600; padding:10px 24px; border-radius:8px; cursor:pointer; transition:border-color .2s; }
-    .btn-connect:hover { border-color:var(--orange); }
+    /* ATMOSPHERE */
+    .grid-bg {
+      position: fixed; inset: 0; z-index: -3;
+      background-size: 50px 50px;
+      background-image: 
+        linear-gradient(to right, rgba(30,41,59,0.5) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(30,41,59,0.5) 1px, transparent 1px);
+      mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
+      -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
+      pointer-events: none;
+    }
+    .noise-bg {
+      position: fixed; inset: 0; z-index: -2;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+      opacity: 0.04; mix-blend-mode: overlay; pointer-events: none;
+    }
+    .ambient-blob {
+      position: fixed; border-radius: 50%; filter: blur(120px); pointer-events: none; z-index: -1;
+    }
+    .blob-1 { top: -10%; left: -10%; width: 600px; height: 600px; background: var(--orange); opacity: 0.15; }
+    .blob-2 { top: 20%; right: -20%; width: 500px; height: 500px; background: var(--gold); opacity: 0.12; }
+    .blob-3 { bottom: -20%; left: 30%; width: 800px; height: 400px; background: var(--burnt-orange); opacity: 0.10; }
+
+    /* TYPOGRAPHY */
+    h1, h2, h3, h4, h5 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; color: var(--fg); letter-spacing: -0.02em; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+    
+    .text-gradient {
+      background: var(--gradient-brand);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    a:focus-visible, button:focus-visible, input:focus-visible {
+      outline: 2px solid var(--orange); outline-offset: 4px;
+    }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 10; }
+
+    /* HEADER */
+    header {
+      background: rgba(3, 3, 4, 0.8);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 40px;
+      display: flex; justify-content: space-between; align-items: center;
+      position: sticky; top: 0; z-index: 50;
+    }
+    .logo {
+      display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--fg);
+    }
+    .logo-icon {
+      width: 28px; height: 28px; border-radius: 50%; background: var(--gradient-brand);
+      box-shadow: var(--glow-subtle); display: flex; align-items: center; justify-content: center;
+    }
+    .logo-icon::after { content: '₿'; font-family: sans-serif; font-weight: bold; color: #111; font-size: 18px; }
+    .logo span { font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 700; }
+    
+    nav { display: flex; align-items: center; gap: 32px; }
+    nav ul { list-style: none; display: flex; gap: 24px; margin: 0; padding: 0; }
+    nav a {
+      font-size: 14px; font-weight: 500; color: var(--muted); text-decoration: none;
+      transition: color var(--transition-fast);
+    }
+    nav a:hover { color: var(--fg); }
+    
+    .btn-pill-glass {
+      background: rgba(15, 17, 21, 0.5); border: 1px solid rgba(255,255,255,0.1);
+      color: var(--fg); font-size: 14px; font-weight: 500;
+      padding: 10px 24px; border-radius: 100px; text-decoration: none;
+      transition: all var(--transition-fast); backdrop-filter: blur(4px);
+    }
+    .btn-pill-glass:hover { border-color: var(--orange); box-shadow: var(--glow-subtle); color: var(--orange); }
+
+    .btn-pill-primary {
+      background: var(--gradient-btn); border: none;
+      color: var(--fg); font-size: 14px; font-weight: 600;
+      padding: 12px 28px; border-radius: 100px; text-decoration: none;
+      box-shadow: var(--glow-orange); transition: all var(--transition-fast);
+    }
+    .btn-pill-primary:hover { filter: brightness(1.1); box-shadow: 0 0 30px rgba(247, 147, 26, 0.6); }
+
+    /* MOBILE MENU TOGGLE */
+    .menu-toggle { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: transparent; border: none; padding: 8px; }
+    .menu-toggle span { width: 24px; height: 2px; background: var(--fg); transition: 0.3s; }
+    #mobile-menu-checkbox { display: none; }
+    
+    @media (max-width: 900px) {
+      .menu-toggle { display: flex; }
+      nav { 
+        position: absolute; top: 100%; left: 0; right: 0; 
+        background: rgba(15, 17, 21, 0.95); backdrop-filter: blur(16px);
+        flex-direction: column; padding: 32px 40px; border-bottom: 1px solid var(--border);
+        transform: translateY(-10px); opacity: 0; pointer-events: none;
+        transition: all 0.3s ease;
+      }
+      nav ul { flex-direction: column; text-align: center; gap: 24px; width: 100%; }
+      nav a { font-size: 16px; }
+      .btn-pill-glass { width: 100%; text-align: center; margin-top: 16px; }
+      #mobile-menu-checkbox:checked ~ nav { transform: translateY(0); opacity: 1; pointer-events: auto; }
+      #mobile-menu-checkbox:checked ~ .menu-toggle span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+      #mobile-menu-checkbox:checked ~ .menu-toggle span:nth-child(2) { opacity: 0; }
+      #mobile-menu-checkbox:checked ~ .menu-toggle span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+    }
 
     /* HERO */
-    .hero { padding:100px 0 80px; text-align:center; }
-    .hero-badge { display:inline-block; background:rgba(247,147,26,.1); border:1px solid rgba(247,147,26,.3); color:var(--orange); font-size:12px; font-weight:600; padding:6px 16px; border-radius:999px; margin-bottom:32px; letter-spacing:.05em; text-transform:uppercase; }
-    h1.hero-headline { font-size:clamp(3rem,6vw,5.5rem); font-weight:700; line-height:1.05; letter-spacing:-.03em; margin-bottom:24px; }
-    h1.hero-headline span { background:linear-gradient(135deg,var(--orange),var(--gold)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
-    .hero-sub { color:var(--muted); font-size:18px; max-width:600px; margin:0 auto 48px; line-height:1.6; }
-    .btn-primary { display:inline-block; background:linear-gradient(135deg,var(--orange),var(--gold)); color:#000; font-size:15px; font-weight:700; padding:16px 36px; border-radius:12px; text-decoration:none; transition:transform .2s, box-shadow .2s; box-shadow:0 8px 24px rgba(247,147,26,.2); }
-    .btn-primary:hover { transform:translateY(-2px); box-shadow:0 12px 32px rgba(247,147,26,.3); }
+    .hero {
+      padding: 100px 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+    .status-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(247, 147, 26, 0.1); border: 1px solid rgba(247, 147, 26, 0.2);
+      padding: 6px 12px; border-radius: 100px;
+      font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 500; color: var(--orange);
+      text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 32px;
+    }
+    .pulse-dot {
+      width: 6px; height: 6px; background: var(--orange); border-radius: 50%;
+      box-shadow: 0 0 8px var(--orange); animation: pulse 2s infinite;
+    }
+    @keyframes pulse { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.5); } 100% { opacity: 1; transform: scale(1); } }
+
+    .hero-left h1 { font-size: clamp(3rem, 5vw, 4.5rem); line-height: 1.1; margin-bottom: 24px; }
+    .hero-left p { color: var(--muted); font-size: 18px; max-width: 480px; margin-bottom: 40px; }
+    .hero-ctas { display: flex; gap: 16px; flex-wrap: wrap; }
+
+    /* ORBITAL ILLUSTRATION */
+    .hero-right {
+      position: relative; width: 100%; aspect-ratio: 1;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .orbit-outer {
+      position: absolute; width: 400px; height: 400px;
+      border: 1px dashed rgba(255,255,255,0.1); border-radius: 50%;
+      animation: spin 30s linear infinite;
+    }
+    .orbit-inner {
+      position: absolute; width: 280px; height: 280px;
+      border: 1px solid rgba(247, 147, 26, 0.2); border-radius: 50%;
+      animation: spin 20s linear infinite reverse;
+    }
+    .orbit-center {
+      position: absolute; width: 100px; height: 100px;
+      background: var(--gradient-brand); border-radius: 50%;
+      box-shadow: 0 0 40px rgba(247, 147, 26, 0.4), inset 0 0 20px rgba(255,255,255,0.5);
+      display: flex; align-items: center; justify-content: center; z-index: 5;
+    }
+    .orbit-center::after { content: '₿'; font-size: 60px; color: rgba(255,255,255,0.9); font-weight: bold; }
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+
+    /* Floating Data Cards */
+    .float-card {
+      position: absolute; background: rgba(15, 17, 21, 0.7); backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.1); border-radius: 12px;
+      padding: 12px 16px; font-family: 'JetBrains Mono', monospace;
+      animation: float 6s ease-in-out infinite; z-index: 10;
+    }
+    .fc-1 { top: 10%; right: 10%; animation-delay: 0s; }
+    .fc-2 { bottom: 20%; left: 10%; animation-delay: -2s; }
+    .fc-3 { bottom: 10%; right: 20%; animation-delay: -4s; }
+    
+    .fc-label { font-size: 10px; color: var(--muted); text-transform: uppercase; margin-bottom: 4px; }
+    .fc-val { font-size: 16px; font-weight: 500; color: var(--fg); }
+    .fc-val span { color: #10B981; font-size: 12px; margin-left: 8px; }
+    @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
 
     /* DATA GRID */
-    .data-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:80px; }
-    .data-card { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:24px; }
-    .data-label { color:var(--muted); font-size:13px; margin-bottom:8px; font-weight:500; }
-    .data-value { font-size:28px; font-weight:700; color:var(--fg); letter-spacing:-.02em; }
-    .data-change { color:var(--orange); font-size:13px; font-weight:600; margin-left:8px; }
+    .data-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; padding: 0 0 100px; }
+    .data-card {
+      background: rgba(255,255,255,0.02); backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.1); border-radius: 16px;
+      padding: 24px; transition: all var(--transition-med);
+    }
+    .data-card:hover {
+      transform: translateY(-3px); border-color: rgba(247, 147, 26, 0.4);
+      box-shadow: var(--glow-subtle); background: rgba(255,255,255,0.04);
+    }
+    .dc-label { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--muted); margin-bottom: 8px; display: block; }
+    .dc-val { font-family: 'Space Grotesk', sans-serif; font-size: 32px; font-weight: 700; color: var(--fg); line-height: 1; }
+    .dc-change { color: var(--orange); font-size: 14px; font-weight: 500; margin-top: 8px; display: block; }
 
-    footer { border-top:1px solid var(--border); padding:32px 0; display:flex; justify-content:space-between; }
-    footer span { color:var(--muted); font-size:13px; font-weight:500; }
+    /* FEATURES */
+    .features-section { padding: 80px 0 120px; }
+    .section-header { text-align: center; margin-bottom: 64px; }
+    .section-header h2 { font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 16px; }
+    
+    .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+    .feature-card {
+      background: rgba(15, 17, 21, 0.6); backdrop-filter: blur(12px);
+      border: 1px solid var(--border); border-radius: 24px;
+      padding: 40px; position: relative; overflow: hidden;
+      transition: all var(--transition-med);
+    }
+    /* Corner Accents */
+    .feature-card::before, .feature-card::after {
+      content: ''; position: absolute; width: 40px; height: 40px;
+      border: 2px solid var(--orange); border-radius: 24px; opacity: 0;
+      transition: opacity var(--transition-med); pointer-events: none;
+    }
+    .feature-card::before { top: -2px; left: -2px; border-right: transparent; border-bottom: transparent; }
+    .feature-card::after { bottom: -2px; right: -2px; border-left: transparent; border-top: transparent; }
+    
+    .feature-card:hover { border-color: rgba(255,255,255,0.1); transform: translateY(-4px); }
+    .feature-card:hover::before, .feature-card:hover::after { opacity: 1; }
+    
+    .fc-icon-container {
+      width: 48px; height: 48px; border-radius: 12px;
+      background: rgba(247, 147, 26, 0.1); border: 1px solid rgba(247, 147, 26, 0.3);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 24px; color: var(--orange); font-size: 24px;
+      box-shadow: var(--glow-subtle); position: relative; z-index: 2;
+    }
+    .feature-card h3 { font-size: 20px; margin-bottom: 12px; position: relative; z-index: 2; }
+    .feature-card p { color: var(--muted); font-size: 15px; position: relative; z-index: 2; }
+    
+    /* Watermark */
+    .watermark {
+      position: absolute; bottom: -20px; right: -20px;
+      font-size: 160px; font-weight: bold; font-family: sans-serif;
+      color: rgba(255,255,255,0.02); line-height: 1;
+      transition: color var(--transition-med), transform var(--transition-med);
+      z-index: 1; pointer-events: none;
+    }
+    .feature-card:hover .watermark { color: rgba(247, 147, 26, 0.05); transform: scale(1.1) rotate(-10deg); }
+
+    /* TIMELINE */
+    .timeline-section { padding: 0 0 120px; }
+    .timeline {
+      display: flex; justify-content: space-between; position: relative; gap: 40px;
+    }
+    /* Connecting Line */
+    .timeline::before {
+      content: ''; position: absolute; top: 24px; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--orange), transparent);
+      z-index: 1;
+    }
+    .timeline-node {
+      flex: 1; position: relative; z-index: 2; padding-top: 48px;
+    }
+    .tn-circle {
+      position: absolute; top: 12px; left: 50%; transform: translateX(-50%);
+      width: 24px; height: 24px; border-radius: 50%; background: var(--bg);
+      border: 4px solid var(--orange); box-shadow: 0 0 0 4px var(--bg), var(--glow-orange);
+    }
+    .tn-content {
+      background: rgba(15, 17, 21, 0.4); border: 1px solid var(--border);
+      border-radius: 16px; padding: 24px; text-align: center;
+      position: relative;
+    }
+    .tn-content::before {
+      content: ''; position: absolute; top: -1px; left: 16px; width: 32px; height: 1px; background: var(--orange);
+    }
+    .tn-step { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--orange); margin-bottom: 8px; text-transform: uppercase; display: block; }
+    .tn-content h4 { font-size: 18px; margin-bottom: 8px; }
+    .tn-content p { font-size: 14px; color: var(--muted); }
+
+    /* FINAL CTA */
+    .cta-panel {
+      background: rgba(15, 17, 21, 0.5); backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.1); border-radius: 32px;
+      padding: 80px 40px; text-align: center; margin-bottom: 100px;
+      position: relative; overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5), inset 0 0 80px rgba(247, 147, 26, 0.05);
+    }
+    .cta-panel::before {
+      content: ''; position: absolute; inset: 0;
+      background-size: 20px 20px;
+      background-image: linear-gradient(to right, rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.02) 1px, transparent 1px);
+      z-index: 1; pointer-events: none;
+    }
+    .cta-content { position: relative; z-index: 2; }
+    .cta-panel h2 { font-size: clamp(2.5rem, 5vw, 4rem); margin-bottom: 24px; }
+    .cta-panel p { color: var(--muted); font-size: 18px; max-width: 600px; margin: 0 auto 40px; }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--border); padding: 40px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    footer span { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--muted); text-transform: uppercase; }
+
+    /* RESPONSIVE */
+    @media (max-width: 1000px) {
+      .hero { grid-template-columns: 1fr; text-align: center; gap: 40px; padding: 60px 0; }
+      .hero-left p { margin: 0 auto 40px; }
+      .hero-ctas { justify-content: center; }
+      .orbit-outer { width: 300px; height: 300px; }
+      .orbit-inner { width: 200px; height: 200px; }
+      .data-grid { grid-template-columns: repeat(2, 1fr); }
+      .features-grid { grid-template-columns: 1fr; }
+      .timeline { flex-direction: column; }
+      .timeline::before { top: 0; bottom: 0; left: 24px; width: 2px; height: auto; background: linear-gradient(180deg, transparent, var(--orange), transparent); }
+      .timeline-node { padding-top: 0; padding-left: 64px; }
+      .tn-circle { top: 50%; left: 25px; transform: translate(-50%, -50%); }
+      .tn-content { text-align: left; }
+    }
+    @media (max-width: 600px) {
+      .data-grid { grid-template-columns: 1fr; }
+      .hero-ctas { flex-direction: column; width: 100%; max-width: 320px; }
+      .btn-pill-primary, .btn-pill-glass { width: 100%; text-align: center; }
+      .cta-panel { padding: 60px 24px; border-radius: 24px; }
+      footer { flex-direction: column; gap: 16px; text-align: center; }
+    }
   </style>
 </head>
 <body>
+  
+  <div class="grid-bg" aria-hidden="true"></div>
+  <div class="noise-bg" aria-hidden="true"></div>
+  <div class="ambient-blob blob-1" aria-hidden="true"></div>
+  <div class="ambient-blob blob-2" aria-hidden="true"></div>
+  <div class="ambient-blob blob-3" aria-hidden="true"></div>
+
   <header>
-    <a href="#" class="logo"><span class="logo-icon"></span> Bitcoin DeFi</a>
-    <nav><ul>
-      <li><a href="#">Markets</a></li>
-      <li><a href="#">Exchange</a></li>
-      <li><a href="#">Earn</a></li>
-    </ul></nav>
-    <button class="btn-connect">Connect Wallet</button>
+    <a href="#" class="logo">
+      <div class="logo-icon"></div>
+      <span>Bitcoin DeFi</span>
+    </a>
+    
+    <input type="checkbox" id="mobile-menu-checkbox">
+    <label for="mobile-menu-checkbox" class="menu-toggle" aria-label="Toggle Navigation">
+      <span></span><span></span><span></span>
+    </label>
+
+    <nav>
+      <ul>
+        <li><a href="#">Markets</a></li>
+        <li><a href="#">Lending</a></li>
+        <li><a href="#">Governance</a></li>
+      </ul>
+      <a href="#" class="btn-pill-glass">Connect Wallet</a>
+    </nav>
   </header>
 
-  <main class="container">
-    <section class="hero">
-      <div class="hero-badge">L2 Network Live</div>
-      <h1 class="hero-headline">Decentralized finance on <span>true sound money.</span></h1>
-      <p class="hero-sub">The visual DNA of Bitcoin merged with modern DeFi primitives. True void backgrounds, dark matter surfaces, and digital gold accents.</p>
-      <a href="#" class="btn-primary">Copy This System</a>
+  <main>
+    <section class="container hero">
+      <div class="hero-left">
+        <div class="status-badge">
+          <div class="pulse-dot"></div>
+          Bitcoin L2 Native
+        </div>
+        <h1>The financial layer for <span class="text-gradient">true sound money.</span></h1>
+        <p>A premium design system for the next generation of Bitcoin decentralized finance. Dark matter surfaces, pure void backgrounds, and high-fidelity crypto aesthetics.</p>
+        <div class="hero-ctas">
+          <a href="#" class="btn-pill-primary">Deploy System</a>
+          <a href="#" class="btn-pill-glass">View Documentation</a>
+        </div>
+      </div>
+      
+      <div class="hero-right" aria-hidden="true">
+        <div class="orbit-outer"></div>
+        <div class="orbit-inner"></div>
+        <div class="orbit-center"></div>
+        
+        <div class="float-card fc-1">
+          <div class="fc-label">BTC Yield</div>
+          <div class="fc-val">4.2% <span>+0.5%</span></div>
+        </div>
+        <div class="float-card fc-2">
+          <div class="fc-label">Block Time</div>
+          <div class="fc-val">10m 02s</div>
+        </div>
+        <div class="float-card fc-3">
+          <div class="fc-label">Hashrate</div>
+          <div class="fc-val">650 EH/s</div>
+        </div>
+      </div>
     </section>
 
-    <div class="data-grid">
-      <div class="data-card"><div class="data-label">Total Value Locked</div><div class="data-value">$1.24B <span class="data-change">+5.2%</span></div></div>
-      <div class="data-card"><div class="data-label">24h Volume</div><div class="data-value">$482M <span class="data-change">+1.8%</span></div></div>
-      <div class="data-card"><div class="data-label">Active Wallets</div><div class="data-value">142,890</div></div>
-      <div class="data-card"><div class="data-label">BTC Price</div><div class="data-value">$94,250</div></div>
-    </div>
+    <section class="container data-grid">
+      <div class="data-card">
+        <span class="dc-label">Total Value Locked</span>
+        <span class="dc-val">$1.24B</span>
+        <span class="dc-change">+5.2% (24h)</span>
+      </div>
+      <div class="data-card">
+        <span class="dc-label">24h Volume</span>
+        <span class="dc-val">$482M</span>
+        <span class="dc-change">+1.8% (24h)</span>
+      </div>
+      <div class="data-card">
+        <span class="dc-label">Active Wallets</span>
+        <span class="dc-val">142,890</span>
+      </div>
+      <div class="data-card">
+        <span class="dc-label">BTC Price</span>
+        <span class="dc-val">$94,250</span>
+      </div>
+    </section>
+
+    <section class="container features-section">
+      <div class="section-header">
+        <h2>Built on Cryptographic Trust</h2>
+      </div>
+      
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="fc-icon-container">🔑</div>
+          <h3>Self-Custody First</h3>
+          <p>Design patterns that reinforce user ownership and security. Clear signing flows and hardware wallet integrations.</p>
+          <div class="watermark">🔑</div>
+        </div>
+        <div class="feature-card">
+          <div class="fc-icon-container">📊</div>
+          <h3>Proof of Reserves</h3>
+          <p>Transparent data visualization components prioritizing legibility. JetBrains Mono used exclusively for financial data.</p>
+          <div class="watermark">📊</div>
+        </div>
+        <div class="feature-card">
+          <div class="fc-icon-container">⚡</div>
+          <h3>Lightning Fast</h3>
+          <p>Snappy 200ms interactions paired with slow, ambient background movement to create a high-performance, premium feel.</p>
+          <div class="watermark">⚡</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container timeline-section">
+      <div class="section-header">
+        <h2>How to Integrate</h2>
+      </div>
+      
+      <div class="timeline">
+        <div class="timeline-node">
+          <div class="tn-circle" aria-hidden="true"></div>
+          <div class="tn-content">
+            <span class="tn-step">Phase 01</span>
+            <h4>Copy the Prompt</h4>
+            <p>Inject the exact design system tokens, typography rules, and CSS specifications into your AI IDE context.</p>
+          </div>
+        </div>
+        <div class="timeline-node">
+          <div class="tn-circle" aria-hidden="true"></div>
+          <div class="tn-content">
+            <span class="tn-step">Phase 02</span>
+            <h4>Generate UI</h4>
+            <p>Instruct the AI to build your dashboard using the Bitcoin DeFi ruleset (glassmorphism, orange glows, true void).</p>
+          </div>
+        </div>
+        <div class="timeline-node">
+          <div class="tn-circle" aria-hidden="true"></div>
+          <div class="tn-content">
+            <span class="tn-step">Phase 03</span>
+            <h4>Deploy dApp</h4>
+            <p>Launch your Web3 application with a hyper-premium, trustworthy aesthetic that respects crypto-native users.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="cta-panel">
+        <div class="cta-content">
+          <h2>Ready to build the <span class="text-gradient">future of finance?</span></h2>
+          <p>Stop using generic dark modes. Give your Web3 application the premium, cryptographic aesthetic it deserves.</p>
+          <a href="#" class="btn-pill-primary">Acquire Design System</a>
+        </div>
+      </div>
+    </section>
   </main>
 
-  <footer class="container">
+  <footer>
     <span>scaffold — prompt directory</span>
     <span>Bitcoin DeFi System</span>
   </footer>
+
 </body>
 </html>

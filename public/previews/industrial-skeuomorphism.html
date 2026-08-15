@@ -4,102 +4,452 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Industrial Skeuomorphism — Design System Preview</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=block');
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;700&display=block" rel="stylesheet">
 
+  <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:      #E4E6EB;
-      --surface: #F0F2F5;
-      --fg:      #1A1C23;
-      --muted:   #6C7280;
-      --accent:  #FF5A36; /* Safety Orange */
-      --metal:   linear-gradient(180deg, #FFFFFF 0%, #E8EAED 100%);
-      --shadow-outer: 10px 10px 20px rgba(166,171,189,0.5), -10px -10px 20px #FFFFFF;
-      --shadow-inner: inset 4px 4px 8px rgba(166,171,189,0.4), inset -4px -4px 8px #FFFFFF;
+      --bg:      #e0e5ec;
+      --panel:   #f0f2f5;
+      --recess:  #d1d9e6;
+      --text:    #2d3436;
+      --muted:   #4a5568;
+      --accent:  #ff4757;
+      
+      --shadow-outer: 8px 8px 16px #babecc, -8px -8px 16px #ffffff;
+      --shadow-inner: inset 4px 4px 8px #babecc, inset -4px -4px 8px #ffffff;
+      
+      --gradient-metal: linear-gradient(145deg, #f0f2f5, #d1d9e6);
+      --gradient-carbon: repeating-linear-gradient(45deg, #1a1a1a, #1a1a1a 2px, #2a2a2a 2px, #2a2a2a 4px);
+      
+      --transition: 300ms cubic-bezier(0.2, 0.8, 0.2, 1);
     }
 
-    html, body { min-height:100%; background:var(--bg); color:var(--fg); font-family:'Inter',sans-serif; font-size:15px; line-height:1.6; }
-    
-    /* Aluminum texture */
-    body::before { content:''; position:fixed; inset:0; z-index:-1; background:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.2'/%3E%3C/svg%3E"); opacity:0.25; mix-blend-mode:color-burn; }
+    @media (prefers-reduced-motion: reduce) {
+      * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
 
-    .container { max-width:1080px; margin:0 auto; padding:0 40px; }
+    html, body { 
+      min-height: 100%; 
+      background: var(--bg); 
+      color: var(--text); 
+      font-family: 'Inter', sans-serif; 
+      font-size: 16px; 
+      line-height: 1.6; 
+      overflow-x: hidden;
+    }
 
-    /* NAV */
-    header { padding:24px 40px; display:flex; justify-content:space-between; align-items:center; }
-    .logo { font-family:'Space Grotesk',sans-serif; font-size:22px; font-weight:700; color:var(--fg); text-decoration:none; letter-spacing:1px; text-transform:uppercase; display:flex; align-items:center; gap:12px; }
-    .logo::before { content:''; width:12px; height:12px; border-radius:50%; background:var(--accent); box-shadow:inset 2px 2px 4px rgba(255,255,255,0.4), 0 0 8px rgba(255,90,54,0.6); }
-    nav ul { list-style:none; display:flex; gap:32px; }
-    nav a { font-size:13px; font-weight:600; text-transform:uppercase; letter-spacing:1px; color:var(--muted); text-decoration:none; }
-    nav a:hover { color:var(--fg); }
+    /* NOISE & BLUEPRINT */
+    .noise-bg {
+      position: fixed; inset: 0; z-index: 100; pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.04; mix-blend-mode: multiply;
+    }
+    .blueprint-bg {
+      position: fixed; inset: 0; z-index: -1; pointer-events: none;
+      background-size: 40px 40px;
+      background-image: 
+        linear-gradient(to right, rgba(255,255,255,0.4) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255,255,255,0.4) 1px, transparent 1px);
+    }
+
+    /* TYPOGRAPHY */
+    h1, h2, h3, h4 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; text-transform: uppercase; color: var(--text); }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
     
-    .btn-mechanical { background:var(--metal); border:1px solid #D1D5DB; color:var(--fg); font-family:'Space Grotesk',sans-serif; font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:1px; padding:12px 24px; border-radius:6px; text-decoration:none; box-shadow:var(--shadow-outer); transition:all .1s; display:inline-flex; align-items:center; gap:8px; }
-    .btn-mechanical:active { box-shadow:var(--shadow-inner); transform:translateY(2px); }
+    .embossed-text {
+      text-shadow: 1px 1px 1px #fff, -1px -1px 1px rgba(0,0,0,0.1);
+    }
+    
+    a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 10; }
+
+    /* HARDWARE DETAILS */
+    .screw {
+      width: 12px; height: 12px; border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #fff, #999);
+      box-shadow: inset 0 0 2px rgba(0,0,0,0.5), 1px 1px 2px rgba(255,255,255,0.8);
+      position: absolute; display: flex; align-items: center; justify-content: center;
+    }
+    .screw::after { content: ''; width: 8px; height: 2px; background: rgba(0,0,0,0.6); transform: rotate(45deg); border-radius: 1px; }
+    
+    .vent-slots {
+      position: absolute; top: 20px; right: 20px; display: flex; flex-direction: column; gap: 4px;
+    }
+    .vent {
+      width: 30px; height: 4px; background: var(--bg); border-radius: 2px;
+      box-shadow: var(--shadow-inner);
+    }
+
+    .led {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--accent); box-shadow: 0 0 10px var(--accent), inset 2px 2px 2px rgba(255,255,255,0.8);
+      animation: pulse-led 2s infinite;
+    }
+    .led-off { background: #555; box-shadow: inset 1px 1px 3px rgba(0,0,0,0.5); animation: none; }
+    @keyframes pulse-led { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+    /* BUTTONS */
+    .btn-mechanical {
+      font-family: 'Space Grotesk', sans-serif; font-size: 14px; font-weight: 700; text-transform: uppercase;
+      padding: 14px 32px; border-radius: 8px; border: none; cursor: pointer; text-decoration: none;
+      background: var(--panel); color: var(--text); box-shadow: var(--shadow-outer);
+      transition: all var(--transition); display: inline-flex; align-items: center; gap: 12px;
+      position: relative; overflow: hidden;
+    }
+    .btn-mechanical:active { box-shadow: var(--shadow-inner); transform: translateY(2px); }
+    
+    .btn-orange {
+      background: linear-gradient(145deg, #ff6b81, #ff4757); color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+      box-shadow: 4px 4px 8px rgba(255,71,87,0.3), -4px -4px 8px #ffffff, inset 1px 1px 2px rgba(255,255,255,0.5);
+    }
+    .btn-orange:active { box-shadow: inset 2px 2px 8px rgba(0,0,0,0.3); }
+
+    /* HEADER */
+    header {
+      background: var(--bg); padding: 20px 40px; display: flex; justify-content: space-between; align-items: center;
+      position: sticky; top: 0; z-index: 50; box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    .logo { font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 700; color: var(--text); text-decoration: none; display: flex; align-items: center; gap: 12px; }
+    
+    nav { display: flex; align-items: center; gap: 32px; }
+    nav ul { list-style: none; display: flex; gap: 24px; margin: 0; padding: 0; }
+    nav a {
+      font-size: 13px; font-weight: 600; text-transform: uppercase; color: var(--muted);
+      text-decoration: none; transition: color var(--transition); letter-spacing: 0.05em;
+    }
+    nav a:hover { color: var(--text); }
+
+    /* MOBILE MENU */
+    .menu-toggle { display: none; flex-direction: column; gap: 4px; cursor: pointer; background: var(--panel); border: none; padding: 8px; border-radius: 6px; box-shadow: var(--shadow-outer); }
+    .menu-toggle span { width: 20px; height: 2px; background: var(--text); }
+    .menu-toggle:active { box-shadow: var(--shadow-inner); }
+    #mobile-menu-checkbox { display: none; }
+    
+    @media (max-width: 900px) {
+      .menu-toggle { display: flex; }
+      nav { 
+        position: absolute; top: 100%; left: 0; right: 0; 
+        background: var(--bg); flex-direction: column; 
+        padding: 40px; border-top: 1px solid rgba(0,0,0,0.05);
+        transform: translateY(-10px); opacity: 0; pointer-events: none; transition: all 0.3s ease;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+      }
+      nav ul { flex-direction: column; text-align: center; gap: 24px; width: 100%; }
+      .btn-mechanical { width: 100%; justify-content: center; margin-top: 24px; }
+      #mobile-menu-checkbox:checked ~ nav { transform: translateY(0); opacity: 1; pointer-events: auto; }
+    }
 
     /* HERO */
-    .hero { padding:100px 0 80px; text-align:center; }
-    .hero-badge { display:inline-flex; align-items:center; gap:8px; background:#1A1C23; color:var(--accent); font-family:'Space Grotesk',sans-serif; font-size:12px; font-weight:700; padding:6px 16px; border-radius:4px; margin-bottom:32px; letter-spacing:1px; text-transform:uppercase; box-shadow:inset 0 2px 4px rgba(0,0,0,0.5), 0 1px 0 rgba(255,255,255,0.3); }
-    h1.hero-headline { font-family:'Space Grotesk',sans-serif; font-size:clamp(3rem,6vw,5rem); font-weight:700; line-height:1.1; margin-bottom:24px; color:var(--fg); text-transform:uppercase; letter-spacing:-1px; }
-    .hero-sub { color:var(--muted); font-size:18px; max-width:600px; margin:0 auto 48px; }
+    .hero { padding: 100px 0 120px; display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+    .status-badge {
+      display: inline-flex; align-items: center; gap: 12px; background: var(--recess);
+      padding: 8px 16px; border-radius: 4px; box-shadow: var(--shadow-inner);
+      font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 500; color: var(--muted); margin-bottom: 32px;
+    }
     
-    .btn-primary { background:linear-gradient(180deg, #FF7052 0%, #FF5A36 100%); border:1px solid #E0401E; color:#fff; font-family:'Space Grotesk',sans-serif; font-size:15px; font-weight:700; text-transform:uppercase; letter-spacing:1px; padding:16px 40px; border-radius:6px; text-decoration:none; box-shadow:0 8px 16px rgba(255,90,54,0.3), inset 0 2px 4px rgba(255,255,255,0.4); text-shadow:0 1px 2px rgba(0,0,0,0.3); transition:all .1s; display:inline-block; }
-    .btn-primary:active { box-shadow:inset 0 4px 8px rgba(0,0,0,0.2); transform:translateY(2px); background:#E0401E; }
+    .hero-headline { font-size: clamp(3.5rem, 6vw, 5.5rem); margin-bottom: 24px; line-height: 1.1; letter-spacing: -0.02em; }
+    .hero-body { font-size: 18px; color: var(--muted); max-width: 480px; margin-bottom: 40px; }
+    .hero-ctas { display: flex; gap: 24px; flex-wrap: wrap; }
 
-    /* HARDWARE MODULES */
-    .modules { display:grid; grid-template-columns:repeat(3,1fr); gap:32px; padding:0 32px 100px; }
-    .module { background:var(--surface); border:1px solid #FFFFFF; border-radius:12px; padding:32px; box-shadow:var(--shadow-outer); position:relative; }
-    /* Screw heads */
-    .module::before, .module::after { content:'+'; position:absolute; color:#A6ABBD; font-family:monospace; font-size:16px; font-weight:bold; }
-    .module::before { top:12px; left:12px; }
-    .module::after { bottom:12px; right:12px; }
+    /* HARDWARE MOCKUP */
+    .hardware-device {
+      background: var(--bg); border-radius: 24px; padding: 24px;
+      box-shadow: 15px 15px 30px rgba(0,0,0,0.15), -15px -15px 30px rgba(255,255,255,0.8), inset 0 0 0 2px #fff;
+      position: relative; display: flex; flex-direction: column; gap: 24px;
+    }
+    .hw-screw { position: absolute; }
+    .hw-screw:nth-child(1) { top: 16px; left: 16px; }
+    .hw-screw:nth-child(2) { top: 16px; right: 16px; }
+    .hw-screw:nth-child(3) { bottom: 16px; left: 16px; }
+    .hw-screw:nth-child(4) { bottom: 16px; right: 16px; }
     
-    .mod-display { background:#1A1C23; border-radius:6px; padding:16px; margin-bottom:24px; box-shadow:inset 0 4px 8px rgba(0,0,0,0.4), 0 1px 0 rgba(255,255,255,0.5); }
-    .mod-display h3 { font-family:'Space Grotesk',sans-serif; font-size:16px; color:#4ADE80; text-transform:uppercase; margin:0; letter-spacing:1px; text-shadow:0 0 8px rgba(74,222,128,0.4); }
+    .hw-screen {
+      background: #111; border-radius: 12px; padding: 24px; height: 240px; position: relative; overflow: hidden;
+      box-shadow: inset 4px 4px 10px rgba(0,0,0,0.8), 0 1px 0 rgba(255,255,255,0.5);
+      border: 4px solid #222;
+    }
+    .hw-scanlines {
+      position: absolute; inset: 0; background: repeating-linear-gradient(to bottom, transparent, transparent 2px, rgba(255,255,255,0.03) 3px);
+      pointer-events: none; z-index: 5;
+    }
+    .hw-dashboard { position: relative; z-index: 2; display: flex; flex-direction: column; gap: 16px; }
+    .hw-dash-line { width: 100%; height: 20px; background: rgba(0,255,136,0.1); border: 1px solid rgba(0,255,136,0.3); border-radius: 4px; overflow: hidden; }
+    .hw-dash-fill { height: 100%; background: var(--accent); width: 60%; box-shadow: 0 0 10px var(--accent); animation: pulse-led 2s infinite; }
+    .hw-dash-text { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent); text-shadow: 0 0 5px var(--accent); }
     
-    .module p { color:var(--muted); font-size:14px; margin-bottom:24px; font-weight:500; }
-    .toggle { height:24px; width:48px; background:var(--metal); border-radius:12px; box-shadow:var(--shadow-inner); position:relative; cursor:pointer; }
-    .toggle::after { content:''; position:absolute; top:2px; left:2px; width:20px; height:20px; background:var(--accent); border-radius:50%; box-shadow:0 2px 4px rgba(0,0,0,0.2), inset 0 2px 2px rgba(255,255,255,0.4); transition:left .2s; }
-    .module:hover .toggle::after { left:26px; background:#4ADE80; }
+    .hw-controls { display: flex; justify-content: space-between; align-items: center; padding: 0 16px; }
+    .hw-btn { width: 48px; height: 48px; border-radius: 50%; background: var(--bg); box-shadow: var(--shadow-outer); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .hw-btn:active { box-shadow: var(--shadow-inner); }
+    .hw-btn-inner { width: 24px; height: 24px; border-radius: 50%; background: linear-gradient(145deg, #fff, #d1d9e6); }
+    
+    .hw-slider-track { flex-grow: 1; margin: 0 24px; height: 8px; background: var(--recess); border-radius: 4px; box-shadow: var(--shadow-inner); position: relative; }
+    .hw-slider-thumb { position: absolute; top: 50%; left: 30%; transform: translate(-50%, -50%); width: 24px; height: 40px; background: var(--panel); border-radius: 4px; box-shadow: var(--shadow-outer); border-left: 2px solid rgba(255,255,255,0.8); border-right: 2px solid rgba(0,0,0,0.1); }
 
+    /* FEATURE MODULES */
+    .features-section { padding: 80px 0 120px; }
+    .features-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 40px; }
+    
+    .feature-module {
+      background: var(--panel); border-radius: 16px; padding: 40px; position: relative;
+      box-shadow: var(--shadow-outer); transition: all 0.3s;
+    }
+    .fm-screen {
+      background: var(--recess); padding: 16px; border-radius: 8px; box-shadow: var(--shadow-inner);
+      font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--muted); margin-bottom: 24px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .feature-module h3 { font-size: 20px; margin-bottom: 12px; }
+    .feature-module p { font-size: 15px; color: var(--muted); }
+    
+    /* Physical Toggle */
+    .fm-toggle {
+      width: 60px; height: 30px; background: var(--recess); border-radius: 15px; box-shadow: var(--shadow-inner);
+      position: relative; margin-top: 24px; cursor: pointer; transition: 0.3s;
+    }
+    .fm-toggle-switch {
+      position: absolute; top: 2px; left: 2px; width: 26px; height: 26px; border-radius: 50%;
+      background: linear-gradient(145deg, #fff, #e0e5ec); box-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+      transition: 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .feature-module:hover .fm-toggle-switch { left: 32px; background: linear-gradient(145deg, #ff6b81, #ff4757); }
+    .feature-module:hover .fm-toggle { box-shadow: inset 2px 2px 5px rgba(0,0,0,0.2); }
+
+    /* STATS */
+    .stats-section { padding: 40px 0; }
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; }
+    .stat-panel {
+      background: var(--recess); border-radius: 12px; padding: 32px 24px; text-align: center;
+      box-shadow: var(--shadow-inner); position: relative;
+    }
+    .stat-panel::before { content: ''; position: absolute; top: 4px; left: 4px; right: 4px; bottom: 4px; border: 1px solid rgba(255,255,255,0.3); border-radius: 8px; pointer-events: none; }
+    .stat-val { font-family: 'JetBrains Mono', monospace; font-size: 32px; font-weight: 500; color: var(--text); margin-bottom: 8px; text-shadow: 1px 1px 0 #fff; }
+    .stat-label { font-size: 11px; text-transform: uppercase; font-weight: 600; color: var(--muted); letter-spacing: 0.05em; }
+
+    /* PROCESS */
+    .process-section { padding: 120px 0; position: relative; }
+    .pipe {
+      position: absolute; top: 190px; left: 10%; right: 10%; height: 16px;
+      background: linear-gradient(to bottom, #babecc, #ffffff, #babecc);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1); border-radius: 8px; z-index: 1;
+    }
+    .process-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; position: relative; z-index: 2; text-align: center; }
+    
+    .proc-node {
+      width: 80px; height: 80px; border-radius: 50%; background: var(--panel);
+      box-shadow: var(--shadow-outer); margin: 0 auto 32px;
+      display: flex; align-items: center; justify-content: center; position: relative;
+    }
+    .proc-node::after {
+      content: ''; position: absolute; inset: 10px; border-radius: 50%;
+      background: linear-gradient(145deg, #e0e5ec, #fff); box-shadow: var(--shadow-inner);
+    }
+    .proc-num { position: relative; z-index: 5; font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 700; color: var(--muted); }
+    .process-grid h3 { font-size: 20px; margin-bottom: 12px; }
+    .process-grid p { font-size: 15px; color: var(--muted); }
+
+    /* FINAL CTA */
+    .final-cta { background: #2d3436; padding: 120px 0; text-align: center; position: relative; }
+    .fc-carbon { position: absolute; inset: 0; background: var(--gradient-carbon); opacity: 0.5; pointer-events: none; }
+    .fc-content { position: relative; z-index: 2; }
+    .final-cta h2 { color: #fff; font-size: clamp(2.5rem, 5vw, 4rem); margin-bottom: 40px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+
+    /* FOOTER */
+    footer { border-top: 2px solid var(--panel); box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); padding: 32px 40px; display: flex; justify-content: space-between; align-items: center; }
+    footer span { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--muted); }
+    .foot-status { color: var(--accent); display: flex; align-items: center; gap: 8px; }
+
+    /* RESPONSIVE */
+    @media (max-width: 1000px) {
+      .hero { grid-template-columns: 1fr; text-align: center; }
+      .hero-body { margin: 0 auto 40px; }
+      .hero-ctas { justify-content: center; }
+      .hardware-device { max-width: 500px; margin: 0 auto; }
+      .features-grid { grid-template-columns: 1fr; }
+      .stats-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+      .pipe { display: none; }
+      .process-grid { grid-template-columns: 1fr; gap: 64px; }
+    }
+    @media (max-width: 600px) {
+      .stats-grid { grid-template-columns: 1fr; }
+      .btn-mechanical { width: 100%; justify-content: center; }
+      .hero-ctas { flex-direction: column; }
+      footer { flex-direction: column; gap: 16px; text-align: center; }
+    }
   </style>
 </head>
 <body>
+  
+  <div class="noise-bg" aria-hidden="true"></div>
+  <div class="blueprint-bg" aria-hidden="true"></div>
+
   <header>
-    <a href="#" class="logo">SCAFFOLD_OS</a>
-    <nav><ul>
-      <li><a href="#">Manual</a></li>
-      <li><a href="#">Specs</a></li>
-    </ul></nav>
-    <a href="#" class="btn-mechanical">PWR_ON</a>
+    <a href="#" class="logo">
+      SCAFFOLD_OS
+      <div class="led"></div>
+    </a>
+    
+    <input type="checkbox" id="mobile-menu-checkbox">
+    <label for="mobile-menu-checkbox" class="menu-toggle" aria-label="Toggle Navigation">
+      <span></span><span></span><span></span>
+    </label>
+
+    <nav>
+      <ul>
+        <li><a href="#">Sys_Modules</a></li>
+        <li><a href="#">Telemetry</a></li>
+        <li><a href="#">Diagnostics</a></li>
+      </ul>
+      <a href="#" class="btn-mechanical">Initialize</a>
+    </nav>
   </header>
 
-  <main class="container">
-    <section class="hero">
-      <div class="hero-badge">SYSTEM.READY // REV. 04</div>
-      <h1 class="hero-headline">Industrial Realism.</h1>
-      <p class="hero-sub">Teenage Engineering playfulness meets tactile hardware precision. Aluminum surfaces, safety orange toggles, and machined drop shadows.</p>
-      <a href="#" class="btn-primary">DEPLOY_PROMPT</a>
+  <main>
+    <section class="container hero">
+      <div class="hero-left">
+        <div class="status-badge">
+          <div class="led"></div>
+          SYSTEM READY // REV 04
+        </div>
+        <h1 class="hero-headline embossed-text">Industrial Realism.</h1>
+        <p class="hero-body">
+          Tactile hardware UI designed for heavy machinery, developer tools, and command centers. Featuring machined aluminum textures, inset screens, and mechanical physics.
+        </p>
+        <div class="hero-ctas">
+          <a href="#" class="btn-mechanical btn-orange">
+            <div class="led" style="background:#fff; box-shadow:0 0 5px #fff;"></div>
+            Engage System
+          </a>
+          <a href="#" class="btn-mechanical">View Manual</a>
+        </div>
+      </div>
+      <div class="hero-right">
+        <div class="hardware-device" aria-hidden="true">
+          <div class="screw hw-screw"></div><div class="screw hw-screw"></div>
+          <div class="screw hw-screw"></div><div class="screw hw-screw"></div>
+          
+          <div class="hw-screen">
+            <div class="hw-scanlines"></div>
+            <div class="hw-dashboard">
+              <div class="hw-dash-text">SYS.LOAD [||||||||||  ] 82%</div>
+              <div class="hw-dash-line"><div class="hw-dash-fill"></div></div>
+              <div class="hw-dash-text" style="color:#d1d9e6; text-shadow:none; margin-top:16px;">VENTS: OPEN<br>TEMP: NOMINAL<br>SHADOWS: RENDERED</div>
+            </div>
+          </div>
+          
+          <div class="hw-controls">
+            <button class="hw-btn"><div class="hw-btn-inner"></div></button>
+            <div class="hw-slider-track"><div class="hw-slider-thumb"></div></div>
+            <button class="hw-btn" style="background:var(--recess); box-shadow:var(--shadow-inner);"><div class="hw-btn-inner" style="background:linear-gradient(145deg, #ff6b81, #ff4757);"></div></button>
+          </div>
+        </div>
+      </div>
     </section>
 
-    <div class="modules">
-      <div class="module">
-        <div class="mod-display"><h3>MOD_01</h3></div>
-        <p>Machined aluminum surfaces with subtle textures. UI elements feel like they were milled from solid blocks.</p>
-        <div class="toggle"></div>
-      </div>
-      <div class="module">
-        <div class="mod-display"><h3>MOD_02</h3></div>
-        <p>Safety Orange used exclusively for interactive triggers and alerts, mimicking real-world heavy machinery.</p>
-        <div class="toggle"></div>
-      </div>
-      <div class="module">
-        <div class="mod-display"><h3>MOD_03</h3></div>
-        <p>Active states use deep inset shadows to simulate pressing physical mechanical buttons.</p>
-        <div class="toggle"></div>
+    <div class="stats-section">
+      <div class="container stats-grid">
+        <div class="stat-panel">
+          <div class="stat-val">4</div>
+          <div class="stat-label">Shadow Layers</div>
+        </div>
+        <div class="stat-panel">
+          <div class="stat-val">48px</div>
+          <div class="stat-label">Min Touch Target</div>
+        </div>
+        <div class="stat-panel">
+          <div class="stat-val">0</div>
+          <div class="stat-label">Border Blur</div>
+        </div>
+        <div class="stat-panel">
+          <div class="stat-val">100%</div>
+          <div class="stat-label">Physical Form</div>
+        </div>
       </div>
     </div>
+
+    <section class="container features-section">
+      <div class="features-grid">
+        <div class="feature-module">
+          <div class="screw hw-screw"></div><div class="screw hw-screw"></div><div class="screw hw-screw"></div><div class="screw hw-screw"></div>
+          <div class="vent-slots"><div class="vent"></div><div class="vent"></div><div class="vent"></div></div>
+          
+          <div class="fm-screen"><span>MOD_01</span> <div class="led led-off"></div></div>
+          <h3 class="embossed-text">Machined Aluminum</h3>
+          <p>Carefully balanced drop shadows and inset highlights create the illusion of CNC milled aluminum chassis plates.</p>
+          <div class="fm-toggle"><div class="fm-toggle-switch"></div></div>
+        </div>
+        <div class="feature-module">
+          <div class="screw hw-screw"></div><div class="screw hw-screw"></div><div class="screw hw-screw"></div><div class="screw hw-screw"></div>
+          <div class="vent-slots"><div class="vent"></div><div class="vent"></div><div class="vent"></div></div>
+          
+          <div class="fm-screen"><span>MOD_02</span> <div class="led"></div></div>
+          <h3 class="embossed-text">Safety Orange</h3>
+          <p>Bright, aggressive accent colors are reserved strictly for interactive triggers, mimicking emergency stop buttons.</p>
+          <div class="fm-toggle"><div class="fm-toggle-switch"></div></div>
+        </div>
+        <div class="feature-module">
+          <div class="screw hw-screw"></div><div class="screw hw-screw"></div><div class="screw hw-screw"></div><div class="screw hw-screw"></div>
+          <div class="vent-slots"><div class="vent"></div><div class="vent"></div><div class="vent"></div></div>
+          
+          <div class="fm-screen"><span>MOD_03</span> <div class="led led-off"></div></div>
+          <h3 class="embossed-text">Mechanical Press</h3>
+          <p>Buttons don't just change color; they physically depress into the board using Y-axis translation and inverted inner shadows.</p>
+          <div class="fm-toggle"><div class="fm-toggle-switch"></div></div>
+        </div>
+        <div class="feature-module">
+          <div class="screw hw-screw"></div><div class="screw hw-screw"></div><div class="screw hw-screw"></div><div class="screw hw-screw"></div>
+          <div class="vent-slots"><div class="vent"></div><div class="vent"></div><div class="vent"></div></div>
+          
+          <div class="fm-screen"><span>MOD_04</span> <div class="led"></div></div>
+          <h3 class="embossed-text">LED Systems</h3>
+          <p>Glowing diodes with CSS pulse animations provide immediate, visceral feedback on system status and readiness.</p>
+          <div class="fm-toggle"><div class="fm-toggle-switch"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container process-section">
+      <div class="pipe" aria-hidden="true"></div>
+      <div class="process-grid">
+        <div class="proc-step">
+          <div class="proc-node"><span class="proc-num">01</span></div>
+          <h3 class="embossed-text">Extract Tokens</h3>
+          <p>Load the structural shadow definitions and color palettes into your CSS variables.</p>
+        </div>
+        <div class="proc-step">
+          <div class="proc-node"><span class="proc-num">02</span></div>
+          <h3 class="embossed-text">Mill Components</h3>
+          <p>Apply neumorphic outer and inner shadows to create elevated panels and recessed troughs.</p>
+        </div>
+        <div class="proc-step">
+          <div class="proc-node"><span class="proc-num">03</span></div>
+          <h3 class="embossed-text">Wire Triggers</h3>
+          <p>Implement the active: CSS states to ensure buttons physically depress when clicked.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="final-cta">
+      <div class="fc-carbon"></div>
+      <div class="container fc-content">
+        <h2>POWER UP THE INTERFACE</h2>
+        <a href="#" class="btn-mechanical btn-orange" style="font-size:18px; padding:20px 48px;">
+          <div class="led" style="background:#fff; box-shadow:0 0 10px #fff;"></div>
+          Initiate Download
+        </a>
+      </div>
+    </section>
   </main>
+
+  <footer>
+    <span>scaffold // prompt_directory</span>
+    <span class="foot-status"><div class="led"></div> STATUS: OPERATIONAL</span>
+  </footer>
+
 </body>
 </html>

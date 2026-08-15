@@ -4,94 +4,356 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Playful Geometric — Design System Preview</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700;800&family=Plus+Jakarta+Sans:wght@400;500;600&display=block');
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700;800&family=Plus+Jakarta+Sans:wght@400;500;600&display=block" rel="stylesheet">
 
+  <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:      #FFFDF5;
-      --fg:      #1E293B;
-      --muted:   #F1F5F9;
-      --muted-fg:#64748B;
-      --violet:  #8B5CF6;
-      --pink:    #F472B6;
-      --yellow:  #FBBF24;
-      --border:  #E2E8F0;
+      --bg:             #FFFDF5;
+      --fg:             #1E293B;
+      --muted:          #F1F5F9;
+      --muted-fg:       #64748B;
+      --accent:         #8B5CF6; /* Violet */
+      --secondary:      #F472B6; /* Pink */
+      --tertiary:       #FBBF24; /* Yellow */
+      --quaternary:     #34D399; /* Mint */
+      --border:         #E2E8F0;
+      
+      --border-hard:    2px solid var(--fg);
+      
+      --shadow-sm:      4px 4px 0 var(--fg);
+      --shadow-md:      8px 8px 0 var(--fg);
+      --shadow-lg:      12px 12px 0 var(--fg);
+      
+      --shadow-pink:    8px 8px 0 var(--secondary);
+      --shadow-yellow:  8px 8px 0 var(--tertiary);
+      --shadow-mint:    8px 8px 0 var(--quaternary);
+      --shadow-violet:  8px 8px 0 var(--accent);
+      
+      --bouncy:         cubic-bezier(0.34, 1.56, 0.64, 1);
+      --transition:     300ms var(--bouncy);
     }
 
-    html, body { min-height:100%; background:var(--bg); color:var(--fg); font-family:'Plus Jakarta Sans',sans-serif; font-size:16px; line-height:1.6; }
+    @media (prefers-reduced-motion: reduce) {
+      * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
 
-    .container { max-width:1200px; margin:0 auto; padding:0 32px; }
+    html, body { 
+      min-height: 100%; background: var(--bg); color: var(--fg); 
+      font-family: 'Plus Jakarta Sans', sans-serif; font-size: 16px; line-height: 1.6; overflow-x: hidden;
+    }
 
-    /* NAV */
-    header { padding:24px 32px; display:flex; justify-content:space-between; align-items:center; }
-    .logo { font-family:'Outfit',sans-serif; font-size:24px; font-weight:800; color:var(--fg); text-decoration:none; letter-spacing:-.02em; display:flex; align-items:center; gap:8px; }
-    .logo-shape { width:24px; height:24px; background:var(--violet); border-radius:8px; display:inline-block; transform:rotate(-10deg); }
-    nav ul { list-style:none; display:flex; gap:32px; }
-    nav a { font-size:15px; font-weight:600; color:var(--muted-fg); text-decoration:none; transition:color .2s; }
-    nav a:hover { color:var(--violet); }
-    .btn-nav { background:var(--fg); color:var(--bg); font-family:inherit; font-size:14px; font-weight:700; padding:12px 28px; border-radius:999px; text-decoration:none; transition:transform .2s, box-shadow .2s; }
-    .btn-nav:hover { transform:translateY(-2px); box-shadow:0 8px 20px rgba(30,41,59,.15); }
+    /* PATTERNS */
+    .pattern-dots {
+      position: fixed; inset: 0; z-index: -1; pointer-events: none;
+      background-image: radial-gradient(var(--fg) 1px, transparent 1px);
+      background-size: 32px 32px; opacity: 0.05;
+    }
+    
+    .pattern-stripes {
+      background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(30,41,59,0.05) 10px, rgba(30,41,59,0.05) 20px);
+    }
+
+    /* TYPOGRAPHY */
+    h1, h2, h3, h4 { font-family: 'Outfit', sans-serif; font-weight: 800; color: var(--fg); line-height: 1.1; letter-spacing: -0.02em; }
+    
+    a:focus-visible, button:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; border-radius: 8px; }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 10; }
+
+    /* BUTTONS */
+    .btn {
+      font-family: 'Outfit', sans-serif; font-size: 16px; font-weight: 700;
+      padding: 14px 28px; border-radius: 9999px; border: var(--border-hard); cursor: pointer;
+      text-decoration: none; display: inline-flex; align-items: center; justify-content: center;
+      transition: all var(--transition); box-shadow: var(--shadow-sm); background: #fff;
+    }
+    .btn:hover { transform: translate(-2px, -2px) rotate(-1deg); box-shadow: var(--shadow-md); }
+    .btn:active { transform: translate(4px, 4px) rotate(1deg); box-shadow: 0 0 0 var(--fg); }
+    
+    .btn-primary { background: var(--accent); color: #fff; box-shadow: var(--shadow-sm); }
+    .btn-primary:hover { box-shadow: 8px 8px 0 var(--tertiary); }
+    
+    .badge {
+      display: inline-flex; align-items: center; background: rgba(139, 92, 246, 0.1); color: var(--accent);
+      border: var(--border-hard); font-family: 'Outfit', sans-serif; font-weight: 700; padding: 6px 16px; border-radius: 9999px;
+      margin-bottom: 24px; box-shadow: 4px 4px 0 rgba(139, 92, 246, 0.3); transform: rotate(-2deg);
+    }
+
+    /* HEADER */
+    header {
+      padding: 24px 40px; display: flex; justify-content: space-between; align-items: center;
+      position: sticky; top: 0; z-index: 50; background: var(--bg);
+    }
+    .logo { display: flex; align-items: center; gap: 12px; font-family: 'Outfit', sans-serif; font-size: 24px; font-weight: 800; color: var(--fg); text-decoration: none; }
+    .logo-icon { width: 24px; height: 24px; background: var(--secondary); border: 2px solid var(--fg); transform: rotate(15deg); box-shadow: 2px 2px 0 var(--fg); }
+    
+    nav { display: flex; align-items: center; gap: 32px; }
+    nav ul { list-style: none; display: flex; gap: 24px; margin: 0; padding: 0; }
+    nav a { font-size: 15px; font-weight: 600; color: var(--muted-fg); text-decoration: none; transition: color 0.2s; }
+    nav a:hover { color: var(--accent); }
+
+    /* MOBILE MENU TOGGLE */
+    .menu-toggle { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: var(--tertiary); border: var(--border-hard); padding: 8px; border-radius: 8px; box-shadow: 2px 2px 0 var(--fg); }
+    .menu-toggle span { width: 24px; height: 3px; background: var(--fg); transition: 0.3s; }
+    #mobile-menu-checkbox { display: none; }
+    
+    @media (max-width: 900px) {
+      .menu-toggle { display: flex; }
+      nav { 
+        position: absolute; top: 100%; left: 0; right: 0; 
+        background: #fff; border-bottom: var(--border-hard);
+        flex-direction: column; padding: 40px; display: none;
+      }
+      nav ul { flex-direction: column; width: 100%; text-align: center; }
+      nav a { display: block; padding: 12px; }
+      .btn { width: 100%; margin-top: 24px; }
+      #mobile-menu-checkbox:checked ~ nav { display: flex; }
+    }
 
     /* HERO */
-    .hero { padding:80px 0 100px; text-align:center; position:relative; overflow:hidden; }
-    .shape-1 { position:absolute; top:20%; left:10%; width:60px; height:60px; background:var(--pink); border-radius:50%; z-index:-1; animation:float 6s ease-in-out infinite; }
-    .shape-2 { position:absolute; top:40%; right:15%; width:70px; height:70px; background:var(--yellow); border-radius:16px; transform:rotate(15deg); z-index:-1; animation:float 8s ease-in-out infinite reverse; }
-    @keyframes float { 0%,100%{transform:translateY(0) rotate(15deg)} 50%{transform:translateY(-20px) rotate(25deg)} }
+    .hero { padding: 100px 0 140px; text-align: center; position: relative; }
     
-    .hero-badge { display:inline-block; background:rgba(139,92,246,.1); color:var(--violet); font-size:13px; font-weight:700; padding:8px 20px; border-radius:999px; margin-bottom:24px; }
-    h1.hero-headline { font-family:'Outfit',sans-serif; font-size:clamp(3.5rem,7vw,6rem); font-weight:800; line-height:1.05; letter-spacing:-.03em; margin-bottom:24px; color:var(--fg); }
-    .hero-sub { color:var(--muted-fg); font-size:18px; max-width:540px; margin:0 auto 40px; line-height:1.6; }
-    .btn-primary { display:inline-block; background:var(--violet); color:#fff; font-size:16px; font-weight:700; padding:18px 40px; border-radius:999px; text-decoration:none; transition:transform .2s, box-shadow .2s; box-shadow:0 8px 24px rgba(139,92,246,.3); }
-    .btn-primary:hover { transform:translateY(-4px); box-shadow:0 12px 32px rgba(139,92,246,.4); }
+    .hero-headline { font-size: clamp(3rem, 7vw, 5rem); margin-bottom: 24px; }
+    .hero-body { font-size: 18px; color: var(--muted-fg); max-width: 560px; margin: 0 auto 40px; }
+    .hero-ctas { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
 
-    /* CARDS */
-    .cards { display:grid; grid-template-columns:repeat(3,1fr); gap:32px; padding:0 32px 80px; }
-    .card { background:#fff; border:2px solid var(--border); border-radius:24px; padding:40px 32px; text-align:center; transition:transform .2s, border-color .2s, box-shadow .2s; }
-    .card:hover { transform:translateY(-8px); border-color:var(--violet); box-shadow:0 20px 40px rgba(139,92,246,.1); }
-    .card-icon { width:64px; height:64px; border-radius:20px; margin:0 auto 24px; display:flex; align-items:center; justify-content:center; font-size:32px; }
-    .ci-1 { background:rgba(244,114,182,.1); color:var(--pink); }
-    .ci-2 { background:rgba(139,92,246,.1); color:var(--violet); }
-    .ci-3 { background:rgba(251,191,36,.1); color:var(--yellow); }
-    .card h3 { font-family:'Outfit',sans-serif; font-size:22px; font-weight:700; margin-bottom:12px; color:var(--fg); }
-    .card p { color:var(--muted-fg); font-size:15px; }
+    /* FLOATING DECORATIONS */
+    .deco-shape { position: absolute; border: var(--border-hard); z-index: -1; animation: float 6s infinite alternate ease-in-out; }
+    .ds-1 { width: 64px; height: 64px; border-radius: 50%; background: var(--quaternary); top: 15%; left: 15%; box-shadow: var(--shadow-sm); }
+    .ds-2 { width: 80px; height: 80px; background: var(--tertiary); top: 60%; left: 10%; transform: rotate(-15deg); box-shadow: var(--shadow-md); animation-delay: -2s; }
+    .ds-3 { width: 100px; height: 48px; border-radius: 24px; background: var(--secondary); top: 20%; right: 15%; transform: rotate(20deg); box-shadow: var(--shadow-sm); animation-delay: -4s; }
+    .ds-4 { width: 0; height: 0; border: none; border-left: 40px solid transparent; border-right: 40px solid transparent; border-bottom: 70px solid var(--accent); top: 70%; right: 10%; transform: rotate(-30deg); animation-delay: -1s; filter: drop-shadow(4px 4px 0 var(--fg)); }
+    @keyframes float { 0% { transform: translateY(0) rotate(0deg); } 100% { transform: translateY(-20px) rotate(10deg); } }
 
-    footer { border-top:1px solid var(--border); padding:32px; display:flex; justify-content:space-between; }
-    footer span { color:var(--muted-fg); font-weight:600; font-size:14px; }
+    /* FEATURE CARDS */
+    .features-section { padding: 40px 0 120px; }
+    .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+    .f-card {
+      background: #fff; border: var(--border-hard); padding: 40px 32px;
+      box-shadow: var(--shadow-md); transition: all var(--transition);
+      display: flex; flex-direction: column; align-items: flex-start;
+    }
+    .fc-1 { border-radius: 24px; }
+    .fc-2 { border-radius: 40px 16px 40px 16px; }
+    .fc-3 { border-radius: 16px 40px 16px 40px; }
+    
+    .f-card:hover { transform: translateY(-8px) rotate(-1deg); box-shadow: var(--shadow-lg); }
+    .fc-1:hover { box-shadow: var(--shadow-violet); }
+    .fc-2:hover { box-shadow: var(--shadow-pink); }
+    .fc-3:hover { box-shadow: var(--shadow-yellow); }
+    
+    .fc-icon {
+      width: 64px; height: 64px; border: var(--border-hard); box-shadow: var(--shadow-sm);
+      display: flex; align-items: center; justify-content: center; margin-bottom: 24px;
+      font-size: 28px; transform: rotate(-5deg); transition: transform var(--transition);
+    }
+    .fc-1 .fc-icon { background: var(--accent); border-radius: 16px; }
+    .fc-2 .fc-icon { background: var(--secondary); border-radius: 50%; }
+    .fc-3 .fc-icon { background: var(--tertiary); border-radius: 16px 32px 16px 32px; }
+    
+    .f-card:hover .fc-icon { transform: rotate(10deg) scale(1.1); }
+    
+    .f-card h3 { font-size: 24px; margin-bottom: 12px; }
+    .f-card p { font-size: 15px; color: var(--muted-fg); }
+
+    /* STATS */
+    .stats-section { padding: 0 0 120px; }
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+    .stat-box {
+      border: var(--border-hard); box-shadow: var(--shadow-sm); padding: 24px;
+      text-align: center; border-radius: 16px; transition: all var(--transition);
+    }
+    .stat-box:hover { transform: scale(1.05); box-shadow: var(--shadow-md); }
+    
+    .sb-1 { background: var(--accent); color: #fff; border-radius: 50px; }
+    .sb-2 { background: var(--secondary); color: #fff; }
+    .sb-3 { background: var(--quaternary); color: var(--fg); border-radius: 30px 10px 30px 10px; }
+    .sb-4 { background: var(--tertiary); color: var(--fg); border-radius: 10px 30px 10px 30px; }
+    
+    .stat-val { font-size: 32px; margin-bottom: 4px; line-height: 1; }
+    .sb-1 .stat-val, .sb-2 .stat-val { color: #fff; }
+    .stat-label { font-size: 14px; font-weight: 600; opacity: 0.9; }
+
+    /* PROCESS */
+    .process-section { padding: 80px 0 140px; text-align: center; overflow: hidden; }
+    .process-section h2 { font-size: 36px; margin-bottom: 80px; }
+    .process-steps { display: flex; justify-content: center; gap: 80px; position: relative; }
+    
+    .p-svg { position: absolute; top: 40px; left: 10%; width: 80%; height: 60px; z-index: -1; pointer-events: none; }
+    .p-path { fill: none; stroke: var(--fg); stroke-width: 4; stroke-linecap: round; stroke-dasharray: 10 15; }
+    
+    .p-step { display: flex; flex-direction: column; align-items: center; width: 160px; background: var(--bg); }
+    .p-node { width: 80px; height: 80px; border-radius: 50%; border: var(--border-hard); box-shadow: var(--shadow-md); display: flex; align-items: center; justify-content: center; font-family: 'Outfit', sans-serif; font-size: 32px; font-weight: 800; margin-bottom: 24px; color: #fff; transform: rotate(-5deg); }
+    .pn-1 { background: var(--quaternary); color: var(--fg); }
+    .pn-2 { background: var(--tertiary); color: var(--fg); transform: rotate(5deg); }
+    .pn-3 { background: var(--secondary); }
+    
+    .p-step h3 { font-size: 20px; margin-bottom: 8px; }
+    .p-step p { font-size: 14px; color: var(--muted-fg); }
+
+    /* FINAL CTA */
+    .final-cta { padding: 0 40px 140px; text-align: center; }
+    .cta-panel {
+      background: var(--tertiary); border: var(--border-hard); border-radius: 32px;
+      padding: 80px 40px; box-shadow: 16px 16px 0 var(--accent); position: relative; max-width: 1000px; margin: 0 auto;
+    }
+    .cta-panel::before { content: ''; position: absolute; inset: 0; border-radius: 32px; background-image: radial-gradient(var(--fg) 1px, transparent 1px); background-size: 20px 20px; opacity: 0.1; pointer-events: none; }
+    .cta-panel h2 { font-size: clamp(2.5rem, 6vw, 4rem); margin-bottom: 40px; position: relative; z-index: 2; transform: rotate(-1deg); }
+
+    /* FOOTER */
+    footer { border-top: 2px solid var(--border); padding: 40px; display: flex; justify-content: space-between; align-items: center; background: #fff; }
+    footer span { font-size: 14px; color: var(--muted-fg); font-weight: 600; }
+
+    /* RESPONSIVE */
+    @media (max-width: 1000px) {
+      .deco-shape { display: none; }
+      .features-grid { grid-template-columns: 1fr; gap: 32px; }
+      .stats-grid { grid-template-columns: 1fr 1fr; gap: 24px; }
+      .process-steps { flex-direction: column; gap: 40px; align-items: center; }
+      .p-svg { display: none; }
+      .p-step { width: 100%; max-width: 300px; border: var(--border-hard); border-radius: 16px; padding: 24px; box-shadow: var(--shadow-sm); flex-direction: row; gap: 24px; text-align: left; }
+      .p-node { margin-bottom: 0; flex-shrink: 0; }
+    }
+    @media (max-width: 600px) {
+      .stats-grid { grid-template-columns: 1fr; }
+      .hero-ctas { flex-direction: column; }
+      .btn { width: 100%; justify-content: center; }
+      .cta-panel { padding: 60px 24px; box-shadow: 8px 8px 0 var(--accent); }
+      footer { flex-direction: column; gap: 16px; text-align: center; }
+    }
   </style>
 </head>
 <body>
+  
+  <div class="pattern-dots" aria-hidden="true"></div>
+
   <header>
-    <a href="#" class="logo"><span class="logo-shape"></span> scaffold</a>
-    <nav><ul>
-      <li><a href="#">Showcase</a></li>
-      <li><a href="#">Components</a></li>
-      <li><a href="#">Pricing</a></li>
-    </ul></nav>
-    <a href="#" class="btn-nav">Copy Prompt</a>
+    <a href="#" class="logo">
+      <div class="logo-icon"></div>
+      Scaffold
+    </a>
+    
+    <input type="checkbox" id="mobile-menu-checkbox">
+    <label for="mobile-menu-checkbox" class="menu-toggle" aria-label="Toggle Navigation">
+      <span></span><span></span><span></span>
+    </label>
+
+    <nav>
+      <ul>
+        <li><a href="#">Elements</a></li>
+        <li><a href="#">Colors</a></li>
+        <li><a href="#">Motion</a></li>
+      </ul>
+      <a href="#" class="btn btn-primary" style="padding: 10px 24px; font-size: 14px;">Build with us</a>
+    </nav>
   </header>
 
   <main>
-    <section class="hero container">
-      <div class="shape-1"></div>
-      <div class="shape-2"></div>
-      <div class="hero-badge">Playful Geometric</div>
-      <h1 class="hero-headline">Design that doesn't take itself too seriously.</h1>
-      <p class="hero-sub">The antidote to sterile corporate minimalism. Warm cream canvas, punchy saturated colors, and friendly typography.</p>
-      <a href="#" class="btn-primary">Generate Design System</a>
+    <section class="container hero">
+      <div class="deco-shape ds-1"></div>
+      <div class="deco-shape ds-2"></div>
+      <div class="deco-shape ds-3"></div>
+      <div class="deco-shape ds-4"></div>
+      
+      <div class="badge">V1.0 NOW AVAILABLE</div>
+      <h1 class="hero-headline">Let's make the <br>web fun again.</h1>
+      <p class="hero-body">
+        The Playful Geometric design system embraces primitive shapes, hard offset shadows, vibrant colors, and bouncy interactions to create deeply joyful, tactile interfaces.
+      </p>
+      <div class="hero-ctas">
+        <a href="#" class="btn btn-primary">Download System</a>
+        <a href="#" class="btn">View Documentation</a>
+      </div>
     </section>
 
-    <div class="cards container">
-      <div class="card"><div class="card-icon ci-1">✨</div><h3>Vibrant Palette</h3><p>Vivid violet, hot pink, and warm yellow pop against a soft cream background.</p></div>
-      <div class="card"><div class="card-icon ci-2">🔠</div><h3>Friendly Type</h3><p>Outfit for chunky, rounded headings. Plus Jakarta Sans for highly legible body text.</p></div>
-      <div class="card"><div class="card-icon ci-3">🟢</div><h3>Soft Geometry</h3><p>Large border radii (24px+), floating abstract shapes, and bouncy micro-interactions.</p></div>
+    <section class="container features-section">
+      <div class="features-grid">
+        <div class="f-card fc-1">
+          <div class="fc-icon">🎨</div>
+          <h3>Vibrant Palette</h3>
+          <p>Utilize highly saturated, unashamedly bold colors like violet, mint, yellow, and hot pink to create instant joy.</p>
+        </div>
+        <div class="f-card fc-2">
+          <div class="fc-icon">👋</div>
+          <h3>Friendly Type</h3>
+          <p>Geometric sans-serifs with rounded terminals (like Outfit) bring approachability and warmth to every headline.</p>
+        </div>
+        <div class="f-card fc-3">
+          <div class="fc-icon">🧩</div>
+          <h3>Soft Geometry</h3>
+          <p>Mix perfect circles, rounded pills, and asymmetric blob radii. Combine them with chunky 2px solid borders.</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="stats-section container">
+      <div class="stats-grid">
+        <div class="stat-box sb-1">
+          <div class="stat-val">24px</div>
+          <div class="stat-label">Corner Radius</div>
+        </div>
+        <div class="stat-box sb-2">
+          <div class="stat-val">2px</div>
+          <div class="stat-label">Border Width</div>
+        </div>
+        <div class="stat-box sb-3">
+          <div class="stat-val">8px</div>
+          <div class="stat-label">Hard Shadow</div>
+        </div>
+        <div class="stat-box sb-4">
+          <div class="stat-val">100%</div>
+          <div class="stat-label">Playful Energy</div>
+        </div>
+      </div>
     </div>
+
+    <section class="container process-section">
+      <h2>How it works</h2>
+      <div class="process-steps">
+        <svg class="p-svg" preserveAspectRatio="none" viewBox="0 0 100 20">
+          <path class="p-path" d="M0,10 Q25,25 50,10 T100,10" />
+        </svg>
+        <div class="p-step">
+          <div class="p-node pn-1">1</div>
+          <div>
+            <h3>Structure</h3>
+            <p>Start with chunky borders.</p>
+          </div>
+        </div>
+        <div class="p-step">
+          <div class="p-node pn-2">2</div>
+          <div>
+            <h3>Shadow</h3>
+            <p>Add hard offsets.</p>
+          </div>
+        </div>
+        <div class="p-step">
+          <div class="p-node pn-3">3</div>
+          <div>
+            <h3>Bounce</h3>
+            <p>Apply custom easing.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="final-cta">
+      <div class="cta-panel pattern-stripes">
+        <h2>Bring the joy back.</h2>
+        <a href="#" class="btn btn-primary" style="font-size: 20px; padding: 20px 48px; background: #fff; color: var(--fg); box-shadow: var(--shadow-sm);">Start Playing</a>
+      </div>
+    </section>
   </main>
 
-  <footer class="container">
+  <footer>
     <span>scaffold — prompt directory</span>
     <span>Playful Geometric System</span>
   </footer>
+
 </body>
 </html>

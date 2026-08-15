@@ -4,125 +4,635 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Art Deco — Design System Preview</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Josefin+Sans:wght@300;400;600;700&display=block');
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;500;600;700&family=Marcellus&display=block" rel="stylesheet">
 
+  <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:     #0A0A0A;
-      --fg:     #F2F0E4;
-      --card:   #141414;
-      --gold:   #D4AF37;
-      --blue:   #1E3D59;
-      --muted:  #888888;
+      --bg:       #0A0A0A;
+      --fg:       #F2F0E4;
+      --card:     #141414;
+      --gold:     #D4AF37;
+      --midnight: #1E3D59;
+      --muted:    #888888;
+      
+      --gold-glow: 0 0 15px rgba(212, 175, 55, 0.4);
+      --gold-glow-strong: 0 0 25px rgba(212, 175, 55, 0.6);
+      
+      --transition-slow: 700ms ease-in-out;
+      --transition-med:  400ms ease-out;
     }
 
-    html, body { min-height:100%; background:var(--bg); color:var(--fg); font-family:'Josefin Sans',sans-serif; font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased; }
+    @media (prefers-reduced-motion: reduce) {
+      :root {
+        --transition-slow: 0ms;
+        --transition-med:  0ms;
+      }
+    }
 
-    .container { max-width:1200px; margin:0 auto; padding:0 48px; }
+    html, body { 
+      min-height: 100%; 
+      background: var(--bg); 
+      color: var(--fg); 
+      font-family: 'Josefin Sans', sans-serif; 
+      font-size: 16px; 
+      line-height: 1.6; 
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
 
-    /* decorative border */
-    .deco-border { border-top:1px solid var(--gold); border-bottom:1px solid var(--gold); padding:3px 0; }
-    .deco-border-inner { border-top:3px solid var(--gold); border-bottom:3px solid var(--gold); padding:2px 0; }
-    .deco-border-wrap { padding:8px 0; }
+    /* OVERLAYS */
+    .crosshatch-overlay {
+      position: fixed; inset: 0; z-index: 100; pointer-events: none;
+      background-image: 
+        repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(212, 175, 55, 0.03) 10px, rgba(212, 175, 55, 0.03) 11px),
+        repeating-linear-gradient(-45deg, transparent, transparent 10px, rgba(212, 175, 55, 0.03) 10px, rgba(212, 175, 55, 0.03) 11px);
+    }
+    .sunburst-overlay {
+      position: fixed; inset: 0; z-index: 99; pointer-events: none;
+      background: radial-gradient(circle at 50% 20%, rgba(212, 175, 55, 0.14), transparent 60%);
+    }
 
-    /* NAV */
-    header { border-bottom:1px solid var(--gold); }
-    .nav-top { border-bottom:1px solid rgba(212,175,55,.3); padding:6px 48px; display:flex; justify-content:center; }
-    .nav-top span { font-size:10px; letter-spacing:.3em; text-transform:uppercase; color:var(--muted); }
-    .nav-main { display:flex; align-items:center; justify-content:space-between; padding:20px 48px; }
-    .logo { font-family:'Cormorant Garamond',serif; font-size:28px; font-weight:600; color:var(--gold); text-decoration:none; letter-spacing:.1em; text-transform:uppercase; }
-    nav ul { list-style:none; display:flex; gap:32px; }
-    nav a { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.25em; color:var(--muted); text-decoration:none; transition:color .3s; }
-    nav a:hover { color:var(--gold); }
-    .btn-gold { background:transparent; border:1px solid var(--gold); color:var(--gold); font-family:'Josefin Sans',sans-serif; font-size:10px; font-weight:700; letter-spacing:.25em; text-transform:uppercase; padding:10px 28px; text-decoration:none; transition:background .3s, color .3s; }
-    .btn-gold:hover { background:var(--gold); color:var(--bg); }
+    /* TYPOGRAPHY HELPERS */
+    h1, h2, h3, h4, h5 { font-family: 'Marcellus', serif; color: var(--gold); font-weight: 400; text-transform: uppercase; }
+    .gold-text { color: var(--gold); }
+    .muted-text { color: var(--muted); }
+    
+    a:focus-visible, button:focus-visible, input:focus-visible {
+      outline: 2px solid var(--gold);
+      outline-offset: 4px;
+    }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 10; }
+
+    /* ANNOUNCEMENT BAR */
+    .announcement {
+      border-top: 3px double var(--gold);
+      border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+      text-align: center;
+      padding: 10px 16px;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.3em;
+      color: var(--muted);
+      position: relative;
+      z-index: 50;
+      background: rgba(10, 10, 10, 0.9);
+    }
+
+    /* HEADER */
+    header {
+      padding: 24px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      z-index: 50;
+      background: rgba(10, 10, 10, 0.85);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+    }
+    .logo {
+      font-family: 'Marcellus', serif;
+      font-size: 26px;
+      color: var(--gold);
+      text-decoration: none;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-shadow: var(--gold-glow);
+    }
+    nav { display: flex; align-items: center; gap: 40px; }
+    nav ul { list-style: none; display: flex; gap: 32px; }
+    nav a {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color var(--transition-med);
+    }
+    nav a:hover { color: var(--gold); text-shadow: var(--gold-glow); }
+    
+    .btn-gold-outline {
+      border: 1px solid var(--gold);
+      background: transparent;
+      color: var(--gold);
+      font-size: 12px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      padding: 12px 28px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all var(--transition-med);
+    }
+    .btn-gold-outline:hover {
+      background: var(--gold);
+      color: var(--bg);
+      box-shadow: var(--gold-glow);
+    }
+
+    /* MOBILE MENU TOGGLE */
+    .menu-toggle { display: none; flex-direction: column; gap: 6px; cursor: pointer; background: transparent; border: none; padding: 8px; }
+    .menu-toggle span { width: 26px; height: 1px; background: var(--gold); transition: 0.3s; }
+    #mobile-menu-checkbox { display: none; }
+    
+    @media (max-width: 900px) {
+      .menu-toggle { display: flex; }
+      nav { 
+        position: absolute; top: 100%; left: 0; right: 0; 
+        background: var(--bg); flex-direction: column; 
+        padding: 32px 40px; border-bottom: 1px solid var(--gold);
+        transform: translateY(-10px); opacity: 0; pointer-events: none;
+        transition: all 0.3s ease;
+      }
+      nav ul { flex-direction: column; text-align: center; gap: 24px; width: 100%; }
+      nav a { font-size: 14px; display: block; }
+      .btn-gold-outline { width: 100%; text-align: center; margin-top: 16px; }
+      #mobile-menu-checkbox:checked ~ nav { transform: translateY(0); opacity: 1; pointer-events: auto; }
+      #mobile-menu-checkbox:checked ~ .menu-toggle span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+      #mobile-menu-checkbox:checked ~ .menu-toggle span:nth-child(2) { opacity: 0; }
+      #mobile-menu-checkbox:checked ~ .menu-toggle span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+    }
 
     /* HERO */
-    .hero { padding:80px 48px 64px; text-align:center; position:relative; border-bottom:1px solid var(--gold); }
-    .hero::before { content:''; position:absolute; top:0; left:50%; transform:translateX(-50%); width:1px; height:40px; background:var(--gold); }
-    .hero-overline { font-size:10px; letter-spacing:.35em; text-transform:uppercase; color:var(--gold); margin-bottom:16px; }
-    /* gold fan decorations */
-    .fan { display:flex; justify-content:center; gap:3px; margin-bottom:32px; }
-    .fan span { width:2px; background:var(--gold); border-radius:1px; }
-    h1.hero-headline { font-family:'Cormorant Garamond',serif; font-size:clamp(3.5rem,7vw,7rem); font-weight:600; line-height:.95; letter-spacing:.05em; text-transform:uppercase; color:var(--fg); margin-bottom:24px; }
-    h1.hero-headline em { font-style:italic; color:var(--gold); }
-    .hero-rule { display:flex; align-items:center; gap:16px; justify-content:center; margin-bottom:24px; }
-    .hero-rule .line { flex:1; max-width:120px; height:1px; background:var(--gold); }
-    .hero-rule .diamond { color:var(--gold); font-size:10px; }
-    .hero-body { font-size:15px; color:var(--muted); max-width:520px; margin:0 auto 40px; line-height:1.8; letter-spacing:.03em; }
-    .hero-ctas { display:flex; gap:20px; justify-content:center; }
-    .btn-primary-deco { background:var(--gold); color:var(--bg); font-family:'Josefin Sans',sans-serif; font-size:11px; font-weight:700; letter-spacing:.25em; text-transform:uppercase; padding:16px 40px; text-decoration:none; transition:opacity .3s; }
-    .btn-primary-deco:hover { opacity:.85; }
-    .btn-outline-deco { border:1px solid var(--gold); color:var(--gold); font-family:'Josefin Sans',sans-serif; font-size:11px; font-weight:700; letter-spacing:.25em; text-transform:uppercase; padding:16px 40px; text-decoration:none; transition:background .3s, color .3s; }
-    .btn-outline-deco:hover { background:var(--gold); color:var(--bg); }
+    .hero {
+      padding: 100px 0;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .hero-overline {
+      font-size: 11px;
+      letter-spacing: 0.3em;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+    
+    /* Fan Motif */
+    .fan-motif {
+      display: flex;
+      align-items: flex-end;
+      gap: 4px;
+      height: 40px;
+      margin-bottom: 32px;
+      opacity: 0.8;
+    }
+    .fan-motif span {
+      width: 2px;
+      background: var(--gold);
+    }
+    .fan-motif span:nth-child(1) { height: 10px; }
+    .fan-motif span:nth-child(2) { height: 20px; }
+    .fan-motif span:nth-child(3) { height: 30px; }
+    .fan-motif span:nth-child(4) { height: 40px; width: 3px; }
+    .fan-motif span:nth-child(5) { height: 30px; }
+    .fan-motif span:nth-child(6) { height: 20px; }
+    .fan-motif span:nth-child(7) { height: 10px; }
 
-    /* FEATURES */
-    .features { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--gold); border:1px solid var(--gold); margin:64px 0; }
-    .feat { background:var(--card); padding:40px 32px; text-align:center; }
-    .feat-num { font-family:'Cormorant Garamond',serif; font-size:48px; font-weight:400; color:var(--gold); line-height:1; margin-bottom:16px; }
-    .feat h3 { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.25em; color:var(--fg); margin-bottom:12px; }
-    .feat p { font-size:13px; color:var(--muted); line-height:1.75; }
+    .hero-headline {
+      font-size: clamp(3rem, 7vw, 6rem);
+      line-height: 1;
+      margin-bottom: 32px;
+      letter-spacing: 0.05em;
+      text-shadow: var(--gold-glow);
+    }
+    .hero-headline span {
+      color: var(--fg);
+    }
+    
+    .decorative-rule {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      width: 100%;
+      max-width: 400px;
+      margin: 0 auto 40px;
+    }
+    .decorative-rule::before, .decorative-rule::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--gold);
+      opacity: 0.5;
+    }
+    .diamond-glyph {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      background: var(--gold);
+      transform: rotate(45deg);
+      box-shadow: var(--gold-glow);
+    }
 
-    /* CTA */
-    .cta { background:var(--card); border:1px solid var(--gold); padding:64px; text-align:center; margin:0 0 64px; }
-    .cta h2 { font-family:'Cormorant Garamond',serif; font-size:clamp(2.5rem,4vw,3.5rem); font-weight:600; color:var(--fg); margin-bottom:12px; letter-spacing:.05em; }
-    .cta h2 em { font-style:italic; color:var(--gold); }
-    .cta p { color:var(--muted); font-size:14px; letter-spacing:.05em; margin-bottom:32px; }
+    .hero-body {
+      color: var(--muted);
+      font-size: 18px;
+      margin-bottom: 48px;
+      max-width: 600px;
+      font-weight: 300;
+    }
+    .hero-ctas { display: flex; gap: 24px; flex-wrap: wrap; justify-content: center; }
+    
+    .btn-gold-solid {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--bg);
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      padding: 16px 40px;
+      text-decoration: none;
+      box-shadow: var(--gold-glow);
+      transition: all var(--transition-med);
+    }
+    .btn-gold-solid:hover {
+      box-shadow: var(--gold-glow-strong);
+      transform: translateY(-2px);
+    }
 
-    footer { border-top:1px solid var(--gold); padding:24px 48px; display:flex; justify-content:space-between; }
-    footer span { font-size:10px; letter-spacing:.25em; text-transform:uppercase; color:var(--muted); }
+    /* SECTION HEADERS */
+    .section-header {
+      text-align: center;
+      margin-bottom: 64px;
+    }
+    .section-header h2 {
+      font-size: 20px;
+      letter-spacing: 0.3em;
+      display: inline-flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .section-header h2::before, .section-header h2::after {
+      content: '◆';
+      font-size: 12px;
+      opacity: 0.6;
+    }
+
+    /* STEPPED CORNERS & L-BRACKETS (FEATURES) */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 40px;
+      margin-bottom: 120px;
+    }
+    .feature-card {
+      background: var(--card);
+      padding: 48px 40px;
+      position: relative;
+      transition: all var(--transition-med);
+      border: 1px solid rgba(212,175,55,0.1);
+      /* Stepped corners via clip-path */
+      clip-path: polygon(
+        15px 0, calc(100% - 15px) 0, 
+        100% 15px, 100% calc(100% - 15px), 
+        calc(100% - 15px) 100%, 15px 100%, 
+        0 calc(100% - 15px), 0 15px
+      );
+    }
+    /* Inner border */
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      inset: 6px;
+      border: 1px solid rgba(212,175,55,0.2);
+      pointer-events: none;
+      transition: border-color var(--transition-med);
+      /* Stepped inner border */
+      clip-path: polygon(
+        10px 0, calc(100% - 10px) 0, 
+        100% 10px, 100% calc(100% - 10px), 
+        calc(100% - 10px) 100%, 10px 100%, 
+        0 calc(100% - 10px), 0 10px
+      );
+    }
+    /* L-brackets */
+    .l-bracket {
+      position: absolute;
+      width: 15px;
+      height: 15px;
+      border: 2px solid var(--gold);
+      opacity: 0.4;
+      pointer-events: none;
+      transition: opacity var(--transition-med);
+    }
+    .br-tl { top: 16px; left: 16px; border-right: none; border-bottom: none; }
+    .br-tr { top: 16px; right: 16px; border-left: none; border-bottom: none; }
+    .br-bl { bottom: 16px; left: 16px; border-right: none; border-top: none; }
+    .br-br { bottom: 16px; right: 16px; border-left: none; border-top: none; }
+
+    .feature-card:hover {
+      background: #181818;
+      border-color: rgba(212,175,55,0.3);
+      transform: translateY(-5px);
+    }
+    .feature-card:hover::before { border-color: rgba(212,175,55,0.5); }
+    .feature-card:hover .l-bracket { opacity: 1; box-shadow: var(--gold-glow); }
+
+    .roman-numeral {
+      font-family: 'Marcellus', serif;
+      font-size: 28px;
+      color: var(--gold);
+      margin-bottom: 24px;
+      text-shadow: var(--gold-glow);
+    }
+    .feature-card h3 {
+      font-size: 18px;
+      margin-bottom: 16px;
+      letter-spacing: 0.1em;
+      color: var(--fg);
+    }
+    .feature-card p {
+      color: var(--muted);
+      font-size: 15px;
+      font-weight: 300;
+    }
+
+    /* STATS STRIP */
+    .stats-strip {
+      background: var(--midnight);
+      border-top: 1px solid var(--gold);
+      border-bottom: 1px solid var(--gold);
+      padding: 64px 0;
+      margin-bottom: 120px;
+      position: relative;
+    }
+    /* Add double border inside stats strip */
+    .stats-strip::before, .stats-strip::after {
+      content: ''; position: absolute; left: 0; right: 0; height: 1px; background: rgba(212,175,55,0.3);
+    }
+    .stats-strip::before { top: 4px; }
+    .stats-strip::after { bottom: 4px; }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+    }
+    .stat-item {
+      text-align: center;
+      padding: 0 24px;
+      position: relative;
+    }
+    .stat-item:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 10%;
+      height: 80%;
+      width: 1px;
+      background: rgba(212,175,55,0.3);
+    }
+    .stat-val {
+      font-family: 'Marcellus', serif;
+      font-size: clamp(2.5rem, 4vw, 3.5rem);
+      color: var(--gold);
+      margin-bottom: 8px;
+      text-shadow: var(--gold-glow);
+    }
+    .stat-label {
+      font-size: 11px;
+      color: var(--fg);
+      opacity: 0.7;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+    }
+
+    /* DOUBLE RULE DIVIDER */
+    .section-divider {
+      margin: 0 auto 120px;
+      max-width: 600px;
+      position: relative;
+      height: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .section-divider::before, .section-divider::after {
+      content: '';
+      position: absolute;
+      left: 0; right: 0;
+      height: 1px;
+      background: var(--gold);
+      opacity: 0.4;
+    }
+    .section-divider::before { top: 0; }
+    .section-divider::after { bottom: 0; }
+    .section-divider .diamond-glyph {
+      width: 16px; height: 16px;
+    }
+
+    /* CTA / FINALE */
+    .cta-panel {
+      max-width: 800px;
+      margin: 0 auto 120px;
+      text-align: center;
+      padding: 80px 40px;
+      background: rgba(20, 20, 20, 0.8);
+      border: 1px solid var(--gold);
+      /* Stepped corners */
+      clip-path: polygon(
+        20px 0, calc(100% - 20px) 0, 
+        100% 20px, 100% calc(100% - 20px), 
+        calc(100% - 20px) 100%, 20px 100%, 
+        0 calc(100% - 20px), 0 20px
+      );
+      position: relative;
+    }
+    .cta-panel::before {
+      content: '';
+      position: absolute;
+      inset: 8px;
+      border: 1px solid rgba(212,175,55,0.4);
+      pointer-events: none;
+      clip-path: polygon(
+        14px 0, calc(100% - 14px) 0, 
+        100% 14px, 100% calc(100% - 14px), 
+        calc(100% - 14px) 100%, 14px 100%, 
+        0 calc(100% - 14px), 0 14px
+      );
+    }
+    .cta-panel h2 {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      margin-bottom: 24px;
+      text-shadow: var(--gold-glow);
+    }
+    .cta-panel p {
+      color: var(--muted);
+      font-size: 18px;
+      max-width: 500px;
+      margin: 0 auto 40px;
+    }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--gold);
+      padding: 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      z-index: 10;
+      background: var(--bg);
+    }
+    footer span {
+      font-size: 10px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 900px) {
+      .stats-grid { grid-template-columns: 1fr 1fr; gap: 40px 0; }
+      .stat-item:nth-child(2)::after { display: none; }
+      .hero-ctas { flex-direction: column; width: 100%; max-width: 300px; }
+      .btn-gold-solid, .btn-gold-outline { width: 100%; text-align: center; }
+      footer { flex-direction: column; gap: 16px; text-align: center; }
+    }
+    @media (max-width: 600px) {
+      .stats-grid { grid-template-columns: 1fr; gap: 40px 0; }
+      .stat-item::after { display: none !important; }
+      .cta-panel { padding: 60px 24px; clip-path: polygon(10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px), 0 10px); }
+      .cta-panel::before { inset: 4px; clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px); }
+    }
   </style>
 </head>
 <body>
+  
+  <div class="crosshatch-overlay" aria-hidden="true"></div>
+  <div class="sunburst-overlay" aria-hidden="true"></div>
 
-<header>
-  <div class="nav-top"><span>Est. MMXXV &nbsp;·&nbsp; The Scaffold Collection &nbsp;·&nbsp; Design Prompts</span></div>
-  <div class="nav-main">
+  <div class="announcement">
+    Est. MMXXV · The Scaffold Collection · Design Prompts
+  </div>
+
+  <header>
     <a href="#" class="logo">Scaffold</a>
-    <nav><ul>
-      <li><a href="#">Collection</a></li>
-      <li><a href="#">Archive</a></li>
-      <li><a href="#">About</a></li>
-    </ul></nav>
-    <a href="#" class="btn-gold">Acquire</a>
-  </div>
-</header>
+    
+    <input type="checkbox" id="mobile-menu-checkbox">
+    <label for="mobile-menu-checkbox" class="menu-toggle" aria-label="Toggle Navigation">
+      <span></span><span></span><span></span>
+    </label>
 
-<section class="hero">
-  <p class="hero-overline">Art Deco — The Gatsby Aesthetic</p>
-  <div class="fan">
-    <span style="height:24px"></span><span style="height:32px"></span><span style="height:40px"></span>
-    <span style="height:48px"></span><span style="height:40px"></span><span style="height:32px"></span><span style="height:24px"></span>
-  </div>
-  <h1 class="hero-headline">The Art<br>of <em>Opulence.</em></h1>
-  <div class="hero-rule"><span class="line"></span><span class="diamond">◆</span><span class="line"></span></div>
-  <p class="hero-body">Dark luxury. Metallic gold. Geometric precision that whispers of the Roaring Twenties — translated to the modern interface with impeccable restraint.</p>
-  <div class="hero-ctas">
-    <a href="#" class="btn-primary-deco">Copy This System</a>
-    <a href="#" class="btn-outline-deco">View Archive</a>
-  </div>
-</section>
+    <nav>
+      <ul>
+        <li><a href="#">Collection</a></li>
+        <li><a href="#">Exhibition</a></li>
+        <li><a href="#">About</a></li>
+      </ul>
+      <a href="#" class="btn-gold-outline">Acquire</a>
+    </nav>
+  </header>
 
-<div class="container">
-  <div class="features">
-    <div class="feat"><div class="feat-num">I</div><h3>Dark Luxury Palette</h3><p>Obsidian black with champagne cream text. Gold borders celebrated, never hidden.</p></div>
-    <div class="feat"><div class="feat-num">II</div><h3>Geometric Symmetry</h3><p>Fan motifs, chevrons, sunburst patterns. Symmetry is non-negotiable.</p></div>
-    <div class="feat"><div class="feat-num">III</div><h3>Slow Gold Animation</h3><p>500-700ms transitions. Gold fills slide in. Nothing abrupt. Pure luxury pacing.</p></div>
-  </div>
+  <main>
+    <section class="container hero">
+      <span class="hero-overline">Art Deco — The Gatsby Aesthetic</span>
+      
+      <div class="fan-motif" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+      </div>
+      
+      <h1 class="hero-headline">The Art of <span>Opulence</span></h1>
+      
+      <div class="decorative-rule" aria-hidden="true">
+        <div class="diamond-glyph"></div>
+      </div>
+      
+      <p class="hero-body">
+        Dark luxury characterized by obsidian blacks, metallic gold borders, symmetrical geometry, and the timeless elegance of Marcellus. A roaring twenties aesthetic built for modern interfaces.
+      </p>
+      
+      <div class="hero-ctas">
+        <a href="#" class="btn-gold-solid">Acquire System</a>
+        <a href="#" class="btn-gold-outline">View Gallery</a>
+      </div>
+    </section>
 
-  <div class="cta">
-    <h2>An <em>Era</em> of Elegance.</h2>
-    <p>Copy the prompt and let your AI IDE generate a complete Art Deco implementation — tokens, geometry, and opulence — in minutes.</p>
-    <a href="#" class="btn-primary-deco">Copy Prompt</a>
-  </div>
-</div>
+    <section class="container" style="margin-top: 100px;">
+      <div class="section-header">
+        <h2>Features</h2>
+      </div>
+      
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="l-bracket br-tl" aria-hidden="true"></div>
+          <div class="l-bracket br-tr" aria-hidden="true"></div>
+          <div class="l-bracket br-bl" aria-hidden="true"></div>
+          <div class="l-bracket br-br" aria-hidden="true"></div>
+          
+          <div class="roman-numeral">I.</div>
+          <h3>Dark Luxury Palette</h3>
+          <p>An obsidian black canvas provides the perfect void for champagne cream text and metallic gold accents to command attention.</p>
+        </div>
+        <div class="feature-card">
+          <div class="l-bracket br-tl" aria-hidden="true"></div>
+          <div class="l-bracket br-tr" aria-hidden="true"></div>
+          <div class="l-bracket br-bl" aria-hidden="true"></div>
+          <div class="l-bracket br-br" aria-hidden="true"></div>
+          
+          <div class="roman-numeral">II.</div>
+          <h3>Geometric Symmetry</h3>
+          <p>Stepped corners, ziggurat motifs, and rotated diamond containers enforce strict, pleasing geometry throughout the layout.</p>
+        </div>
+        <div class="feature-card">
+          <div class="l-bracket br-tl" aria-hidden="true"></div>
+          <div class="l-bracket br-tr" aria-hidden="true"></div>
+          <div class="l-bracket br-bl" aria-hidden="true"></div>
+          <div class="l-bracket br-br" aria-hidden="true"></div>
+          
+          <div class="roman-numeral">III.</div>
+          <h3>Opulent Motion</h3>
+          <p>Transitions are slow, theatrical, and dramatic. Components glow with gold rather than casting flat black drop shadows.</p>
+        </div>
+      </div>
+    </section>
 
-<footer>
-  <span>scaffold — prompt directory</span>
-  <span>Art Deco System</span>
-</footer>
+    <section class="stats-strip">
+      <div class="container stats-grid">
+        <div class="stat-item">
+          <div class="stat-val">1925</div>
+          <div class="stat-label">Art Deco Origins</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-val">03</div>
+          <div class="stat-label">Signature Materials</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-val">07</div>
+          <div class="stat-label">Ornamental Elements</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-val">100%</div>
+          <div class="stat-label">Geometric Precision</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="container">
+      <div class="section-divider" aria-hidden="true">
+        <div class="diamond-glyph"></div>
+      </div>
+      
+      <div class="cta-panel">
+        <h2>An Era of Elegance.</h2>
+        <p>Return to a time of meticulous craftsmanship and unapologetic luxury. Deploy the complete system today.</p>
+        <a href="#" class="btn-gold-solid">Copy Prompt</a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <span>scaffold — prompt directory</span>
+    <span>Art Deco System</span>
+  </footer>
 
 </body>
 </html>

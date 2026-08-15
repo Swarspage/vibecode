@@ -1,95 +1,265 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Serif — Design System Preview</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Source+Sans+3:wght@400;600&display=block" rel="stylesheet">
+
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Source+Sans+3:wght@400;600&display=block');
-
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
+    
     :root {
-      --bg:      #FAFAF8;
-      --fg:      #1A1A1A;
-      --muted:   #6B6B6B;
-      --gold:    #B8860B;
-      --border:  #E8E8E0;
+      --bg: #FAFAF8;
+      --fg: #1A1A1A;
+      --muted: #F5F3F0;
+      --muted-fg: #6B6B6B;
+      --accent: #B8860B; /* Burnished gold */
+      --accent-sec: #D4A84B;
+      --border: #E8E4DF;
+      --card: #FFFFFF;
+      --transition: 200ms ease;
     }
 
-    html, body { min-height:100%; background:var(--bg); color:var(--fg); font-family:'Source Sans 3',sans-serif; font-size:16px; line-height:1.7; -webkit-font-smoothing:antialiased; }
+    body {
+      background-color: var(--bg);
+      color: var(--fg);
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 17px;
+      line-height: 1.6;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.02'/%3E%3C/svg%3E");
+    }
 
-    .container { max-width:1000px; margin:0 auto; padding:0 40px; }
+    /* TYPOGRAPHY */
+    h1, h2, h3, h4 { font-family: 'Playfair Display', serif; font-weight: 600; line-height: 1.2; }
+    h1 { font-size: clamp(3rem, 6vw, 5rem); letter-spacing: -0.02em; }
+    h2 { font-size: clamp(2rem, 4vw, 3rem); }
+    h3 { font-size: 1.5rem; }
+    
+    .italic { font-style: italic; font-weight: 400; }
+    .gold { color: var(--accent); }
+    
+    .mono { font-family: 'IBM Plex Mono', monospace; font-size: 13px; }
+    .small-caps { text-transform: uppercase; letter-spacing: 0.1em; font-weight: 500; font-size: 12px; }
 
-    /* NAV */
-    header { padding:32px 40px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); }
-    .logo { font-family:'Playfair Display',serif; font-size:24px; font-weight:600; color:var(--fg); text-decoration:none; letter-spacing:.02em; }
-    nav ul { list-style:none; display:flex; gap:40px; }
-    nav a { font-size:13px; font-weight:600; text-transform:uppercase; letter-spacing:.15em; color:var(--muted); text-decoration:none; transition:color .3s; }
-    nav a:hover { color:var(--gold); }
-    .btn-nav { border:1px solid var(--gold); color:var(--gold); font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:.15em; padding:12px 28px; text-decoration:none; transition:all .3s; }
-    .btn-nav:hover { background:var(--gold); color:#fff; }
+    a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
+
+    /* COMPONENTS */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 14px 32px; font-family: 'Source Sans 3', sans-serif; font-weight: 600;
+      text-decoration: none; cursor: pointer; transition: all var(--transition);
+      background: transparent; border: 1px solid var(--fg); color: var(--fg);
+    }
+    .btn:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+    
+    .btn-gold {
+      border: 1px solid var(--accent); color: var(--accent);
+    }
+    .btn-gold:hover { background: var(--accent); color: #fff; }
+    
+    .btn-dark { background: var(--fg); color: #fff; }
+    .btn-dark:hover { background: var(--accent); border-color: var(--accent); }
+
+    .rule-line { height: 1px; background: var(--border); width: 100%; }
+
+    /* HEADER */
+    header {
+      padding: 24px 40px; display: flex; justify-content: space-between; align-items: center;
+      border-bottom: 1px solid var(--border);
+    }
+    .logo { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 600; color: var(--fg); text-decoration: none; }
+    
+    nav { display: flex; align-items: center; gap: 40px; }
+    nav ul { list-style: none; display: flex; gap: 32px; margin: 0; padding: 0; }
+    nav a { color: var(--muted-fg); text-decoration: none; transition: color var(--transition); }
+    nav a:hover { color: var(--accent); }
+    
+    @media (max-width: 768px) {
+      nav ul { display: none; }
+    }
 
     /* HERO */
-    .hero { padding:100px 0; text-align:center; }
-    .hero-label { font-size:12px; font-weight:600; letter-spacing:.2em; text-transform:uppercase; color:var(--gold); margin-bottom:24px; }
-    h1.hero-headline { font-family:'Playfair Display',serif; font-size:clamp(3.5rem,6vw,5rem); font-weight:400; line-height:1.1; letter-spacing:-.01em; margin-bottom:32px; color:var(--fg); }
-    h1.hero-headline em { font-style:italic; }
-    .hero-body { font-size:18px; color:var(--muted); max-width:600px; margin:0 auto 48px; line-height:1.8; }
-    .btn-primary { display:inline-block; background:var(--fg); color:var(--bg); font-size:13px; font-weight:600; text-transform:uppercase; letter-spacing:.15em; padding:16px 40px; text-decoration:none; transition:background .3s; }
-    .btn-primary:hover { background:var(--gold); }
+    .hero { padding: 120px 0 100px; text-align: center; }
+    .hero-label-wrapper { display: flex; align-items: center; gap: 24px; max-width: 600px; margin: 0 auto 40px; }
+    .hero-label { color: var(--accent); white-space: nowrap; }
+    .hero h1 { margin-bottom: 32px; max-width: 900px; margin-inline: auto; }
+    .hero p { color: var(--muted-fg); max-width: 500px; margin: 0 auto 48px; font-size: 18px; }
+    
+    .hero-divider { width: 1px; height: 80px; background: var(--accent); margin: 80px auto 0; }
 
-    /* DIVIDER */
-    .divider { width:60px; height:2px; background:var(--gold); margin:0 auto 80px; }
+    /* FEATURE CARDS */
+    .features-section { padding: 80px 0; }
+    .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+    .f-card {
+      background: var(--card); border: 1px solid var(--border); padding: 48px 40px;
+      transition: box-shadow var(--transition), transform var(--transition); position: relative;
+    }
+    .f-card:hover { box-shadow: 0 12px 40px rgba(0,0,0,0.04); transform: translateY(-4px); }
+    
+    .f-card.featured::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: var(--accent); }
+    
+    .fc-label { color: var(--accent); margin-bottom: 24px; display: block; }
+    .f-card h3 { margin-bottom: 16px; font-size: 24px; }
+    .f-card p { color: var(--muted-fg); }
 
-    /* CONTENT */
-    .content-grid { display:grid; grid-template-columns:1fr 1fr; gap:64px; margin-bottom:100px; }
-    .content-block h3 { font-family:'Playfair Display',serif; font-size:32px; font-weight:400; margin-bottom:20px; color:var(--fg); }
-    .content-block p { font-size:16px; color:var(--muted); margin-bottom:24px; text-align:justify; }
-    .content-link { color:var(--gold); font-size:13px; font-weight:600; text-transform:uppercase; letter-spacing:.1em; text-decoration:none; border-bottom:1px solid transparent; transition:border-color .3s; }
-    .content-link:hover { border-bottom-color:var(--gold); }
+    /* STATS */
+    .stats-section { padding: 80px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); margin-bottom: 120px; }
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); }
+    .stat-box { text-align: center; border-right: 1px solid var(--border); padding: 0 24px; }
+    .stat-box:last-child { border-right: none; }
+    .stat-num { font-family: 'Playfair Display', serif; font-size: 4rem; color: var(--accent); font-weight: 400; line-height: 1; margin-bottom: 12px; }
+    .stat-label { color: var(--muted-fg); }
 
-    footer { border-top:1px solid var(--border); padding:40px; text-align:center; }
-    footer span { color:var(--muted); font-size:12px; font-weight:600; letter-spacing:.15em; text-transform:uppercase; }
+    /* SPLIT SECTION */
+    .split-section { padding: 0 0 120px; display: grid; grid-template-columns: 1.3fr 0.7fr; gap: 80px; align-items: center; }
+    .split-content .label { color: var(--accent); margin-bottom: 24px; display: block; }
+    .split-content h2 { margin-bottom: 32px; }
+    .split-content p { color: var(--muted-fg); margin-bottom: 24px; font-size: 18px; }
+    
+    .split-visual {
+      background: var(--muted); height: 100%; min-height: 500px; display: flex; align-items: center; justify-content: center;
+      position: relative; overflow: hidden;
+    }
+    .big-amp { font-family: 'Playfair Display', serif; font-size: 24rem; font-style: italic; color: var(--bg); font-weight: 700; line-height: 0.8; opacity: 0.5; }
+
+    /* PULL QUOTE */
+    .quote-section { padding: 0 0 120px; max-width: 800px; margin: 0 auto; text-align: center; position: relative; }
+    .quote-mark { font-family: 'Playfair Display', serif; font-size: 8rem; color: var(--accent); line-height: 0; position: absolute; top: 40px; left: 50%; transform: translateX(-50%); opacity: 0.2; }
+    .quote-text { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 4vw, 3rem); font-style: italic; margin-bottom: 40px; position: relative; z-index: 2; line-height: 1.3; }
+    .quote-attr { color: var(--muted-fg); }
+
+    /* FINAL CTA */
+    .final-cta { background: var(--muted); padding: 120px 40px; text-align: center; border-top: 1px solid var(--border); }
+    .final-cta h2 { margin-bottom: 40px; max-width: 600px; margin-inline: auto; }
+
+    /* FOOTER */
+    footer { border-top: 1px solid var(--border); padding: 32px 40px; display: flex; justify-content: space-between; align-items: center; }
+    footer span { color: var(--muted-fg); }
+
+    @media (max-width: 900px) {
+      .features-grid { grid-template-columns: 1fr; }
+      .stats-grid { grid-template-columns: 1fr 1fr; gap: 40px; }
+      .stat-box:nth-child(2) { border-right: none; }
+      .split-section { grid-template-columns: 1fr; }
+      .split-visual { min-height: 300px; }
+    }
+    @media (max-width: 600px) {
+      .stats-grid { grid-template-columns: 1fr; }
+      .stat-box { border-right: none; }
+      footer { flex-direction: column; gap: 16px; text-align: center; }
+    }
   </style>
 </head>
 <body>
+
   <header>
-    <a href="#" class="logo">Scaffold</a>
-    <nav><ul>
-      <li><a href="#">Articles</a></li>
-      <li><a href="#">Essays</a></li>
-      <li><a href="#">Archive</a></li>
-    </ul></nav>
-    <a href="#" class="btn-nav">Acquire Prompt</a>
+    <a href="#" class="logo">Scaffold.</a>
+    <nav>
+      <ul>
+        <li><a href="#" class="mono small-caps">Typeface</a></li>
+        <li><a href="#" class="mono small-caps">Layouts</a></li>
+        <li><a href="#" class="mono small-caps">Journal</a></li>
+      </ul>
+      <a href="#" class="btn btn-gold mono small-caps" style="padding: 10px 24px;">Subscribe</a>
+    </nav>
   </header>
 
-  <main class="container">
-    <section class="hero">
-      <div class="hero-label">The Serif Aesthetic</div>
-      <h1 class="hero-headline">Typographic elegance<br>through <em>classical restraint.</em></h1>
-      <p class="hero-body">Drawing heavy inspiration from luxury print editorial, this design system uses color sparingly and relies entirely on the beauty of the Playfair Display serif.</p>
-      <a href="#" class="btn-primary">Copy This System</a>
+  <main>
+    <section class="container hero">
+      <div class="hero-label-wrapper">
+        <div class="rule-line"></div>
+        <span class="mono small-caps hero-label">Volume IV — Aesthetics</span>
+        <div class="rule-line"></div>
+      </div>
+      
+      <h1>The art of <span class="italic gold">refined</span> digital experiences.</h1>
+      <p>A sophisticated design system built for editorial clarity, utilizing dramatic serifs, burnished gold accents, and deliberate whitespace.</p>
+      
+      <a href="#" class="btn btn-dark mono small-caps">Read the Manifesto</a>
+      
+      <div class="hero-divider"></div>
     </section>
 
-    <div class="divider"></div>
-
-    <div class="content-grid">
-      <div class="content-block">
-        <h3>Ivory & Rich Black</h3>
-        <p>A cream-tinted white base that feels significantly warmer than pure white, paired with a deep but not harsh black for primary text. The contrast is sophisticated, not straining.</p>
-        <a href="#" class="content-link">Read the guidelines</a>
+    <section class="container features-section">
+      <div class="features-grid">
+        <div class="f-card">
+          <span class="mono small-caps fc-label">01. Typography</span>
+          <h3>Dramatic Scale</h3>
+          <p>Pairing Playfair Display's luxurious high contrast with the utilitarian precision of IBM Plex Mono for structured labels.</p>
+        </div>
+        <div class="f-card featured">
+          <span class="mono small-caps fc-label">02. Palette</span>
+          <h3>Burnished Ivory</h3>
+          <p>A warm, off-white foundation that reduces eye strain while allowing the gold accents to feel authentic and grounded.</p>
+        </div>
+        <div class="f-card">
+          <span class="mono small-caps fc-label">03. Structure</span>
+          <h3>Rule Lines</h3>
+          <p>Using 1px borders to establish rigid grids and hierarchies, reminiscent of classic print magazine layouts.</p>
+        </div>
       </div>
-      <div class="content-block">
-        <h3>Burnished Gold</h3>
-        <p>The single accent color, used exclusively for emphasis, interactive states, and thin decorative borders. Inspired by gold leaf in illuminated manuscripts.</p>
-        <a href="#" class="content-link">Explore the palette</a>
+    </section>
+
+    <div class="container">
+      <div class="stats-section">
+        <div class="stats-grid">
+          <div class="stat-box">
+            <div class="stat-num">7xl</div>
+            <div class="mono small-caps stat-label">Display Scale</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num">1</div>
+            <div class="mono small-caps stat-label">Accent Color</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num">1px</div>
+            <div class="mono small-caps stat-label">Rule Lines</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num">200ms</div>
+            <div class="mono small-caps stat-label">Linear Motion</div>
+          </div>
+        </div>
       </div>
     </div>
+
+    <section class="container split-section">
+      <div class="split-content">
+        <span class="mono small-caps label">Editorial Asymmetry</span>
+        <h2>Designing for the quiet moments.</h2>
+        <p>In a web obsessed with grabbing attention, the Serif system demands it through restraint. We use asymmetrical layouts to guide the eye naturally through narrative content.</p>
+        <p>No bouncing elements, no aggressive colors. Just typography, breathing room, and intent.</p>
+        <a href="#" class="btn mono small-caps" style="margin-top: 24px;">Explore Layouts</a>
+      </div>
+      <div class="split-visual">
+        <div class="big-amp">&</div>
+      </div>
+    </section>
+
+    <section class="container quote-section">
+      <div class="quote-mark">“</div>
+      <blockquote class="quote-text">
+        Good design is obvious. Great design is transparent, yet commands absolute respect.
+      </blockquote>
+      <cite class="mono small-caps quote-attr">— Scaffold Design Team</cite>
+    </section>
+
+    <section class="final-cta">
+      <h2>Begin crafting your next publication.</h2>
+      <a href="#" class="btn btn-dark mono small-caps">Access System</a>
+    </section>
   </main>
 
   <footer>
-    <span>scaffold — prompt directory</span>
+    <span class="mono small-caps">scaffold — prompt directory</span>
+    <span class="mono small-caps">Serif System</span>
   </footer>
+
 </body>
 </html>

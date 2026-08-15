@@ -4,87 +4,349 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Organic / Natural — Design System Preview</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&family=Nunito:wght@400;600&display=block');
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Nunito:wght@400;600;700&display=block" rel="stylesheet">
 
+  <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:      #F7F5F0;
-      --fg:      #3E4A3D;
-      --accent:  #879679; /* Moss Green */
-      --terracotta: #D37A6A;
-      --clay:    #E6CDA5;
-      --muted:   #9C9C92;
-      --border:  #E8E5DF;
+      --bg:       #FDFCF8;
+      --fg:       #2C2C24;
+      --primary:  #5D7052; /* Moss Green */
+      --secondary:#C18C5D; /* Terracotta */
+      --accent:   #E6DCCD; /* Sand */
+      --muted:    #F0EBE5; /* Stone */
+      --muted-fg: #78786C;
+      --border:   #DED8CF;
+      
+      --radius-blob-1: 60% 40% 30% 70% / 60% 30% 70% 40%;
+      --radius-blob-2: 30% 70% 70% 30% / 30% 30% 70% 70%;
+      --radius-blob-3: 50% 50% 40% 60% / 40% 60% 50% 50%;
+      
+      --shadow-moss: 0 10px 30px -10px rgba(93, 112, 82, 0.2);
+      
+      --transition: 600ms cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    html, body { min-height:100%; background:var(--bg); color:var(--fg); font-family:'Nunito',sans-serif; font-size:16px; line-height:1.7; }
+    @media (prefers-reduced-motion: reduce) {
+      * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
 
-    /* Paper/Sand texture */
-    body::before { content:''; position:fixed; inset:0; z-index:-1; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.5' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E"); opacity:0.04; mix-blend-mode:multiply; pointer-events:none; }
+    html, body { 
+      min-height: 100%; background: var(--bg); color: var(--fg); 
+      font-family: 'Nunito', sans-serif; font-size: 16px; line-height: 1.6; overflow-x: hidden;
+    }
 
-    .container { max-width:960px; margin:0 auto; padding:0 32px; }
+    /* TEXTURES & AMBIENT */
+    .paper-grain {
+      position: fixed; inset: 0; z-index: 100; pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.035; mix-blend-mode: multiply;
+    }
+    
+    .ambient-blobs { position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; filter: blur(100px); opacity: 0.4; }
+    .blob { position: absolute; border-radius: 50%; animation: float 20s infinite alternate ease-in-out; }
+    .blob-1 { width: 50vw; height: 50vw; background: var(--accent); top: -10%; left: -10%; }
+    .blob-2 { width: 40vw; height: 40vw; background: rgba(93, 112, 82, 0.15); bottom: 10%; right: -10%; animation-delay: -5s; }
+    .blob-3 { width: 30vw; height: 30vw; background: rgba(193, 140, 93, 0.1); top: 40%; left: 30%; animation-delay: -10s; }
+    @keyframes float { 0% { transform: translate(0,0) scale(1); } 100% { transform: translate(-30px, 30px) scale(1.1); } }
 
-    /* NAV */
-    header { padding:32px 0; display:flex; justify-content:space-between; align-items:center; }
-    .logo { font-family:'Fraunces',serif; font-size:26px; font-weight:500; color:var(--fg); text-decoration:none; letter-spacing:-.02em; }
-    nav ul { list-style:none; display:flex; gap:40px; }
-    nav a { font-size:15px; color:var(--muted); text-decoration:none; transition:color .3s; }
-    nav a:hover { color:var(--fg); }
-    .btn-leaf { background:var(--accent); color:#fff; font-family:'Nunito',sans-serif; font-weight:600; padding:10px 24px; border-radius:100px 100px 4px 100px; text-decoration:none; transition:transform .3s, background .3s; }
-    .btn-leaf:hover { background:var(--fg); transform:translateY(-2px); }
+    /* TYPOGRAPHY */
+    h1, h2, h3, h4 { font-family: 'Fraunces', serif; color: var(--fg); font-weight: 500; line-height: 1.1; letter-spacing: -0.01em; }
+    
+    a:focus-visible, button:focus-visible { outline: 2px solid var(--primary); outline-offset: 4px; }
+
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 10; }
+
+    /* BUTTONS */
+    .btn {
+      font-family: 'Nunito', sans-serif; font-size: 15px; font-weight: 600;
+      padding: 14px 32px; border-radius: 9999px; border: none; cursor: pointer;
+      text-decoration: none; display: inline-flex; align-items: center; justify-content: center;
+      transition: all var(--transition);
+    }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { background: var(--secondary); transform: translateY(-2px); box-shadow: 0 10px 20px -10px rgba(193, 140, 93, 0.4); }
+
+    /* HEADER */
+    header {
+      padding: 32px 40px; display: flex; justify-content: space-between; align-items: center;
+      position: relative; z-index: 50;
+    }
+    .logo { font-family: 'Fraunces', serif; font-size: 28px; font-weight: 500; font-style: italic; color: var(--primary); text-decoration: none; }
+    
+    nav { display: flex; align-items: center; gap: 40px; }
+    nav ul { list-style: none; display: flex; gap: 32px; margin: 0; padding: 0; }
+    nav a { font-size: 15px; font-weight: 600; color: var(--muted-fg); text-decoration: none; transition: color 0.3s; }
+    nav a:hover { color: var(--primary); }
+
+    /* MOBILE MENU TOGGLE */
+    .menu-toggle { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: transparent; border: none; padding: 8px; }
+    .menu-toggle span { width: 24px; height: 2px; background: var(--primary); transition: 0.3s; }
+    #mobile-menu-checkbox { display: none; }
+    
+    @media (max-width: 900px) {
+      .menu-toggle { display: flex; }
+      nav { 
+        position: absolute; top: 100%; left: 0; right: 0; 
+        background: var(--bg); flex-direction: column; 
+        padding: 40px; border-bottom: 1px solid var(--border);
+        transform: translateY(-10px); opacity: 0; pointer-events: none; transition: all 0.3s;
+      }
+      nav ul { flex-direction: column; width: 100%; text-align: center; }
+      nav a { display: block; padding: 12px; }
+      .btn { width: 100%; margin-top: 24px; }
+      #mobile-menu-checkbox:checked ~ nav { transform: translateY(0); opacity: 1; pointer-events: auto; }
+    }
 
     /* HERO */
-    .hero { padding:80px 0 100px; text-align:center; }
-    .hero-badge { display:inline-block; font-family:'Fraunces',serif; font-style:italic; font-size:18px; color:var(--terracotta); margin-bottom:24px; }
-    h1.hero-headline { font-family:'Fraunces',serif; font-size:clamp(3rem,6vw,5.5rem); font-weight:400; line-height:1.1; letter-spacing:-.03em; margin-bottom:24px; color:var(--fg); }
-    .hero-sub { color:var(--fg); opacity:0.8; font-size:18px; max-width:540px; margin:0 auto 48px; }
-    .btn-primary { display:inline-block; background:var(--clay); color:var(--fg); font-family:'Nunito',sans-serif; font-size:16px; font-weight:600; padding:16px 40px; border-radius:100px; text-decoration:none; box-shadow:0 10px 30px rgba(230,205,165,0.4); transition:all .3s; }
-    .btn-primary:hover { background:var(--terracotta); color:#fff; box-shadow:0 10px 30px rgba(211,122,106,0.3); transform:translateY(-2px); }
+    .hero { padding: 80px 0 140px; text-align: center; position: relative; }
+    
+    .badge {
+      display: inline-flex; align-items: center; font-family: 'Fraunces', serif; font-style: italic;
+      color: var(--secondary); font-size: 18px; margin-bottom: 24px;
+    }
+    .badge::before, .badge::after { content: '—'; margin: 0 12px; color: var(--border); }
+    
+    .hero-headline { font-size: clamp(3.5rem, 7vw, 5.5rem); margin-bottom: 32px; color: var(--primary); }
+    .hero-body { font-size: 18px; color: var(--muted-fg); max-width: 560px; margin: 0 auto 48px; }
+    
+    .hero-deco { position: absolute; width: 120px; height: 120px; border: 1px solid var(--primary); border-radius: var(--radius-blob-1); opacity: 0.2; top: 20%; right: 10%; animation: spin 30s linear infinite; }
+    @keyframes spin { 100% { transform: rotate(360deg); } }
 
-    /* CARDS */
-    .cards { display:grid; grid-template-columns:repeat(2,1fr); gap:40px; padding:0 0 100px; }
-    .card { background:#fff; border-radius:24px 100px 24px 24px; padding:48px 40px; box-shadow:0 15px 40px rgba(135,150,121,0.08); transition:transform .4s; }
-    .card:hover { transform:translateY(-8px); }
-    .card-icon { width:64px; height:64px; border-radius:50%; background:var(--bg); margin-bottom:24px; display:flex; align-items:center; justify-content:center; font-size:28px; }
-    .card h3 { font-family:'Fraunces',serif; font-size:24px; font-weight:500; margin-bottom:12px; color:var(--fg); }
-    .card p { color:var(--muted); font-size:16px; }
+    /* FEATURES */
+    .features-section { padding: 40px 0 120px; }
+    .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; }
+    .f-card {
+      background: #fff; padding: 48px 32px; transition: all var(--transition);
+      display: flex; flex-direction: column; align-items: center; text-align: center;
+      box-shadow: var(--shadow-moss);
+    }
+    .fc-1 { border-radius: var(--radius-blob-1); }
+    .fc-2 { border-radius: var(--radius-blob-2); }
+    .fc-3 { border-radius: var(--radius-blob-3); }
+    
+    .f-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px -10px rgba(93, 112, 82, 0.3); }
+    
+    .fc-icon {
+      width: 64px; height: 64px; border-radius: 50%; background: var(--muted);
+      display: flex; align-items: center; justify-content: center; margin-bottom: 32px;
+      font-size: 24px; color: var(--primary);
+    }
+    .fc-2 .fc-icon { background: var(--accent); color: var(--secondary); }
+    
+    .f-card h3 { font-size: 24px; margin-bottom: 16px; }
+    .f-card p { font-size: 15px; color: var(--muted-fg); }
 
+    /* STATS */
+    .stats-section { padding: 0 0 140px; }
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; }
+    .stat-panel {
+      padding: 40px 24px; text-align: center; border-radius: var(--radius-blob-3);
+      display: flex; flex-direction: column; justify-content: center;
+    }
+    .sp-1 { background: var(--muted); }
+    .sp-2 { background: rgba(93, 112, 82, 0.1); }
+    .sp-3 { background: var(--accent); }
+    .sp-4 { background: rgba(193, 140, 93, 0.1); }
+    
+    .stat-val { font-family: 'Fraunces', serif; font-size: 40px; font-weight: 500; color: var(--fg); margin-bottom: 8px; }
+    .sp-2 .stat-val { color: var(--primary); }
+    .sp-4 .stat-val { color: var(--secondary); }
+    .stat-label { font-size: 14px; color: var(--muted-fg); font-weight: 600; }
+
+    /* SPLIT SECTION */
+    .split-section { padding: 80px 0 140px; }
+    .split-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+    .split-text h2 { font-size: 40px; margin-bottom: 24px; color: var(--primary); }
+    .split-text p { font-size: 16px; color: var(--muted-fg); margin-bottom: 40px; }
+    
+    .split-visual { position: relative; padding: 20px; }
+    .img-mask {
+      width: 100%; aspect-ratio: 4/5; background: var(--accent); border-radius: var(--radius-blob-2);
+      transform: rotate(3deg); box-shadow: var(--shadow-moss);
+      display: flex; align-items: center; justify-content: center; font-size: 48px; color: var(--secondary);
+    }
+    .img-deco { position: absolute; width: 100px; height: 100px; border: 1px dashed var(--secondary); border-radius: 50%; bottom: 0; left: 0; z-index: -1; }
+
+    /* PROCESS */
+    .process-section { padding: 0 0 140px; text-align: center; }
+    .process-section h2 { font-size: 36px; margin-bottom: 80px; }
+    .process-steps { display: flex; justify-content: center; gap: 80px; position: relative; }
+    
+    .p-svg { position: absolute; top: 40px; left: 15%; width: 70%; height: 60px; z-index: -1; pointer-events: none; }
+    .p-path { fill: none; stroke: var(--border); stroke-width: 2; stroke-dasharray: 6 6; }
+    
+    .p-step { display: flex; flex-direction: column; align-items: center; width: 160px; background: var(--bg); }
+    .p-node { width: 80px; height: 80px; border-radius: 50%; background: #fff; box-shadow: var(--shadow-moss); display: flex; align-items: center; justify-content: center; font-family: 'Fraunces', serif; font-size: 24px; color: var(--primary); margin-bottom: 24px; }
+    .p-step h3 { font-size: 20px; margin-bottom: 8px; }
+    .p-step p { font-size: 14px; color: var(--muted-fg); }
+
+    /* FINAL CTA */
+    .final-cta { padding: 0 0 140px; }
+    .cta-panel {
+      background: var(--muted); border-radius: var(--radius-blob-1);
+      padding: 100px 40px; text-align: center;
+    }
+    .cta-panel h2 { font-size: 48px; margin-bottom: 24px; color: var(--primary); }
+    .cta-panel p { font-size: 18px; color: var(--muted-fg); margin-bottom: 40px; max-width: 500px; margin-inline: auto; }
+
+    /* FOOTER */
+    footer { border-top: 1px solid var(--border); padding: 40px; display: flex; justify-content: space-between; align-items: center; }
+    footer span { font-size: 14px; color: var(--muted-fg); font-weight: 600; }
+
+    /* RESPONSIVE */
+    @media (max-width: 1000px) {
+      .features-grid { grid-template-columns: 1fr; gap: 48px; }
+      .stats-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+      .split-grid { grid-template-columns: 1fr; gap: 64px; text-align: center; }
+      .img-mask { max-width: 400px; margin: 0 auto; }
+      .process-steps { flex-direction: column; gap: 64px; align-items: center; }
+      .p-svg { display: none; }
+    }
+    @media (max-width: 600px) {
+      .stats-grid { grid-template-columns: 1fr; }
+      .hero-ctas { flex-direction: column; }
+      .btn { width: 100%; }
+      .cta-panel { padding: 80px 24px; border-radius: 32px; }
+      footer { flex-direction: column; gap: 16px; text-align: center; }
+    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <a href="#" class="logo">Scaffold</a>
-      <nav><ul>
-        <li><a href="#">Journal</a></li>
-        <li><a href="#">About</a></li>
-      </ul></nav>
-      <a href="#" class="btn-leaf">Acquire Prompt</a>
-    </header>
+  
+  <div class="paper-grain" aria-hidden="true"></div>
+  <div class="ambient-blobs" aria-hidden="true">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
 
-    <main>
-      <section class="hero">
-        <div class="hero-badge">Wabi-sabi aesthetics</div>
-        <h1 class="hero-headline">Transience &<br>Imperfection.</h1>
-        <p class="hero-sub">An earth-drawn palette evoking forest floors, clay pottery, unbleached paper, and river stones. Soft diffused shadows tinted with moss green.</p>
-        <a href="#" class="btn-primary">Copy This System</a>
-      </section>
+  <header>
+    <a href="#" class="logo">Scaffold</a>
+    
+    <input type="checkbox" id="mobile-menu-checkbox">
+    <label for="mobile-menu-checkbox" class="menu-toggle" aria-label="Toggle Navigation">
+      <span></span><span></span><span></span>
+    </label>
 
-      <div class="cards">
-        <div class="card">
-          <div class="card-icon">🌿</div>
-          <h3>Fraunces Serif</h3>
-          <p>Old-world warmth with modern softness. Paired with Nunito's rounded terminals to echo organic, natural shapes.</p>
+    <nav>
+      <ul>
+        <li><a href="#">Aesthetics</a></li>
+        <li><a href="#">Palette</a></li>
+        <li><a href="#">Motion</a></li>
+      </ul>
+      <a href="#" class="btn btn-primary" style="padding: 10px 24px; font-size: 14px;">Explore Guide</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="container hero">
+      <div class="hero-deco" aria-hidden="true"></div>
+      
+      <div class="badge">Wabi-sabi aesthetics</div>
+      <h1 class="hero-headline">Transience &<br>Imperfection.</h1>
+      <p class="hero-body">
+        A peaceful, handcrafted design system that embraces organic shapes, asymmetric border radii, and earthy color palettes to create deeply calming digital spaces.
+      </p>
+      <div class="hero-ctas" style="display:flex; justify-content:center; gap:16px;">
+        <a href="#" class="btn btn-primary">Initialize System</a>
+      </div>
+    </section>
+
+    <section class="container features-section">
+      <div class="features-grid">
+        <div class="f-card fc-1">
+          <div class="fc-icon">🌿</div>
+          <h3>Organic Shapes</h3>
+          <p>Ditch perfect circles and standard rounded corners for complex, asymmetric border radii that feel hand-drawn and natural.</p>
         </div>
-        <div class="card">
-          <div class="card-icon">🏺</div>
-          <h3>Organic Radii</h3>
-          <p>Asymmetrical border-radii on buttons and cards mimic the shape of leaves and hand-thrown pottery.</p>
+        <div class="f-card fc-2">
+          <div class="fc-icon">🏺</div>
+          <h3>Natural Palette</h3>
+          <p>Muted moss greens, warm terracotta, and sandy stone colors replace harsh digital blues and pure whites.</p>
+        </div>
+        <div class="f-card fc-3">
+          <div class="fc-icon">🍃</div>
+          <h3>Soft Motion</h3>
+          <p>Transitions are slow and graceful, utilizing 600ms bezier curves that feel like leaves drifting on a gentle breeze.</p>
         </div>
       </div>
-    </main>
-  </div>
+    </section>
+
+    <div class="stats-section container">
+      <div class="stats-grid">
+        <div class="stat-panel sp-1">
+          <div class="stat-val">24px</div>
+          <div class="stat-label">Card Radius</div>
+        </div>
+        <div class="stat-panel sp-2">
+          <div class="stat-val">4</div>
+          <div class="stat-label">Soft Shadows</div>
+        </div>
+        <div class="stat-panel sp-3">
+          <div class="stat-val">100%</div>
+          <div class="stat-label">Organic Feel</div>
+        </div>
+        <div class="stat-panel sp-4">
+          <div class="stat-val">600ms</div>
+          <div class="stat-label">Fluid Motion</div>
+        </div>
+      </div>
+    </div>
+
+    <section class="container split-section">
+      <div class="split-grid">
+        <div class="split-text">
+          <h2>Breathe life into layouts.</h2>
+          <p>The Organic / Natural system utilizes heavy blur to create ambient color washes in the background, while a subtle 3% paper grain texture binds the entire interface together, reducing the starkness of digital screens.</p>
+          <a href="#" class="btn btn-primary">View Components</a>
+        </div>
+        <div class="split-visual">
+          <div class="img-deco"></div>
+          <div class="img-mask">✦</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container process-section">
+      <h2>How it flows</h2>
+      <div class="process-steps">
+        <svg class="p-svg" preserveAspectRatio="none" viewBox="0 0 100 20"><path class="p-path" d="M0,10 Q25,20 50,10 T100,10" /></svg>
+        <div class="p-step">
+          <div class="p-node">1</div>
+          <h3>Plant</h3>
+          <p>Establish the earthy base colors.</p>
+        </div>
+        <div class="p-step">
+          <div class="p-node">2</div>
+          <h3>Shape</h3>
+          <p>Apply asymmetric organic radii.</p>
+        </div>
+        <div class="p-step">
+          <div class="p-node">3</div>
+          <h3>Grow</h3>
+          <p>Add graceful motion and shadows.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="container final-cta">
+      <div class="cta-panel">
+        <h2>Return to nature.</h2>
+        <p>Get the complete organic radius variables and moss-tinted shadow configurations.</p>
+        <a href="#" class="btn btn-primary" style="font-size: 18px; padding: 20px 48px;">Cultivate System</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>scaffold — prompt directory</span>
+    <span>Organic / Natural System</span>
+  </footer>
+
 </body>
 </html>

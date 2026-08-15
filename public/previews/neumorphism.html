@@ -4,87 +4,312 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Neumorphism (Soft UI) — Design System Preview</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&family=DM+Sans:wght@400;500;700&display=block');
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@500;700;800&display=block" rel="stylesheet">
 
+  <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
       --bg:     #E0E5EC;
       --fg:     #3D4852;
-      --muted:  #798796;
-      --accent: #4A90E2;
-      --shadow-outer: 9px 9px 16px rgba(163,177,198,0.6), -9px -9px 16px rgba(255,255,255,0.6);
-      --shadow-inner: inset 6px 6px 10px rgba(163,177,198,0.6), inset -6px -6px 10px rgba(255,255,255,0.6);
+      --muted:  #6B7280;
+      --accent: #6C63FF;
+      
+      --shadow-light: rgba(255, 255, 255, 0.6);
+      --shadow-dark:  rgba(163, 177, 198, 0.6);
+      
+      --ext-sm: 4px 4px 8px var(--shadow-dark), -4px -4px 8px var(--shadow-light);
+      --ext-md: 9px 9px 16px var(--shadow-dark), -9px -9px 16px var(--shadow-light);
+      --ext-lg: 14px 14px 24px var(--shadow-dark), -14px -14px 24px var(--shadow-light);
+      
+      --ins-sm: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
+      --ins-md: inset 8px 8px 16px var(--shadow-dark), inset -8px -8px 16px var(--shadow-light);
+      
+      --transition: 300ms cubic-bezier(0.4, 0.0, 0.2, 1);
     }
 
-    html, body { min-height:100%; background:var(--bg); color:var(--fg); font-family:'DM Sans',sans-serif; font-size:16px; line-height:1.6; }
+    @media (prefers-reduced-motion: reduce) {
+      * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
 
-    .container { max-width:1080px; margin:0 auto; padding:0 40px; }
+    html, body { 
+      min-height: 100%; background: var(--bg); color: var(--fg); 
+      font-family: 'DM Sans', sans-serif; font-size: 16px; line-height: 1.6; overflow-x: hidden;
+    }
 
-    /* NAV */
-    header { padding:32px 40px; display:flex; justify-content:space-between; align-items:center; }
-    .logo { font-family:'Plus Jakarta Sans',sans-serif; font-size:24px; font-weight:800; color:var(--fg); text-decoration:none; letter-spacing:-.02em; }
-    nav ul { list-style:none; display:flex; gap:32px; }
-    nav a { font-size:15px; font-weight:500; color:var(--muted); text-decoration:none; transition:color .2s; }
-    nav a:hover { color:var(--accent); }
+    /* AMBIENT BLOBS */
+    .ambient-shapes { position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; filter: blur(100px); opacity: 0.05; }
+    .as-1 { position: absolute; top: -10%; left: -10%; width: 50vw; height: 50vw; background: var(--accent); border-radius: 50%; }
+    .as-2 { position: absolute; bottom: -20%; right: -10%; width: 60vw; height: 60vw; background: #38B2AC; border-radius: 50%; }
+
+    /* TYPOGRAPHY */
+    h1, h2, h3, h4 { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; color: var(--fg); letter-spacing: -0.02em; line-height: 1.2; }
     
-    .btn-neu { background:var(--bg); color:var(--fg); font-family:'Plus Jakarta Sans',sans-serif; font-size:14px; font-weight:700; padding:12px 32px; border-radius:30px; text-decoration:none; box-shadow:var(--shadow-outer); border:none; transition:all .2s; }
-    .btn-neu:active { box-shadow:var(--shadow-inner); color:var(--accent); }
+    a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 10; }
+
+    /* BUTTONS */
+    .btn {
+      font-family: 'Plus Jakarta Sans', sans-serif; font-size: 15px; font-weight: 700;
+      padding: 16px 32px; border-radius: 9999px; border: none; cursor: pointer;
+      text-decoration: none; display: inline-flex; align-items: center; justify-content: center;
+      background: var(--bg); color: var(--fg); box-shadow: var(--ext-sm);
+      transition: all var(--transition);
+    }
+    .btn:hover { box-shadow: var(--ext-md); transform: translateY(-2px); }
+    .btn:active { box-shadow: var(--ins-sm); transform: translateY(0); }
+    
+    .btn-accent { color: var(--accent); }
+    .btn-solid { background: var(--accent); color: #fff; box-shadow: 4px 4px 8px rgba(108,99,255,0.4), -4px -4px 8px var(--shadow-light); }
+    .btn-solid:active { box-shadow: inset 4px 4px 8px rgba(0,0,0,0.2), inset -4px -4px 8px rgba(255,255,255,0.2); }
+
+    /* HEADER */
+    header {
+      padding: 24px 40px; display: flex; justify-content: space-between; align-items: center;
+      position: sticky; top: 0; z-index: 50; background: rgba(224, 229, 236, 0.8); backdrop-filter: blur(12px);
+    }
+    .logo { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 24px; font-weight: 800; color: var(--fg); text-decoration: none; }
+    
+    nav { display: flex; align-items: center; gap: 32px; }
+    nav ul { list-style: none; display: flex; gap: 24px; margin: 0; padding: 0; }
+    nav a { font-size: 15px; font-weight: 500; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+    nav a:hover { color: var(--accent); }
+
+    /* MOBILE MENU TOGGLE */
+    .menu-toggle { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: var(--bg); border: none; padding: 12px; border-radius: 12px; box-shadow: var(--ext-sm); }
+    .menu-toggle:active { box-shadow: var(--ins-sm); }
+    .menu-toggle span { width: 20px; height: 2px; background: var(--fg); transition: 0.3s; }
+    #mobile-menu-checkbox { display: none; }
+    
+    @media (max-width: 900px) {
+      .menu-toggle { display: flex; }
+      nav { 
+        position: absolute; top: 100%; left: 0; right: 0; 
+        background: var(--bg); flex-direction: column; 
+        padding: 40px; box-shadow: var(--ext-lg); border-radius: 0 0 32px 32px;
+        transform: translateY(-10px); opacity: 0; pointer-events: none; transition: all 0.3s;
+      }
+      nav ul { flex-direction: column; width: 100%; text-align: center; }
+      nav a { display: block; padding: 12px; }
+      .btn { width: 100%; margin-top: 24px; }
+      #mobile-menu-checkbox:checked ~ nav { transform: translateY(0); opacity: 1; pointer-events: auto; }
+    }
 
     /* HERO */
-    .hero { padding:100px 0 80px; text-align:center; }
-    .hero-icon { width:80px; height:80px; border-radius:50%; background:var(--bg); box-shadow:var(--shadow-outer); display:flex; align-items:center; justify-content:center; margin:0 auto 32px; color:var(--accent); font-size:32px; }
-    h1.hero-headline { font-family:'Plus Jakarta Sans',sans-serif; font-size:clamp(3rem,6vw,4.5rem); font-weight:800; line-height:1.1; letter-spacing:-.03em; margin-bottom:24px; color:var(--fg); }
-    .hero-sub { color:var(--muted); font-size:18px; max-width:600px; margin:0 auto 48px; }
+    .hero { padding: 100px 0 140px; text-align: center; }
+    .icon-well {
+      width: 80px; height: 80px; border-radius: 50%; background: var(--bg); box-shadow: var(--ins-md);
+      display: flex; align-items: center; justify-content: center; margin: 0 auto 40px;
+      font-size: 32px; color: var(--accent);
+    }
     
-    .btn-primary { display:inline-block; background:var(--bg); color:var(--accent); font-family:'Plus Jakarta Sans',sans-serif; font-size:16px; font-weight:700; padding:20px 48px; border-radius:40px; text-decoration:none; box-shadow:var(--shadow-outer); transition:all .2s; }
-    .btn-primary:active { box-shadow:var(--shadow-inner); transform:scale(0.98); }
+    .hero-headline { font-size: clamp(3rem, 7vw, 5rem); margin-bottom: 24px; }
+    .hero-body { font-size: 18px; color: var(--muted); max-width: 600px; margin: 0 auto 48px; }
+    .hero-ctas { display: flex; gap: 24px; justify-content: center; flex-wrap: wrap; }
 
-    /* CARDS */
-    .cards { display:grid; grid-template-columns:repeat(3,1fr); gap:40px; padding:0 32px 100px; }
-    .card { background:var(--bg); border-radius:24px; padding:40px 32px; text-align:center; box-shadow:var(--shadow-outer); }
-    .card-img { width:100%; height:120px; border-radius:16px; background:var(--bg); box-shadow:var(--shadow-inner); margin-bottom:24px; }
-    .card h3 { font-family:'Plus Jakarta Sans',sans-serif; font-size:20px; font-weight:700; margin-bottom:12px; color:var(--fg); }
-    .card p { color:var(--muted); font-size:15px; }
+    /* FEATURES */
+    .features-section { padding: 40px 0 120px; }
+    .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; }
+    .f-card {
+      background: var(--bg); border-radius: 32px; padding: 48px 32px;
+      box-shadow: var(--ext-md); transition: all var(--transition);
+      display: flex; flex-direction: column; align-items: center; text-align: center;
+    }
+    .f-card:hover { transform: translateY(-4px); box-shadow: var(--ext-lg); }
+    
+    .fc-well {
+      width: 64px; height: 64px; border-radius: 20px; background: var(--bg); box-shadow: var(--ins-sm);
+      display: flex; align-items: center; justify-content: center; margin-bottom: 32px;
+      font-size: 24px; color: var(--fg);
+    }
+    
+    .f-card h3 { font-size: 22px; margin-bottom: 16px; }
+    .f-card p { font-size: 15px; color: var(--muted); }
 
+    /* STATS */
+    .stats-section { padding: 0 0 120px; }
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; }
+    .stat-panel {
+      background: var(--bg); border-radius: 24px; padding: 32px 24px; text-align: center;
+      box-shadow: var(--ext-sm);
+    }
+    .stat-val { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 36px; font-weight: 800; color: var(--accent); margin-bottom: 8px; }
+    .stat-label { font-size: 14px; color: var(--muted); font-weight: 500; }
+
+    /* DEMO SECTION */
+    .demo-section { padding: 80px 0 140px; }
+    .demo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+    .demo-text h2 { font-size: 36px; margin-bottom: 24px; }
+    .demo-text p { font-size: 16px; color: var(--muted); margin-bottom: 40px; }
+    
+    .demo-visual {
+      background: var(--bg); border-radius: 40px; padding: 48px; box-shadow: var(--ext-lg);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .nested-well {
+      width: 100%; max-width: 300px; aspect-ratio: 1; border-radius: 32px; background: var(--bg); box-shadow: var(--ins-md);
+      display: flex; align-items: center; justify-content: center; padding: 40px;
+    }
+    .nested-ext {
+      width: 100%; height: 100%; border-radius: 50%; background: var(--bg); box-shadow: var(--ext-sm);
+      animation: breathe 4s infinite alternate ease-in-out;
+    }
+    @keyframes breathe { 0% { transform: scale(0.9); box-shadow: var(--ext-sm); } 100% { transform: scale(1.1); box-shadow: var(--ext-md); } }
+
+    .input-wrapper { margin-bottom: 32px; width: 100%; }
+    .input-field {
+      width: 100%; background: var(--bg); border: none; padding: 20px 24px; border-radius: 20px;
+      box-shadow: var(--ins-sm); font-family: 'DM Sans', sans-serif; font-size: 16px; color: var(--fg);
+      transition: all var(--transition);
+    }
+    .input-field:focus { outline: none; box-shadow: var(--ins-md), 0 0 0 2px var(--accent); }
+    .input-field::placeholder { color: var(--muted); }
+
+    /* FINAL CTA */
+    .final-cta { padding: 0 0 140px; }
+    .cta-panel {
+      background: var(--bg); border-radius: 40px; padding: 100px 40px; text-align: center;
+      box-shadow: var(--ext-lg);
+    }
+    .cta-panel h2 { font-size: 40px; color: var(--accent); margin-bottom: 24px; }
+    .cta-panel p { font-size: 18px; color: var(--muted); margin-bottom: 48px; max-width: 500px; margin-inline: auto; }
+
+    /* FOOTER */
+    footer { padding: 40px; display: flex; justify-content: space-between; align-items: center; }
+    footer span { font-size: 14px; color: var(--muted); font-weight: 500; }
+
+    /* RESPONSIVE */
+    @media (max-width: 1000px) {
+      .features-grid { grid-template-columns: 1fr; gap: 48px; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .demo-grid { grid-template-columns: 1fr; gap: 64px; text-align: center; }
+    }
+    @media (max-width: 600px) {
+      .stats-grid { grid-template-columns: 1fr; }
+      .hero-ctas { flex-direction: column; }
+      .btn { width: 100%; }
+      .cta-panel { padding: 60px 24px; border-radius: 32px; }
+      footer { flex-direction: column; gap: 16px; text-align: center; }
+    }
   </style>
 </head>
 <body>
+  
+  <div class="ambient-shapes" aria-hidden="true">
+    <div class="as-1"></div>
+    <div class="as-2"></div>
+  </div>
+
   <header>
-    <a href="#" class="logo">scaffold</a>
-    <nav><ul>
-      <li><a href="#">Elements</a></li>
-      <li><a href="#">Typography</a></li>
-    </ul></nav>
-    <a href="#" class="btn-neu">Copy System</a>
+    <a href="#" class="logo">Soft UI.</a>
+    
+    <input type="checkbox" id="mobile-menu-checkbox">
+    <label for="mobile-menu-checkbox" class="menu-toggle" aria-label="Toggle Navigation">
+      <span></span><span></span><span></span>
+    </label>
+
+    <nav>
+      <ul>
+        <li><a href="#">Design</a></li>
+        <li><a href="#">Components</a></li>
+        <li><a href="#">Shadows</a></li>
+      </ul>
+      <a href="#" class="btn btn-accent" style="padding: 10px 24px; font-size: 14px;">Get Code</a>
+    </nav>
   </header>
 
-  <main class="container">
-    <section class="hero">
-      <div class="hero-icon">☁️</div>
-      <h1 class="hero-headline">Soft UI.<br>Perfected.</h1>
-      <p class="hero-sub">The illusion of physical depth through careful light and shadow. A single cool grey base where visual interest comes from shadow play, not color variety.</p>
-      <a href="#" class="btn-primary">Generate Prompt</a>
+  <main>
+    <section class="container hero">
+      <div class="icon-well">✦</div>
+      <h1 class="hero-headline">Soft UI. Perfected.</h1>
+      <p class="hero-body">
+        Experience a tactile, premium interface built on extruded surfaces and deep inset wells. The same-surface illusion creates an incredibly cohesive aesthetic.
+      </p>
+      <div class="hero-ctas">
+        <a href="#" class="btn btn-accent">Copy System</a>
+        <a href="#" class="btn">Read Guidelines</a>
+      </div>
     </section>
 
-    <div class="cards">
-      <div class="card">
-        <div class="card-img"></div>
-        <h3>Cool Clay Base</h3>
-        <p>Molded from a cool #E0E5EC grey surface that avoids looking muddy or dated.</p>
+    <section class="container features-section">
+      <div class="features-grid">
+        <div class="f-card">
+          <div class="fc-well">🎨</div>
+          <h3>Cool Clay Base</h3>
+          <p>Built on a specific cool grey (#E0E5EC) that perfectly balances light and dark shadows for the most realistic 3D extrusion effect.</p>
+        </div>
+        <div class="f-card">
+          <div class="fc-well">🌓</div>
+          <h3>Dual Shadows</h3>
+          <p>Every element uses opposing white and dark-grey shadows. When extruded, they pop out. When inset, they form deep, tactile wells.</p>
+        </div>
+        <div class="f-card">
+          <div class="fc-well">👆</div>
+          <h3>Inset Interactions</h3>
+          <p>Buttons don't just change color; they physically depress into the surface when clicked, providing incredibly satisfying physical feedback.</p>
+        </div>
       </div>
-      <div class="card">
-        <div class="card-img"></div>
-        <h3>Drop Shadow Play</h3>
-        <p>Light hits from the top-left (white shadow) and casts down to the bottom-right (dark shadow).</p>
-      </div>
-      <div class="card">
-        <div class="card-img"></div>
-        <h3>Inset Interactions</h3>
-        <p>Pressed states sink smoothly into the surface using CSS inset box-shadows.</p>
+    </section>
+
+    <div class="stats-section container">
+      <div class="stats-grid">
+        <div class="stat-panel">
+          <div class="stat-val">4</div>
+          <div class="stat-label">Shadow Layers</div>
+        </div>
+        <div class="stat-panel">
+          <div class="stat-val">32px</div>
+          <div class="stat-label">Corner Radius</div>
+        </div>
+        <div class="stat-panel">
+          <div class="stat-val">300ms</div>
+          <div class="stat-label">Fluid Motion</div>
+        </div>
+        <div class="stat-panel">
+          <div class="stat-val">100%</div>
+          <div class="stat-label">Tactile Feel</div>
+        </div>
       </div>
     </div>
+
+    <section class="container demo-section">
+      <div class="demo-grid">
+        <div class="demo-text">
+          <h2>Nested Depth</h2>
+          <p>The true power of Neumorphism lies in stacking extrusions and insets. An extruded card can hold an inset well, which in turn holds an extruded floating element.</p>
+          
+          <div class="input-wrapper">
+            <input type="text" class="input-field" placeholder="Try typing here...">
+          </div>
+          
+          <a href="#" class="btn btn-solid">Submit Form</a>
+        </div>
+        
+        <div class="demo-visual">
+          <div class="nested-well">
+            <div class="nested-ext"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container final-cta">
+      <div class="cta-panel">
+        <h2>Ready to build?</h2>
+        <p>Get the complete shadow variables, CSS classes, and component structures.</p>
+        <a href="#" class="btn btn-accent" style="font-size: 18px; padding: 20px 48px;">Deploy System</a>
+      </div>
+    </section>
   </main>
+
+  <footer>
+    <span>scaffold — prompt directory</span>
+    <span>Neumorphism System</span>
+  </footer>
+
 </body>
 </html>

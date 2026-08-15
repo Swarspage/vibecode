@@ -4,137 +4,611 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Academia / Classical — Design System Preview</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Crimson+Pro:wght@400;600&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=block');
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600;1,700&family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400&display=block" rel="stylesheet">
 
+  <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:       #1C1714;
-      --bg-alt:   #251E19;
-      --fg:       #E8DFD4;
-      --muted:    #3D332B;
-      --muted-fg: #9C8B7A;
-      --brass:    #C9A962;
-      --crimson:  #8B2635;
-      --border:   #4A3F35;
+      --bg:             #1C1714;
+      --bg-alt:         #251E19;
+      --fg:             #E8DFD4;
+      --muted:          #3D332B;
+      --muted-fg:       #9C8B7A;
+      --border:         #4A3F35;
+      --accent:         #C9A962;
+      --accent-sec:     #8B2635;
+      
+      --gradient-brass: linear-gradient(180deg, #D4B872 0%, #C9A962 50%, #B8953F 100%);
+      --engraved-shadow: 1px 1px 1px rgba(0,0,0,0.4), -1px -1px 1px rgba(255,255,255,0.1);
+      --transition-slow: 700ms ease-out;
+      --transition-med:  400ms ease-out;
     }
 
-    html, body { min-height:100%; background:var(--bg); color:var(--fg); font-family:'Source Serif 4','Georgia',serif; font-size:16px; line-height:1.7; -webkit-font-smoothing:antialiased; }
+    @media (prefers-reduced-motion: reduce) {
+      :root {
+        --transition-slow: 0ms;
+        --transition-med:  0ms;
+      }
+    }
 
-    .container { max-width:1200px; margin:0 auto; padding:0 48px; }
+    html, body { 
+      min-height: 100%; 
+      background: var(--bg); 
+      color: var(--fg); 
+      font-family: 'Crimson Pro', serif; 
+      font-size: 18px; 
+      line-height: 1.7; 
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
 
-    /* NAV */
-    header { border-bottom:1px solid var(--border); background:var(--bg); }
-    .nav-top { text-align:center; padding:8px; border-bottom:1px solid var(--border); }
-    .nav-top span { font-size:10px; letter-spacing:.35em; text-transform:uppercase; color:var(--muted-fg); font-family:'Source Serif 4',serif; }
-    .nav-main { display:flex; align-items:center; justify-content:space-between; padding:20px 48px; }
-    .logo { font-family:'EB Garamond','Georgia',serif; font-size:26px; font-weight:500; color:var(--brass); text-decoration:none; letter-spacing:.08em; font-style:italic; }
-    nav ul { list-style:none; display:flex; gap:32px; }
-    nav a { font-size:12px; letter-spacing:.2em; text-transform:uppercase; color:var(--muted-fg); text-decoration:none; transition:color .4s; font-family:'Source Serif 4',serif; }
-    nav a:hover { color:var(--brass); }
-    .btn-brass { border:1px solid var(--brass); color:var(--brass); font-family:'Source Serif 4',serif; font-size:11px; letter-spacing:.18em; text-transform:uppercase; padding:10px 24px; text-decoration:none; transition:background .4s, color .4s; }
-    .btn-brass:hover { background:var(--brass); color:var(--bg); }
+    /* OVERLAYS */
+    .texture-overlay {
+      position: fixed; inset: 0; z-index: 100; pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+      opacity: 0.03;
+      mix-blend-mode: overlay;
+    }
+    .vignette-overlay {
+      position: fixed; inset: 0; z-index: 99; pointer-events: none;
+      background: radial-gradient(ellipse at center, transparent 0%, transparent 55%, rgba(28,23,20,0.45) 100%);
+    }
 
-    /* ORNAMENT LINE */
-    .ornament-line { text-align:center; padding:12px 0; color:var(--border); font-size:18px; letter-spacing:.8em; }
+    /* TYPOGRAPHY HELPERS */
+    h1, h2, h3, h4 { font-family: 'Cormorant Garamond', serif; font-weight: 500; color: var(--fg); }
+    .font-cinzel { font-family: 'Cinzel', serif; }
+    .brass-text { color: var(--accent); }
+    .italic { font-style: italic; }
+    
+    a:focus-visible, button:focus-visible, input:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 4px;
+    }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 10; }
+
+    /* ANNOUNCEMENT BAR */
+    .announcement {
+      background: var(--bg-alt);
+      border-bottom: 1px solid var(--border);
+      text-align: center;
+      padding: 8px 16px;
+      font-family: 'Cinzel', serif;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.35em;
+      color: var(--muted-fg);
+      position: relative;
+    }
+
+    /* HEADER */
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 24px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      z-index: 50;
+      background: rgba(28, 23, 20, 0.9);
+      backdrop-filter: blur(8px);
+    }
+    .logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--accent);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+    }
+    nav { display: flex; align-items: center; gap: 40px; }
+    nav ul { list-style: none; display: flex; gap: 32px; }
+    nav a {
+      font-family: 'Cinzel', serif;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--muted-fg);
+      text-decoration: none;
+      transition: color var(--transition-med);
+    }
+    nav a:hover { color: var(--accent); }
+    
+    .btn-brass-outline {
+      border: 1px solid var(--accent);
+      background: transparent;
+      color: var(--accent);
+      font-family: 'Cinzel', serif;
+      font-size: 12px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      padding: 12px 24px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all var(--transition-med);
+    }
+    .btn-brass-outline:hover {
+      background: var(--accent);
+      color: var(--bg);
+    }
+
+    /* MOBILE MENU TOGGLE */
+    .menu-toggle { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: transparent; border: none; padding: 8px; }
+    .menu-toggle span { width: 24px; height: 1px; background: var(--accent); transition: 0.3s; }
+    #mobile-menu-checkbox { display: none; }
+    
+    @media (max-width: 900px) {
+      .menu-toggle { display: flex; }
+      nav { 
+        position: absolute; top: 100%; left: 0; right: 0; 
+        background: var(--bg-alt); flex-direction: column; 
+        padding: 32px 40px; border-bottom: 1px solid var(--border);
+        transform: translateY(-10px); opacity: 0; pointer-events: none;
+        transition: all 0.3s ease;
+      }
+      nav ul { flex-direction: column; text-align: center; gap: 24px; width: 100%; }
+      nav a { font-size: 16px; display: block; }
+      .btn-brass-outline { width: 100%; text-align: center; margin-top: 16px; }
+      #mobile-menu-checkbox:checked ~ nav { transform: translateY(0); opacity: 1; pointer-events: auto; }
+      #mobile-menu-checkbox:checked ~ .menu-toggle span:nth-child(1) { transform: rotate(45deg) translate(4px, 4px); }
+      #mobile-menu-checkbox:checked ~ .menu-toggle span:nth-child(2) { opacity: 0; }
+      #mobile-menu-checkbox:checked ~ .menu-toggle span:nth-child(3) { transform: rotate(-45deg) translate(4px, -4px); }
+    }
+
+    /* CORNER FLOURISHES */
+    .has-flourish { position: relative; }
+    .has-flourish::before, .has-flourish::after {
+      content: ''; position: absolute; width: 40px; height: 40px;
+      border: 1px solid var(--accent); opacity: 0.5;
+      pointer-events: none;
+    }
+    .flourish-tl-br::before { top: -8px; left: -8px; border-right: none; border-bottom: none; }
+    .flourish-tl-br::after { bottom: -8px; right: -8px; border-left: none; border-top: none; }
+
+    /* BUTTONS */
+    .btn-brass-gradient {
+      display: inline-block;
+      background: var(--gradient-brass);
+      color: #111;
+      font-family: 'Cinzel', serif;
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      padding: 16px 36px;
+      text-decoration: none;
+      text-shadow: 0 1px 1px rgba(255,255,255,0.4);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+      transition: all var(--transition-med);
+      border: 1px solid #DFBE72;
+    }
+    .btn-brass-gradient:hover {
+      filter: brightness(1.1);
+      box-shadow: 0 8px 25px rgba(201,169,98,0.2);
+    }
+    .btn-crimson-outline {
+      display: inline-block;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      font-family: 'Cinzel', serif;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      padding: 16px 36px;
+      text-decoration: none;
+      transition: all var(--transition-med);
+    }
+    .btn-crimson-outline:hover {
+      border-color: var(--accent-sec);
+      color: var(--accent-sec);
+      background: rgba(139, 38, 53, 0.05);
+    }
+
+    /* DROP CAPS */
+    .drop-cap::first-letter {
+      float: left;
+      font-family: 'Cinzel', serif;
+      font-size: 4rem;
+      line-height: 0.8;
+      padding-top: 8px;
+      padding-right: 8px;
+      color: var(--accent);
+      text-shadow: var(--engraved-shadow);
+    }
+
+    /* DIVIDER */
+    .ornate-divider {
+      display: flex; align-items: center; justify-content: center;
+      margin: 80px 0; gap: 24px;
+    }
+    .ornate-divider::before, .ornate-divider::after {
+      content: ''; flex-grow: 1; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border), var(--accent), var(--border), transparent);
+      opacity: 0.6;
+    }
+    .ornate-divider span {
+      color: var(--accent); font-size: 18px; text-shadow: var(--engraved-shadow);
+    }
 
     /* HERO */
-    .hero { padding:80px 48px 64px; text-align:center; border-bottom:1px solid var(--border); position:relative; }
-    .hero::before, .hero::after { content:''; position:absolute; left:0; right:0; height:1px; background:var(--brass); opacity:.3; }
-    .hero::before { top:16px; }
-    .hero::after { bottom:16px; }
-    .hero-label { font-size:11px; letter-spacing:.35em; text-transform:uppercase; color:var(--brass); margin-bottom:32px; font-family:'Source Serif 4',serif; }
-    h1.hero-headline { font-family:'EB Garamond','Georgia',serif; font-size:clamp(3rem,6vw,6.5rem); font-weight:500; line-height:.95; letter-spacing:-.01em; color:var(--fg); margin-bottom:24px; }
-    h1.hero-headline em { font-style:italic; color:var(--brass); }
-    .drop-cap { font-family:'EB Garamond',serif; font-size:5rem; font-weight:500; float:left; line-height:.75; margin-right:8px; margin-top:8px; color:var(--brass); }
-    .hero-body { font-size:17px; color:var(--muted-fg); max-width:560px; margin:0 auto 48px; line-height:1.8; text-align:justify; }
-    .hero-ctas { display:flex; gap:24px; justify-content:center; }
-    .btn-primary-ac { background:var(--brass); color:var(--bg); font-family:'Source Serif 4',serif; font-size:11px; letter-spacing:.2em; text-transform:uppercase; padding:14px 36px; text-decoration:none; transition:opacity .4s; }
-    .btn-primary-ac:hover { opacity:.85; }
-    .btn-ghost-ac { color:var(--muted-fg); font-family:'Source Serif 4',serif; font-size:11px; letter-spacing:.2em; text-transform:uppercase; padding:14px 36px; text-decoration:none; border:1px solid var(--border); transition:border-color .4s, color .4s; }
-    .btn-ghost-ac:hover { border-color:var(--brass); color:var(--brass); }
+    .hero {
+      padding: 100px 0 40px;
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 64px;
+      align-items: center;
+    }
+    .hero-label {
+      font-family: 'Cinzel', serif;
+      font-size: 12px;
+      letter-spacing: 0.2em;
+      color: var(--muted-fg);
+      text-transform: uppercase;
+      margin-bottom: 24px;
+      display: block;
+    }
+    .hero-headline {
+      font-size: clamp(3rem, 5vw, 4.5rem);
+      line-height: 1.05;
+      margin-bottom: 32px;
+      letter-spacing: -0.01em;
+    }
+    .hero-body {
+      color: var(--muted-fg);
+      font-size: 18px;
+      margin-bottom: 48px;
+      text-align: justify;
+      max-width: 90%;
+    }
+    .hero-ctas { display: flex; gap: 24px; flex-wrap: wrap; }
+    
+    .hero-image-wrap {
+      position: relative;
+      padding: 16px;
+      border: 1px solid var(--border);
+      border-radius: 40% 40% 0 0 / 20% 20% 0 0;
+    }
+    .hero-image {
+      width: 100%;
+      aspect-ratio: 3/4;
+      border-radius: 40% 40% 0 0 / 20% 20% 0 0;
+      /* CSS Gradient Placeholder mimicking a classical painting or library */
+      background: linear-gradient(135deg, #32261E 0%, #1A120D 100%), 
+                  repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(0,0,0,0.1) 10px, rgba(0,0,0,0.1) 20px);
+      /* Add an SVG architectural motif as background */
+      background-image: 
+        url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50 10 C30 10 10 30 10 50 L10 90 L90 90 L90 50 C90 30 70 10 50 10 Z' fill='none' stroke='%23C9A962' stroke-width='1' opacity='0.2'/%3E%3Ccircle cx='50' cy='50' r='10' fill='none' stroke='%23C9A962' stroke-width='1' opacity='0.2'/%3E%3C/svg%3E"),
+        linear-gradient(135deg, #4A3525 0%, #17110C 100%);
+      background-position: center 20%, center;
+      background-size: 200px 200px, cover;
+      background-blend-mode: overlay, normal;
+      
+      /* Filter Transition */
+      filter: sepia(0.6) contrast(0.95) brightness(0.9);
+      transition: filter var(--transition-slow);
+    }
+    .hero-image-wrap:hover .hero-image {
+      filter: sepia(0) contrast(1) brightness(1);
+    }
 
-    /* FEATURES */
-    .features { display:grid; grid-template-columns:repeat(3,1fr); border:1px solid var(--border); margin:64px 0; }
-    .feat { padding:40px 32px; border-right:1px solid var(--border); }
-    .feat:last-child { border-right:none; }
-    .feat:hover { background:rgba(201,169,98,.04); transition:background .4s; }
-    .feat-roman { font-family:'EB Garamond',serif; font-size:2.5rem; color:var(--brass); line-height:1; margin-bottom:16px; font-style:italic; }
-    .feat h3 { font-family:'EB Garamond',serif; font-size:20px; font-weight:500; color:var(--fg); margin-bottom:10px; line-height:1.2; }
-    .feat p { font-size:14px; color:var(--muted-fg); line-height:1.75; }
+    /* SECTION: FEATURES */
+    .section-label {
+      text-align: center;
+      font-family: 'Cinzel', serif;
+      font-size: 13px;
+      letter-spacing: 0.2em;
+      color: var(--muted-fg);
+      text-transform: uppercase;
+      margin-bottom: 64px;
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 32px;
+    }
+    .feature-card {
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      padding: 48px 40px;
+      position: relative;
+      transition: all var(--transition-med);
+    }
+    .feature-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-4px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.5), 0 0 40px rgba(201,169,98,0.05);
+    }
+    .roman-numeral {
+      font-family: 'Cinzel', serif;
+      font-size: 24px;
+      color: var(--accent);
+      margin-bottom: 24px;
+      text-shadow: var(--engraved-shadow);
+    }
+    .feature-card h3 {
+      font-size: 24px;
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+    .feature-card p {
+      color: var(--muted-fg);
+      font-size: 16px;
+      line-height: 1.6;
+    }
 
-    /* QUOTE */
-    .quote-section { background:var(--bg-alt); border-top:1px solid var(--border); border-bottom:1px solid var(--border); padding:64px 48px; margin-bottom:64px; text-align:center; }
-    .quote-mark { font-family:'EB Garamond',serif; font-size:8rem; line-height:.6; color:var(--crimson); opacity:.6; display:block; margin-bottom:0; }
-    .quote-text { font-family:'EB Garamond',serif; font-size:clamp(1.5rem,3vw,2.25rem); font-style:italic; color:var(--fg); max-width:680px; margin:0 auto 16px; line-height:1.4; }
-    .quote-attr { font-size:12px; letter-spacing:.25em; text-transform:uppercase; color:var(--muted-fg); }
+    /* SECTION: STATS STRIP */
+    .stats-strip {
+      background: var(--bg-alt);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      margin: 100px 0;
+      padding: 64px 0;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+    }
+    .stat-item {
+      text-align: center;
+      border-right: 1px solid var(--border);
+      padding: 0 24px;
+    }
+    .stat-item:last-child { border-right: none; }
+    .stat-val {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      color: var(--accent);
+      margin-bottom: 8px;
+      text-shadow: var(--engraved-shadow);
+    }
+    .stat-label {
+      font-family: 'Cinzel', serif;
+      font-size: 11px;
+      color: var(--muted-fg);
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+    }
 
-    /* CTA */
-    .cta { background:var(--bg-alt); border:1px solid var(--border); padding:64px; margin-bottom:64px; text-align:center; }
-    .cta h2 { font-family:'EB Garamond',serif; font-size:clamp(2rem,4vw,3.5rem); font-weight:500; color:var(--fg); margin-bottom:12px; }
-    .cta h2 em { font-style:italic; color:var(--brass); }
-    .cta p { color:var(--muted-fg); font-size:15px; margin-bottom:32px; max-width:440px; margin-left:auto; margin-right:auto; line-height:1.8; }
+    /* SECTION: PROCLAMATION */
+    .proclamation {
+      max-width: 800px;
+      margin: 0 auto 100px;
+      text-align: center;
+      padding: 64px;
+      border: 1px solid var(--border);
+      background: rgba(37, 30, 25, 0.4);
+    }
+    .proclamation h2 {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      margin-bottom: 40px;
+      letter-spacing: -0.01em;
+    }
+    .proclamation p {
+      color: var(--muted-fg);
+      font-size: 19px;
+      line-height: 1.8;
+      text-align: justify;
+      margin-bottom: 24px;
+    }
+    .proclamation p:last-child { margin-bottom: 0; }
 
-    footer { border-top:1px solid var(--border); padding:24px 48px; display:flex; justify-content:space-between; }
-    footer span { font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:var(--muted-fg); }
+    /* WAX SEAL TIER */
+    .certificate-card {
+      max-width: 700px;
+      margin: 0 auto 100px;
+      border: 3px double var(--border);
+      padding: 64px 48px;
+      background: var(--bg-alt);
+      position: relative;
+      text-align: center;
+    }
+    .wax-seal {
+      position: absolute;
+      top: -30px;
+      right: -30px;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #a73042, #8B2635 60%, #5a1721);
+      box-shadow: 2px 4px 10px rgba(0,0,0,0.6), inset 0 0 10px rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      color: rgba(255,255,255,0.7);
+      border: 2px solid #5a1721;
+      transform: rotate(15deg);
+    }
+    /* Star inside wax seal */
+    .wax-seal::after {
+      content: '★';
+      font-size: 28px;
+      text-shadow: inset 1px 1px 2px rgba(0,0,0,0.5);
+      color: rgba(255,255,255,0.6);
+    }
+    .certificate-card h2 {
+      font-size: 2.5rem;
+      margin-bottom: 16px;
+      color: var(--accent);
+    }
+    .certificate-card p {
+      font-size: 18px;
+      color: var(--muted-fg);
+      margin-bottom: 40px;
+    }
+
+    /* FOOTER */
+    footer {
+      background: var(--bg-alt);
+      border-top: 1px solid var(--border);
+      padding: 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      z-index: 10;
+    }
+    footer span {
+      font-family: 'Cinzel', serif;
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted-fg);
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; padding-top: 40px; gap: 40px; }
+      .hero-body { max-width: 100%; text-align: left; }
+      .hero-image-wrap { max-width: 400px; margin: 0 auto; }
+      .stats-grid { grid-template-columns: 1fr 1fr; gap: 32px 0; }
+      .stat-item:nth-child(2) { border-right: none; }
+      .stat-item:nth-child(3) { border-right: 1px solid var(--border); }
+      .proclamation { padding: 40px 24px; text-align: left; }
+      .proclamation p { text-align: left; }
+      .certificate-card { padding: 40px 24px; margin: 0 20px 80px; }
+      .wax-seal { top: -20px; right: -10px; width: 60px; height: 60px; font-size: 18px; }
+      .wax-seal::after { font-size: 20px; }
+      footer { flex-direction: column; gap: 16px; text-align: center; }
+    }
+    @media (max-width: 600px) {
+      .stats-grid { grid-template-columns: 1fr; gap: 32px 0; }
+      .stat-item { border-right: none !important; border-bottom: 1px solid var(--border); padding-bottom: 32px; }
+      .stat-item:last-child { border-bottom: none; padding-bottom: 0; }
+      .hero-ctas { flex-direction: column; }
+      .btn-brass-gradient, .btn-crimson-outline { width: 100%; text-align: center; }
+    }
   </style>
 </head>
 <body>
+  
+  <div class="texture-overlay" aria-hidden="true"></div>
+  <div class="vignette-overlay" aria-hidden="true"></div>
 
-<header>
-  <div class="nav-top"><span>The Scaffold Collection &nbsp;·&nbsp; Premium Design Prompts &nbsp;·&nbsp; Est. MMXXV</span></div>
-  <div class="nav-main">
+  <div class="announcement">
+    The Scaffold Collection · Premium Design Prompts · Est. MMXXV
+  </div>
+
+  <header>
     <a href="#" class="logo">Scaffold</a>
-    <nav><ul>
-      <li><a href="#">Collection</a></li>
-      <li><a href="#">Archive</a></li>
-      <li><a href="#">About</a></li>
-    </ul></nav>
-    <a href="#" class="btn-brass">Acquire Prompt</a>
-  </div>
-</header>
+    
+    <input type="checkbox" id="mobile-menu-checkbox">
+    <label for="mobile-menu-checkbox" class="menu-toggle" aria-label="Toggle Navigation">
+      <span></span><span></span><span></span>
+    </label>
 
-<div class="ornament-line" aria-hidden="true">— ✦ —</div>
+    <nav>
+      <ul>
+        <li><a href="#">Collection</a></li>
+        <li><a href="#">Archive</a></li>
+        <li><a href="#">About</a></li>
+      </ul>
+      <a href="#" class="btn-brass-outline">Acquire Prompt</a>
+    </nav>
+  </header>
 
-<section class="hero">
-  <p class="hero-label">Academia / Classical</p>
-  <h1 class="hero-headline">
-    Scholarly <em>Gravitas</em><br>Meets Timeless<br>Elegance.
-  </h1>
-  <p class="hero-body"><span class="drop-cap">D</span>eep mahogany surfaces, antique parchment text, polished brass accents. A design system channeling the quiet authority of a well-stocked library at midnight — where knowledge breathes through every margin.</p>
-  <div class="hero-ctas">
-    <a href="#" class="btn-primary-ac">Copy This System</a>
-    <a href="#" class="btn-ghost-ac">View the Archive →</a>
-  </div>
-</section>
+  <main>
+    <section class="container hero">
+      <div class="hero-content has-flourish flourish-tl-br">
+        <span class="hero-label">Volume I — Academia / Classical</span>
+        <h1 class="hero-headline">Scholarly Gravitas<br>Meets <span class="italic brass-text">Timeless</span> Elegance.</h1>
+        <p class="hero-body drop-cap">
+          Deep mahogany surfaces, antique parchment text, and polished brass accents. A design system channeling the quiet authority of a well-stocked university library at midnight—where knowledge breathes through every margin.
+        </p>
+        <div class="hero-ctas">
+          <a href="#" class="btn-brass-gradient">Acquire System</a>
+          <a href="#" class="btn-crimson-outline">View Codex</a>
+        </div>
+      </div>
+      
+      <div class="hero-image-wrap has-flourish flourish-tl-br">
+        <div class="hero-image" aria-label="Classical Library Arch"></div>
+      </div>
+    </section>
 
-<div class="container">
-  <div class="features">
-    <div class="feat"><div class="feat-roman">I.</div><h3>Library at Night Palette</h3><p>Deep mahogany foundation. Antique parchment text. Polished brass accents. Library crimson for emphasis.</p></div>
-    <div class="feat"><div class="feat-roman">II.</div><h3>Garamond & Baskerville</h3><p>EB Garamond for headlines. Source Serif 4 for body. Drop caps on lead paragraphs. Italic emphasis in gold.</p></div>
-    <div class="feat"><div class="feat-roman">III.</div><h3>Deliberate Pacing</h3><p>400–600ms transitions. Brass borders illuminate on hover. Nothing rushed. Knowledge is patient.</p></div>
-  </div>
-</div>
+    <div class="container">
+      <div class="ornate-divider" aria-hidden="true">
+        <span>✦</span>
+      </div>
+    </div>
 
-<div class="quote-section">
-  <span class="quote-mark">&ldquo;</span>
-  <p class="quote-text">A design system is not a product to be shipped — it is a library to be maintained, expanded, and passed on.</p>
-  <p class="quote-attr">— The Scaffold Codex</p>
-</div>
+    <section class="container">
+      <h2 class="section-label">Volume II · The Principles</h2>
+      <div class="features-grid">
+        <div class="feature-card has-flourish flourish-tl-br">
+          <div class="roman-numeral">I.</div>
+          <h3>Library at Night Palette</h3>
+          <p>Deep mahogany foundation. Antique parchment text. Polished brass accents. Library crimson for emphasis and interactive triggers.</p>
+        </div>
+        <div class="feature-card has-flourish flourish-tl-br">
+          <div class="roman-numeral">II.</div>
+          <h3>Typographic Tradition</h3>
+          <p>Cormorant Garamond for majestic headings. Crimson Pro for legible body copy. Cinzel for structural labels and Roman numerals.</p>
+        </div>
+        <div class="feature-card has-flourish flourish-tl-br">
+          <div class="roman-numeral">III.</div>
+          <h3>Measured Ornamentation</h3>
+          <p>Corner flourishes, centered brass glyphs, and drop caps. Decorative elements are applied with strict editorial restraint.</p>
+        </div>
+      </div>
+    </section>
 
-<div class="container">
-  <div class="cta">
-    <h2>The <em>Collection</em> awaits.</h2>
-    <p>Copy the prompt and let your AI IDE generate a complete Academia / Classical implementation — dark wood, brass, parchment, and scholarly precision.</p>
-    <a href="#" class="btn-primary-ac">Copy Prompt</a>
-  </div>
-</div>
+    <section class="stats-strip">
+      <div class="container stats-grid">
+        <div class="stat-item">
+          <div class="stat-val">1846</div>
+          <div class="stat-label">Est. Aesthetic</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-val">12</div>
+          <div class="stat-label">Design Tokens</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-val">07</div>
+          <div class="stat-label">Signature Elements</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-val">3</div>
+          <div class="stat-label">Font Families</div>
+        </div>
+      </div>
+    </section>
 
-<footer>
-  <span>scaffold — prompt directory</span>
-  <span>Academia / Classical System</span>
-</footer>
+    <section class="container proclamation has-flourish flourish-tl-br">
+      <span class="hero-label">Volume IV · Proclamation</span>
+      <h2 class="brass-text italic">A return to typographic dignity.</h2>
+      <p class="drop-cap">
+        Modern interfaces have largely abandoned the rich, tactile warmth of classical typesetting in favor of sterile minimalism. This design system is a deliberate rejection of that trend, offering a sanctuary for long-form reading and scholarly focus.
+      </p>
+      <p>
+        By combining the high-contrast elegance of Cormorant Garamond with the sturdiness of Crimson Pro, we achieve a hierarchy that guides the eye effortlessly. The palette draws directly from the physical world—aged oak, polished brass, and faded ink on parchment.
+      </p>
+      <p>
+        Implement this system when your content demands respect, authority, and undivided attention from the reader.
+      </p>
+    </section>
+
+    <section class="container">
+      <div class="certificate-card has-flourish flourish-tl-br">
+        <div class="wax-seal" aria-label="Official Seal"></div>
+        <span class="hero-label" style="margin-bottom: 16px;">Volume V · The Artifact</span>
+        <h2 class="font-cinzel">The Master Prompt</h2>
+        <p>Acquire the complete, unredacted design system prompt to instantly deploy this aesthetic via your preferred AI IDE.</p>
+        <a href="#" class="btn-brass-gradient">Copy to Clipboard</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>scaffold — prompt directory</span>
+    <span>Academia / Classical System</span>
+  </footer>
 
 </body>
 </html>

@@ -4,140 +4,390 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Material You — Design System Preview</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@400;500;700&family=Roboto+Mono:wght@400;500&display=block');
-    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=block');
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=block" rel="stylesheet">
 
+  <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:         #FFFBFE;
-      --fg:         #1C1B1F;
-      --primary:    #6750A4;
-      --on-primary: #FFFFFF;
-      --secondary:  #625B71;
-      --tertiary:   #7D5260;
-      --surface:    #F3EDF7;
-      --muted:      #E7E0EC;
-      --muted-fg:   #49454F;
-      --border:     #CAC4D0;
+      /* Material 3 Tonal Palette */
+      --bg:             #FFFBFE;
+      --surface:        #F3EDF7; /* Surface Container */
+      --surface-low:    #E7E0EC; /* Surface Container Low */
+      --surface-high:   #ECE6F0; /* Surface Container High */
+      --on-surface:     #1C1B1F;
+      --outline:        #79747E;
+      --primary:        #6750A4;
+      --on-primary:     #FFFFFF;
+      --secondary-cont: #E8DEF8;
+      --on-sec-cont:    #1D192B;
+      --tertiary:       #7D5260;
+      --tertiary-cont:  #FFD8E4;
+      --on-tertiary-cont:#31111D;
+      
+      /* State Layers */
+      --hover: rgba(28, 27, 31, 0.08);
+      --hover-primary: rgba(103, 80, 164, 0.08);
+      
+      --elevation-1: 0px 1px 2px 0px rgba(0,0,0,0.3), 0px 1px 3px 1px rgba(0,0,0,0.15);
+      --elevation-2: 0px 1px 2px 0px rgba(0,0,0,0.3), 0px 2px 6px 2px rgba(0,0,0,0.15);
+      --elevation-3: 0px 1px 3px 0px rgba(0,0,0,0.3), 0px 4px 8px 3px rgba(0,0,0,0.15);
+      
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+      --radius-2xl: 32px;
+      --radius-3xl: 48px;
+      --radius-full: 9999px;
+      
+      --md-easing: cubic-bezier(0.2, 0, 0, 1);
+      --transition: 200ms var(--md-easing);
     }
 
-    html, body { min-height:100%; background:var(--bg); color:var(--fg); font-family:'Nunito','Roboto',system-ui,sans-serif; font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased; }
+    @media (prefers-reduced-motion: reduce) {
+      * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
 
-    .container { max-width:1152px; margin:0 auto; padding:0 32px; }
+    html, body { 
+      min-height: 100%; 
+      background: var(--bg); 
+      color: var(--on-surface); 
+      font-family: 'Roboto', sans-serif; 
+      font-size: 16px; 
+      line-height: 1.5; 
+      overflow-x: hidden;
+    }
 
-    /* NAV */
-    header { background:var(--bg); border-bottom:1px solid var(--muted); padding:0 32px; }
-    .nav-inner { display:flex; align-items:center; justify-content:space-between; min-height:64px; }
-    .logo { font-size:20px; font-weight:800; color:var(--primary); text-decoration:none; letter-spacing:-.02em; }
-    nav ul { list-style:none; display:flex; gap:4px; }
-    nav a { display:flex; align-items:center; gap:6px; padding:8px 16px; border-radius:999px; font-size:14px; font-weight:600; color:var(--muted-fg); text-decoration:none; transition:background .2s; }
-    nav a:hover { background:var(--surface); color:var(--primary); }
-    .btn-filled { background:var(--primary); color:var(--on-primary); font-size:14px; font-weight:700; padding:10px 24px; border-radius:999px; text-decoration:none; transition:box-shadow .2s; box-shadow:0 1px 2px rgba(103,80,164,.3); }
-    .btn-filled:hover { box-shadow:0 4px 8px rgba(103,80,164,.4); }
+    /* ORGANIC BLUR SHAPES */
+    .blur-bg {
+      position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden;
+    }
+    .blur-shape {
+      position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0.15;
+    }
+    .blur-1 { width: 50vw; height: 50vw; background: var(--primary); top: -20%; right: -10%; }
+    .blur-2 { width: 60vw; height: 60vw; background: var(--secondary-cont); bottom: -30%; left: -20%; }
+    .blur-3 { width: 40vw; height: 40vw; background: var(--tertiary); top: 40%; left: 60%; opacity: 0.1; }
+
+    /* TYPOGRAPHY */
+    h1, h2, h3, h4, h5 { font-weight: 700; color: var(--on-surface); letter-spacing: -0.02em; }
+    
+    a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 32px; position: relative; z-index: 10; }
+
+    /* BUTTONS */
+    .btn {
+      font-family: 'Roboto', sans-serif; font-size: 14px; font-weight: 500;
+      padding: 10px 24px; border-radius: var(--radius-full); border: none; cursor: pointer;
+      text-decoration: none; display: inline-flex; align-items: center; justify-content: center;
+      transition: all var(--transition); letter-spacing: 0.01em; height: 40px; position: relative; overflow: hidden;
+    }
+    .btn::before { content: ''; position: absolute; inset: 0; background: currentColor; opacity: 0; transition: opacity var(--transition); }
+    .btn:hover::before { opacity: 0.08; }
+    .btn:focus-visible::before { opacity: 0.12; }
+    .btn:active { transform: scale(0.95); }
+    .btn:active::before { opacity: 0.12; }
+    
+    .btn-filled { background: var(--primary); color: var(--on-primary); }
+    .btn-filled:hover { box-shadow: var(--elevation-1); }
+    
+    .btn-tonal { background: var(--secondary-cont); color: var(--on-sec-cont); }
+    
+    .btn-text { background: transparent; color: var(--primary); }
+
+    /* FABs */
+    .fab {
+      display: inline-flex; align-items: center; justify-content: center;
+      background: var(--primary); color: var(--on-primary); border: none; cursor: pointer;
+      box-shadow: var(--elevation-3); transition: all var(--transition); position: relative; overflow: hidden;
+    }
+    .fab::before { content: ''; position: absolute; inset: 0; background: currentColor; opacity: 0; transition: opacity var(--transition); }
+    .fab:hover { box-shadow: 0px 4px 8px 3px rgba(0,0,0,0.15); transform: translateY(-2px); }
+    .fab:hover::before { opacity: 0.08; }
+    .fab:active { transform: scale(0.95); }
+    
+    .fab-std { width: 56px; height: 56px; border-radius: 16px; }
+    .fab-mini { width: 40px; height: 40px; border-radius: 12px; background: var(--surface-high); color: var(--primary); box-shadow: var(--elevation-1); }
+
+    /* HEADER */
+    header {
+      background: transparent; padding: 16px 32px; display: flex; justify-content: space-between; align-items: center;
+      position: relative; z-index: 50; transition: background var(--transition), box-shadow var(--transition);
+    }
+    .header-scrolled { background: var(--bg); box-shadow: var(--elevation-1); }
+    
+    .logo { font-size: 20px; font-weight: 700; color: var(--primary); text-decoration: none; letter-spacing: -0.02em; }
+    
+    nav { display: flex; align-items: center; gap: 16px; }
+    nav ul { list-style: none; display: flex; gap: 8px; margin: 0; padding: 0; }
+    nav a {
+      font-size: 14px; font-weight: 500; color: var(--on-surface); text-decoration: none;
+      padding: 8px 16px; border-radius: var(--radius-full); transition: background var(--transition); position: relative;
+    }
+    nav a:hover { background: var(--hover); }
+
+    /* MOBILE MENU TOGGLE */
+    .menu-toggle { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: transparent; border: none; padding: 8px; border-radius: 50%; }
+    .menu-toggle:hover { background: var(--hover); }
+    .menu-toggle span { width: 24px; height: 2px; background: var(--on-surface); transition: 0.3s; }
+    #mobile-menu-checkbox { display: none; }
+    
+    @media (max-width: 800px) {
+      .menu-toggle { display: flex; }
+      nav { 
+        position: absolute; top: 100%; left: 0; right: 0; 
+        background: var(--bg); flex-direction: column; 
+        padding: 24px; box-shadow: var(--elevation-2); border-radius: 0 0 24px 24px;
+        transform: translateY(-10px); opacity: 0; pointer-events: none; transition: all 0.3s var(--md-easing);
+      }
+      nav ul { flex-direction: column; width: 100%; }
+      nav a { display: block; padding: 16px; }
+      .btn { width: 100%; margin-top: 16px; }
+      #mobile-menu-checkbox:checked ~ nav { transform: translateY(0); opacity: 1; pointer-events: auto; }
+    }
 
     /* HERO */
-    .hero { padding:80px 0 64px; }
-    .hero-chip { display:inline-flex; align-items:center; gap:8px; background:var(--surface); border-radius:999px; padding:6px 16px; margin-bottom:28px; }
-    .hero-chip span { font-size:12px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--primary); }
-    .hero-chip .dot { width:8px; height:8px; border-radius:50%; background:var(--tertiary); }
-    h1.hero-headline { font-size:clamp(3rem,6vw,5.5rem); font-weight:800; line-height:1.05; letter-spacing:-.03em; color:var(--fg); max-width:680px; margin-bottom:24px; }
-    h1.hero-headline .purple { color:var(--primary); }
-    .hero-body { font-size:17px; color:var(--muted-fg); max-width:520px; line-height:1.75; margin-bottom:40px; }
-    .hero-ctas { display:flex; gap:12px; flex-wrap:wrap; }
-    .btn-primary-m3 { background:var(--primary); color:#fff; font-size:14px; font-weight:700; padding:14px 28px; border-radius:999px; text-decoration:none; box-shadow:0 1px 2px rgba(103,80,164,.3); transition:box-shadow .2s, transform .15s; }
-    .btn-primary-m3:hover { box-shadow:0 4px 12px rgba(103,80,164,.4); transform:translateY(-1px); }
-    .btn-tonal { background:var(--surface); color:var(--primary); font-size:14px; font-weight:700; padding:14px 28px; border-radius:999px; text-decoration:none; transition:background .2s; }
-    .btn-tonal:hover { background:var(--muted); }
+    .hero { padding: 100px 0 120px; display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+    
+    .badge {
+      display: inline-flex; align-items: center; background: var(--secondary-cont); color: var(--on-sec-cont);
+      padding: 6px 16px; border-radius: var(--radius-full); font-size: 12px; font-weight: 500; margin-bottom: 24px;
+    }
+    
+    .hero-headline { font-size: clamp(3rem, 5vw, 4rem); line-height: 1.1; margin-bottom: 24px; color: var(--on-surface); }
+    .hero-headline span { color: var(--primary); }
+    .hero-body { font-size: 18px; color: #49454F; margin-bottom: 40px; max-width: 480px; }
+    .hero-ctas { display: flex; gap: 12px; flex-wrap: wrap; }
+    
+    .hero-graphic {
+      background: var(--secondary-cont); border-radius: var(--radius-3xl) var(--radius-sm) var(--radius-3xl) var(--radius-3xl);
+      aspect-ratio: 1; width: 100%; max-width: 400px; margin: 0 auto;
+      box-shadow: var(--elevation-1); position: relative;
+    }
+    .hero-graphic::after {
+      content: ''; position: absolute; top: -24px; right: -24px; width: 120px; height: 120px;
+      background: var(--tertiary-cont); border-radius: 50%; box-shadow: var(--elevation-2);
+    }
 
-    /* CARDS */
-    .cards-section { margin:72px 0; }
-    h2.sect-h { font-size:clamp(2rem,4vw,3rem); font-weight:800; letter-spacing:-.03em; color:var(--fg); margin-bottom:12px; }
-    h2.sect-h span { color:var(--primary); }
-    .sect-sub { font-size:16px; color:var(--muted-fg); margin-bottom:40px; }
-    .cards-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
-    .card-m3 { background:var(--surface); border-radius:28px; padding:28px; transition:box-shadow .2s, transform .2s; cursor:pointer; }
-    .card-m3:hover { box-shadow:0 4px 20px rgba(0,0,0,.1); transform:translateY(-3px); }
-    .card-icon { width:48px; height:48px; border-radius:16px; background:var(--primary); display:flex; align-items:center; justify-content:center; font-size:22px; margin-bottom:20px; }
-    .card-m3 h3 { font-size:17px; font-weight:700; color:var(--fg); margin-bottom:8px; }
-    .card-m3 p { font-size:14px; color:var(--muted-fg); line-height:1.6; }
+    /* FEATURES */
+    .features-section { padding: 60px 0 100px; }
+    .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .feature-card {
+      background: var(--surface); border-radius: var(--radius-xl); padding: 32px;
+      transition: all var(--transition); display: flex; flex-direction: column; align-items: flex-start;
+    }
+    .feature-card:hover { transform: translateY(-4px); box-shadow: var(--elevation-1); }
+    
+    .fc-icon {
+      width: 48px; height: 48px; border-radius: var(--radius-lg); margin-bottom: 24px;
+      display: flex; align-items: center; justify-content: center; font-size: 24px;
+    }
+    .fc-1 .fc-icon { background: var(--primary); color: #fff; }
+    .fc-2 .fc-icon { background: var(--tertiary); color: #fff; }
+    .fc-3 .fc-icon { background: var(--secondary-cont); color: var(--on-sec-cont); }
+    
+    .feature-card h3 { font-size: 20px; margin-bottom: 12px; }
+    .feature-card p { font-size: 14px; color: #49454F; line-height: 1.6; }
 
-    /* FAB */
-    .fab-section { display:flex; align-items:center; gap:16px; margin:48px 0; }
-    .fab { width:56px; height:56px; border-radius:16px; background:var(--primary); display:flex; align-items:center; justify-content:center; font-size:24px; color:#fff; box-shadow:0 3px 8px rgba(103,80,164,.4); cursor:pointer; transition:box-shadow .2s; }
-    .fab:hover { box-shadow:0 6px 16px rgba(103,80,164,.5); }
-    .fab-sm { width:40px; height:40px; border-radius:12px; background:var(--surface); display:flex; align-items:center; justify-content:center; font-size:18px; box-shadow:0 1px 4px rgba(0,0,0,.1); cursor:pointer; }
-    .fab-label { font-size:13px; color:var(--muted-fg); font-weight:500; }
+    /* STATS */
+    .stats-section { padding: 40px 0; }
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    .stat-panel {
+      background: var(--surface); border-radius: var(--radius-lg); padding: 24px; text-align: center;
+    }
+    .stat-val { font-size: 32px; font-weight: 700; color: var(--primary); margin-bottom: 8px; line-height: 1; }
+    .stat-label { font-size: 13px; color: #49454F; font-weight: 500; }
 
-    /* CTA */
-    .cta { background:linear-gradient(135deg,#6750A4,#7D5260); border-radius:28px; padding:64px; margin:0 0 72px; }
-    .cta h2 { font-size:clamp(2rem,4vw,3rem); font-weight:800; color:#fff; letter-spacing:-.03em; margin-bottom:12px; }
-    .cta p { color:rgba(255,255,255,.75); font-size:16px; margin-bottom:32px; max-width:420px; }
-    .btn-cta { background:#fff; color:var(--primary); font-size:14px; font-weight:700; padding:14px 32px; border-radius:999px; text-decoration:none; display:inline-block; transition:transform .15s; }
-    .btn-cta:hover { transform:scale(1.03); }
+    /* INPUT & FAB DEMO */
+    .demo-section { padding: 80px 0; }
+    .demo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+    .demo-text h2 { font-size: 32px; margin-bottom: 16px; }
+    .demo-text p { font-size: 16px; color: #49454F; margin-bottom: 32px; }
+    
+    .md-input-container { margin-bottom: 32px; width: 100%; max-width: 320px; }
+    .md-input-wrapper {
+      position: relative; background: var(--surface-low); border-radius: 12px 12px 0 0;
+      border-bottom: 2px solid var(--outline); transition: border-color var(--transition);
+    }
+    .md-input-wrapper:hover { background: #dfd7e3; border-color: var(--on-surface); }
+    .md-input-wrapper:focus-within { border-color: var(--primary); }
+    
+    .md-input-label { position: absolute; left: 16px; top: 8px; font-size: 12px; color: var(--primary); pointer-events: none; }
+    .md-input {
+      width: 100%; background: transparent; border: none; padding: 24px 16px 8px;
+      font-family: 'Roboto', sans-serif; font-size: 16px; color: var(--on-surface); outline: none;
+    }
+    
+    .fab-container { display: flex; gap: 24px; align-items: flex-end; }
 
-    footer { border-top:1px solid var(--muted); padding:28px 0; display:flex; justify-content:space-between; }
-    footer span { font-size:12px; color:var(--muted-fg); font-weight:500; text-transform:uppercase; letter-spacing:.08em; }
+    /* FINAL CTA */
+    .final-cta { padding: 60px 0 120px; }
+    .cta-panel {
+      background: var(--primary); border-radius: var(--radius-3xl);
+      padding: 80px 40px; text-align: center; color: var(--on-primary); position: relative; overflow: hidden;
+    }
+    .cta-panel::before {
+      content: ''; position: absolute; top: -100px; left: -100px; width: 300px; height: 300px;
+      background: rgba(255,255,255,0.1); border-radius: 50%;
+    }
+    .cta-panel h2 { color: var(--on-primary); font-size: 40px; margin-bottom: 16px; position: relative; z-index: 2; }
+    .cta-panel p { color: rgba(255,255,255,0.8); font-size: 18px; margin-bottom: 40px; position: relative; z-index: 2; }
+    .cta-panel .btn { background: #fff; color: var(--primary); }
+
+    /* FOOTER */
+    footer { border-top: 1px solid var(--surface-low); padding: 32px 40px; display: flex; justify-content: space-between; align-items: center; }
+    footer span { font-size: 12px; color: #49454F; }
+
+    /* RESPONSIVE */
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; text-align: center; gap: 40px; }
+      .hero-body { margin: 0 auto 32px; }
+      .hero-ctas { justify-content: center; }
+      .hero-graphic { max-width: 300px; }
+      .features-grid { grid-template-columns: 1fr; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .demo-grid { grid-template-columns: 1fr; gap: 40px; }
+      .md-input-container { margin: 0 auto 32px; }
+      .fab-container { justify-content: center; }
+      .cta-panel { border-radius: var(--radius-2xl); padding: 60px 24px; }
+      .cta-panel h2 { font-size: 32px; }
+    }
+    @media (max-width: 500px) {
+      .stats-grid { grid-template-columns: 1fr; }
+      footer { flex-direction: column; gap: 12px; text-align: center; }
+    }
   </style>
 </head>
 <body>
+  
+  <div class="blur-bg" aria-hidden="true">
+    <div class="blur-shape blur-1"></div>
+    <div class="blur-shape blur-2"></div>
+    <div class="blur-shape blur-3"></div>
+  </div>
 
-<header>
-  <div class="nav-inner">
+  <header>
     <a href="#" class="logo">scaffold.</a>
-    <nav><ul>
-      <li><a href="#">Design</a></li>
-      <li><a href="#">Workflow</a></li>
-      <li><a href="#">Docs</a></li>
-    </ul></nav>
-    <a href="#" class="btn-filled">Copy Prompt</a>
-  </div>
-</header>
+    
+    <input type="checkbox" id="mobile-menu-checkbox">
+    <label for="mobile-menu-checkbox" class="menu-toggle" aria-label="Toggle Navigation">
+      <span></span><span></span><span></span>
+    </label>
 
-<main>
-  <section class="hero">
-    <div class="container">
-      <div class="hero-chip"><span class="dot"></span><span>Material You — MD3</span></div>
-      <h1 class="hero-headline">Personal.<br>Adaptive.<br><span class="purple">Spirited.</span></h1>
-      <p class="hero-body">Material You adapts to you. Rich tonal palettes, expressive components, and generous rounded geometry — the most human design system yet.</p>
-      <div class="hero-ctas">
-        <a href="#" class="btn-primary-m3">Copy This System →</a>
-        <a href="#" class="btn-tonal">Browse All</a>
+    <nav>
+      <ul>
+        <li><a href="#">Guidelines</a></li>
+        <li><a href="#">Components</a></li>
+        <li><a href="#">Color</a></li>
+      </ul>
+      <a href="#" class="btn btn-filled">Get Started</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="container hero">
+      <div class="hero-content">
+        <div class="badge">Material You — MD3</div>
+        <h1 class="hero-headline">Personal. <span>Adaptive.</span> Spirited.</h1>
+        <p class="hero-body">
+          Embrace tonal surfaces, large organic corner radii, and sophisticated opacity-based state layers to build interfaces that feel deeply integrated and accessible.
+        </p>
+        <div class="hero-ctas">
+          <a href="#" class="btn btn-filled">Copy The Prompt</a>
+          <a href="#" class="btn btn-tonal">View Specs</a>
+        </div>
+      </div>
+      <div class="hero-graphic" aria-hidden="true"></div>
+    </section>
+
+    <section class="container features-section">
+      <div class="features-grid">
+        <div class="feature-card fc-1">
+          <div class="fc-icon">🎨</div>
+          <h3>Dynamic Color</h3>
+          <p>Ditch pure white backgrounds for tonal surfaces. Components map logically to primary, secondary, and tertiary tonal containers.</p>
+        </div>
+        <div class="feature-card fc-2">
+          <div class="fc-icon">🛝</div>
+          <h3>Rounded Geometry</h3>
+          <p>From fully-rounded pill buttons to massive 24px and 32px card radii, geometry is soft, approachable, and heavily stylized.</p>
+        </div>
+        <div class="feature-card fc-3">
+          <div class="fc-icon">✨</div>
+          <h3>Expressive Motion</h3>
+          <p>Active states use `scale(0.95)` to simulate physical pressing. Hover states utilize strict opacity layers rather than simple color swaps.</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="stats-section">
+      <div class="container stats-grid">
+        <div class="stat-panel">
+          <div class="stat-val">24px</div>
+          <div class="stat-label">Card Radius</div>
+        </div>
+        <div class="stat-panel">
+          <div class="stat-val">56px</div>
+          <div class="stat-label">FAB Size</div>
+        </div>
+        <div class="stat-panel">
+          <div class="stat-val">3</div>
+          <div class="stat-label">Tonal Surfaces</div>
+        </div>
+        <div class="stat-panel">
+          <div class="stat-val">200ms</div>
+          <div class="stat-label">Easing Motion</div>
+        </div>
       </div>
     </div>
-  </section>
 
-  <div class="container">
-    <div class="cards-section">
-      <h2 class="sect-h">Expressive <span>by design.</span></h2>
-      <p class="sect-sub">Tonal color surfaces, generous radii, and adaptive containers that feel alive.</p>
-      <div class="cards-grid">
-        <div class="card-m3"><div class="card-icon">🎨</div><h3>Dynamic Color</h3><p>Tonal palette derived from a single seed color — purple/violet for this system.</p></div>
-        <div class="card-m3"><div class="card-icon">🔵</div><h3>Rounded Geometry</h3><p>16px–28px radius across all surfaces. Containers feel soft and approachable.</p></div>
-        <div class="card-m3"><div class="card-icon">✨</div><h3>Expressive Motion</h3><p>Shared axis transitions, container transforms. Motion reinforces spatial relationships.</p></div>
+    <section class="container demo-section">
+      <div class="demo-grid">
+        <div class="demo-text">
+          <h2>Iconic Components</h2>
+          <p>MD3 introduces heavily refined components. Notice the filled text field with its squared bottom edge and solid underline, contrasted against the perfectly rounded, elevated Floating Action Buttons.</p>
+          <a href="#" class="btn btn-text" style="padding-left:0; padding-right:0;">Explore all components →</a>
+        </div>
+        <div class="demo-interactives">
+          
+          <div class="md-input-container">
+            <div class="md-input-wrapper">
+              <label class="md-input-label">System name</label>
+              <input type="text" class="md-input" value="Material You">
+            </div>
+          </div>
+          
+          <div class="fab-container">
+            <button class="fab fab-std" aria-label="Add">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14m-7-7h14"/></svg>
+            </button>
+            <button class="fab fab-mini" aria-label="Edit">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            </button>
+          </div>
+          
+        </div>
       </div>
-    </div>
+    </section>
 
-    <div class="fab-section">
-      <div class="fab">+</div>
-      <div class="fab-sm">✏️</div>
-      <div class="fab-sm">📤</div>
-      <span class="fab-label">FAB & Mini FAB components — key MD3 signatures</span>
-    </div>
+    <section class="container final-cta">
+      <div class="cta-panel">
+        <h2>Bring Material to your app.</h2>
+        <p>Get the complete structural prompt and design tokens.</p>
+        <a href="#" class="btn btn-filled" style="background:#fff; color:var(--primary); padding:12px 32px;">Initialize MD3</a>
+      </div>
+    </section>
+  </main>
 
-    <div class="cta">
-      <h2>Your color.<br>Your system.</h2>
-      <p>Copy the prompt and generate a complete Material You implementation — tokens, components, and motion.</p>
-      <a href="#" class="btn-cta">Copy Prompt →</a>
-    </div>
-  </div>
-</main>
-
-<footer class="container">
-  <span>scaffold — prompt directory</span>
-  <span>Material You System</span>
-</footer>
+  <footer>
+    <span>scaffold — prompt directory</span>
+    <span>Material You System</span>
+  </footer>
 
 </body>
 </html>

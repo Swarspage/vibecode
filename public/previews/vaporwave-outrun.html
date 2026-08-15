@@ -1,83 +1,269 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Vaporwave / Outrun — Design System Preview</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=block" rel="stylesheet">
+
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=VCR+OSD+Mono&display=block');
-
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
+    
     :root {
-      --bg:      #0b001a;
-      --fg:      #00ffff;
-      --pink:    #ff00ff;
-      --yellow:  #ffff00;
-      --purple:  #8a2be2;
-      --border:  #ff00ff;
+      --bg: #090014;
+      --fg: #E0E0E0;
+      --magenta: #FF00FF;
+      --cyan: #00FFFF;
+      --orange: #FF9900;
+      --border: #2D1B4E;
+      
+      --glow-magenta: 0 0 10px var(--magenta), 0 0 20px var(--magenta);
+      --glow-cyan: 0 0 10px var(--cyan), 0 0 20px var(--cyan);
+      --glow-orange: 0 0 10px var(--orange), 0 0 20px var(--orange);
     }
 
-    html, body { min-height:100%; background:var(--bg); color:var(--fg); font-family:monospace; font-size:16px; line-height:1.6; overflow-x:hidden; }
+    body {
+      background-color: var(--bg);
+      color: var(--fg);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+      position: relative;
+    }
 
-    /* Sunset / Grid background */
-    body::before { content:''; position:fixed; bottom:0; left:0; right:0; height:50vh; background:linear-gradient(transparent, rgba(138,43,226,.2)); border-top:2px solid var(--pink); box-shadow:0 -10px 30px rgba(255,0,255,.3); z-index:-2; }
-    body::after { content:''; position:fixed; bottom:0; left:-50%; right:-50%; height:50vh; background-image:linear-gradient(var(--pink) 1px, transparent 1px), linear-gradient(90deg, var(--pink) 1px, transparent 1px); background-size:40px 40px; transform:perspective(500px) rotateX(60deg); transform-origin:top; opacity:0.3; z-index:-1; animation:grid-move 2s linear infinite; }
-    @keyframes grid-move { 0%{background-position:0 0} 100%{background-position:0 40px} }
+    /* GLOBAL EFFECTS */
+    .scanlines {
+      position: fixed; inset: 0; z-index: 999; pointer-events: none;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+      background-size: 100% 4px, 3px 100%;
+    }
 
-    .container { max-width:1000px; margin:0 auto; padding:0 32px; }
+    .sun-gradient {
+      position: fixed; top: 10%; left: 50%; transform: translateX(-50%); width: 600px; height: 600px;
+      background: linear-gradient(180deg, var(--magenta) 0%, var(--orange) 100%);
+      border-radius: 50%; filter: blur(120px); opacity: 0.3; z-index: -2; pointer-events: none;
+    }
 
-    /* NAV */
-    header { padding:24px 32px; display:flex; justify-content:space-between; align-items:center; background:rgba(11,0,26,.8); backdrop-filter:blur(4px); border-bottom:1px solid var(--pink); box-shadow:0 0 15px rgba(255,0,255,.3); }
-    .logo { font-family:'Orbitron',sans-serif; font-size:24px; font-weight:900; color:var(--yellow); text-decoration:none; letter-spacing:2px; text-shadow:0 0 10px var(--yellow); }
-    nav ul { list-style:none; display:flex; gap:32px; }
-    nav a { font-family:'Orbitron',sans-serif; font-size:14px; text-transform:uppercase; color:var(--fg); text-decoration:none; text-shadow:0 0 5px var(--fg); transition:color .2s, text-shadow .2s; }
-    nav a:hover { color:var(--pink); text-shadow:0 0 10px var(--pink); }
-    .btn-retro { background:linear-gradient(45deg,var(--pink),var(--purple)); color:#fff; font-family:'Orbitron',sans-serif; font-size:14px; font-weight:700; text-transform:uppercase; padding:10px 24px; border:2px solid #fff; text-decoration:none; box-shadow:4px 4px 0 var(--fg); transition:all .2s; }
-    .btn-retro:hover { transform:translate(2px,2px); box-shadow:2px 2px 0 var(--fg); }
+    .perspective-grid {
+      position: fixed; bottom: 0; left: 0; right: 0; height: 50vh; z-index: -1;
+      background-image: 
+        linear-gradient(transparent 65%, var(--magenta) 65%, var(--magenta) 67%, transparent 67%),
+        linear-gradient(90deg, transparent 65%, var(--cyan) 65%, var(--cyan) 67%, transparent 67%);
+      background-size: 50px 50px;
+      transform: perspective(500px) rotateX(60deg) translateY(100px) scale(3);
+      opacity: 0.2; pointer-events: none;
+    }
+
+    /* TYPOGRAPHY */
+    h1, h2, h3 { font-family: 'Orbitron', sans-serif; text-transform: uppercase; margin-bottom: 16px; }
+    
+    .gradient-text {
+      background: linear-gradient(180deg, var(--cyan), var(--magenta), var(--orange));
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+      filter: drop-shadow(0 0 8px rgba(255,0,255,0.5));
+    }
+
+    a:focus-visible, button:focus-visible { outline: 2px solid var(--cyan); outline-offset: 4px; }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 10; }
+
+    /* COMPONENTS */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 12px 32px; font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 14px; text-transform: uppercase;
+      cursor: pointer; transition: all 0.3s; transform: skewX(-15deg); text-decoration: none;
+    }
+    .btn span { transform: skewX(15deg); } /* Unskew text */
+    
+    .btn-cyan {
+      background: transparent; border: 2px solid var(--cyan); color: var(--cyan);
+      box-shadow: 0 0 10px rgba(0,255,255,0.3), inset 0 0 10px rgba(0,255,255,0.3);
+    }
+    .btn-cyan:hover { background: var(--cyan); color: var(--bg); box-shadow: var(--glow-cyan); }
+    
+    .btn-magenta {
+      background: var(--magenta); border: 2px solid var(--magenta); color: #fff;
+      box-shadow: var(--glow-magenta);
+    }
+    .btn-magenta:hover { background: transparent; color: var(--magenta); }
+
+    /* HEADER */
+    header {
+      padding: 20px 40px; display: flex; justify-content: space-between; align-items: center;
+      background: rgba(45, 27, 78, 0.6); backdrop-filter: blur(10px); border-bottom: 1px solid var(--magenta);
+      position: sticky; top: 0; z-index: 50;
+    }
+    .logo { font-family: 'Orbitron', sans-serif; font-size: 24px; font-weight: 900; color: #fff; text-shadow: var(--glow-orange); text-decoration: none; }
+    
+    nav { display: flex; align-items: center; gap: 40px; }
+    nav ul { list-style: none; display: flex; gap: 32px; margin: 0; padding: 0; }
+    nav a { color: var(--cyan); text-decoration: none; text-transform: uppercase; transition: all 0.3s; }
+    nav a:hover { color: var(--magenta); text-shadow: var(--glow-magenta); }
 
     /* HERO */
-    .hero { padding:100px 0 80px; text-align:center; }
-    h1.hero-headline { font-family:'Orbitron',sans-serif; font-size:clamp(4rem,8vw,7rem); font-weight:900; text-transform:uppercase; color:var(--pink); text-shadow:4px 4px 0 var(--fg), 0 0 20px var(--pink); margin-bottom:24px; line-height:1; }
-    .hero-sub { color:var(--yellow); font-family:monospace; font-size:18px; max-width:600px; margin:0 auto 48px; text-shadow:0 0 5px var(--yellow); }
-    .btn-primary { display:inline-block; background:transparent; color:var(--fg); border:2px solid var(--fg); font-family:'Orbitron',sans-serif; font-size:18px; font-weight:700; text-transform:uppercase; padding:16px 48px; text-decoration:none; box-shadow:0 0 15px var(--fg), inset 0 0 15px var(--fg); transition:all .3s; }
-    .btn-primary:hover { background:var(--fg); color:var(--bg); box-shadow:0 0 30px var(--fg); }
+    .hero { padding: 120px 0; text-align: center; }
+    .hero h1 { font-size: clamp(3.5rem, 8vw, 6rem); font-weight: 900; margin-bottom: 24px; letter-spacing: 4px; }
+    .hero p { font-size: 20px; color: var(--fg); max-width: 600px; margin: 0 auto 48px; }
+    .hero p::before { content: "> "; color: var(--cyan); text-shadow: var(--glow-cyan); }
+    .hero-ctas { display: flex; gap: 24px; justify-content: center; }
 
-    /* CARDS */
-    .cards { display:grid; grid-template-columns:repeat(2,1fr); gap:40px; padding:0 32px 100px; }
-    .card { background:rgba(138,43,226,.2); border:2px solid var(--pink); padding:40px; box-shadow:0 0 20px rgba(255,0,255,.3); backdrop-filter:blur(8px); }
-    .card h3 { font-family:'Orbitron',sans-serif; font-size:24px; color:var(--yellow); text-transform:uppercase; margin-bottom:16px; text-shadow:0 0 8px var(--yellow); }
-    .card p { color:var(--fg); font-size:16px; text-shadow:0 0 4px var(--fg); }
+    /* FEATURE CARDS */
+    .features-section { padding: 80px 0; }
+    .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+    .f-card {
+      background: rgba(9, 0, 20, 0.7); backdrop-filter: blur(8px);
+      border: 2px solid var(--magenta); border-top: 4px solid var(--cyan);
+      padding: 32px; transition: all 0.3s; position: relative;
+    }
+    .f-card:hover { transform: translateY(-5px); box-shadow: var(--glow-magenta); }
+    .f-card h3 { color: var(--cyan); text-shadow: var(--glow-cyan); font-size: 20px; }
 
+    /* TERMINAL WINDOW */
+    .terminal-window {
+      max-width: 800px; margin: 80px auto;
+      border: 2px solid var(--cyan); background: rgba(0,0,0,0.8);
+      box-shadow: 0 0 20px rgba(0,255,255,0.2);
+    }
+    .tw-header {
+      background: var(--cyan); padding: 8px 16px; display: flex; gap: 8px; align-items: center;
+    }
+    .tw-dot { width: 12px; height: 12px; border-radius: 50%; background: var(--bg); }
+    .tw-content { padding: 24px; font-size: 15px; }
+    .tw-content div { margin-bottom: 8px; }
+    .tw-ok { color: var(--magenta); text-shadow: var(--glow-magenta); }
+
+    /* STATS */
+    .stats-section { padding: 80px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); background: rgba(45,27,78,0.3); }
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; text-align: center; }
+    .stat-num { font-family: 'Orbitron', sans-serif; font-size: 3rem; color: #fff; text-shadow: var(--glow-orange); margin-bottom: 8px; font-weight: 700; }
+    .stat-label { color: var(--cyan); text-transform: uppercase; font-size: 14px; }
+
+    /* IRC CHAT */
+    .irc-section { padding: 100px 0; max-width: 600px; margin: 0 auto; }
+    .irc-msg { margin-bottom: 12px; }
+    .irc-user { color: var(--orange); }
+    .irc-sys { color: var(--cyan); font-weight: bold; }
+
+    /* FINAL CTA */
+    .final-cta { text-align: center; padding: 100px 40px; margin: 80px auto; max-width: 800px; border: 2px solid transparent; background: linear-gradient(var(--bg), var(--bg)) padding-box, linear-gradient(45deg, var(--magenta), var(--cyan)) border-box; box-shadow: var(--glow-magenta); }
+    .final-cta h2 { font-size: 2.5rem; margin-bottom: 40px; color: #fff; text-shadow: var(--glow-cyan); }
+
+    /* FOOTER */
+    footer { padding: 32px 40px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; background: rgba(9,0,20,0.9); position: relative; z-index: 10; }
+    footer span { color: var(--cyan); font-size: 14px; }
+
+    @media (max-width: 900px) {
+      .features-grid { grid-template-columns: 1fr; }
+      .stats-grid { grid-template-columns: 1fr 1fr; gap: 40px; }
+      header { flex-direction: column; gap: 16px; align-items: flex-start; }
+      nav ul { display: none; }
+    }
   </style>
 </head>
 <body>
+
+  <div class="scanlines" aria-hidden="true"></div>
+  <div class="sun-gradient" aria-hidden="true"></div>
+  <div class="perspective-grid" aria-hidden="true"></div>
+
   <header>
     <a href="#" class="logo">SCAFFOLD</a>
-    <nav><ul>
-      <li><a href="#">// VHS</a></li>
-      <li><a href="#">// SYNTH</a></li>
-    </ul></nav>
-    <a href="#" class="btn-retro">INSERT COIN</a>
+    <nav>
+      <ul>
+        <li><a href="#">Elements</a></li>
+        <li><a href="#">Neon Core</a></li>
+        <li><a href="#">Synthwave</a></li>
+      </ul>
+      <a href="#" class="btn btn-cyan"><span>ACCESS</span></a>
+    </nav>
   </header>
 
-  <main class="container">
-    <section class="hero">
-      <h1 class="hero-headline">OUTRUN<br>1984</h1>
-      <p class="hero-sub">> DIGITAL NOSTALGIA MEETS NEON FUTURE. A SYNTHETIC REALITY DRENCHED IN RETRO-FUTURISM.</p>
-      <a href="#" class="btn-primary">RUN SYSTEM.EXE</a>
+  <main>
+    <section class="container hero">
+      <h1 class="gradient-text">OUTRUN 1984</h1>
+      <p>A neon-drenched, retro-futuristic design system inspired by 80s arcade aesthetics, VHS glitches, and synthetic sunsets.</p>
+      <div class="hero-ctas">
+        <a href="#" class="btn btn-cyan"><span>INITIALIZE</span></a>
+        <a href="#" class="btn btn-magenta"><span>DOCS.EXE</span></a>
+      </div>
     </section>
 
-    <div class="cards">
-      <div class="card">
-        <h3>NEON PALETTE</h3>
-        <p>100% saturation. Cyan, hot pink, and electric yellow over a deep purple void. Maximum glowing contrast.</p>
+    <section class="container features-section">
+      <div class="features-grid">
+        <div class="f-card">
+          <h3>Neon Palette</h3>
+          <p>Strict use of pure magenta, cyan, and orange. Elements must glow against the void-black backgrounds.</p>
+        </div>
+        <div class="f-card">
+          <h3>Grid Horizon</h3>
+          <p>Perspective CSS grids and blurred sun gradients create an infinite synthetic landscape behind your UI.</p>
+        </div>
+        <div class="f-card">
+          <h3>Terminal Chrome</h3>
+          <p>Embrace the aesthetics of early computing with monospace typography, hard borders, and command-line structures.</p>
+        </div>
       </div>
-      <div class="card">
-        <h3>GRID HORIZON</h3>
-        <p>Animated perspective grids and synthetic sunsets. The interface isn't flat, it's a digital landscape.</p>
+    </section>
+
+    <section class="container">
+      <div class="terminal-window">
+        <div class="tw-header">
+          <div class="tw-dot" style="background: var(--magenta);"></div>
+          <div class="tw-dot" style="background: var(--orange);"></div>
+          <div class="tw-dot" style="background: var(--cyan);"></div>
+        </div>
+        <div class="tw-content">
+          <div>> system.exe --run vaporwave</div>
+          <div>> Loading sunset.gradient... <span class="tw-ok">[OK]</span></div>
+          <div>> Applying scanlines... <span class="tw-ok">[OK]</span></div>
+          <div>> Initializing neon overrides... <span class="tw-ok">[OK]</span></div>
+          <div>> Status: <span style="color: var(--cyan);">ONLINE</span></div>
+          <div class="blink" style="margin-top: 16px;">_</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="stats-section">
+      <div class="container stats-grid">
+        <div>
+          <div class="stat-num">100%</div>
+          <div class="stat-label">Saturation</div>
+        </div>
+        <div>
+          <div class="stat-num">60&deg;</div>
+          <div class="stat-label">Grid Angle</div>
+        </div>
+        <div>
+          <div class="stat-num">3</div>
+          <div class="stat-label">Neon Accents</div>
+        </div>
+        <div>
+          <div class="stat-num">1984</div>
+          <div class="stat-label">Aesthetic</div>
+        </div>
       </div>
     </div>
+
+    <section class="container irc-section">
+      <div class="irc-msg">&lt;<span class="irc-user">user_99</span>&gt; love this aesthetic</div>
+      <div class="irc-msg">&lt;<span class="irc-sys">scaffold</span>&gt; >> transmitting prompt data...</div>
+      <div class="irc-msg">&lt;<span class="irc-user">guest</span>&gt; nostalgic + futuristic. perfectly balanced.</div>
+    </section>
+
+    <section class="container final-cta">
+      <h2>ENTER THE GRID</h2>
+      <a href="#" class="btn btn-magenta"><span>EXECUTE PROTOCOL</span></a>
+    </section>
   </main>
+
+  <footer>
+    <span>scaffold — prompt directory</span>
+    <span>Vaporwave / Outrun System</span>
+  </footer>
+
 </body>
 </html>

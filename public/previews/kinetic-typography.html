@@ -4,220 +4,356 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Kinetic Typography — Design System Preview</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=block');
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Space+Grotesk:wght@400;500;700&display=block" rel="stylesheet">
 
+  <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:        #09090B;
-      --fg:        #FAFAFA;
-      --muted:     #27272A;
-      --muted-fg:  #A1A1AA;
-      --accent:    #DFE104;
-      --border:    #3F3F46;
+      --bg:      #09090B;
+      --fg:      #FAFAFA;
+      --muted:   #27272A;
+      --muted-fg:#A1A1AA;
+      --accent:  #DFE104; /* Acid Yellow */
+      --border:  #3F3F46;
+      
+      --transition: 300ms cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    html, body {
-      min-height: 100%;
-      background: var(--bg);
-      color: var(--fg);
-      font-family: 'Space Grotesk', 'Inter', sans-serif;
-      font-size: 16px;
-      line-height: 1.5;
-      -webkit-font-smoothing: antialiased;
+    @media (prefers-reduced-motion: reduce) {
+      * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+      .marquee-inner { animation: none !important; }
+    }
+
+    html, body { 
+      min-height: 100%; 
+      background: var(--bg); 
+      color: var(--fg); 
+      font-family: 'Inter', sans-serif; 
+      font-size: 16px; 
+      line-height: 1.6; 
       overflow-x: hidden;
     }
 
-    /* Noise texture */
-    body::before {
-      content:''; position:fixed; inset:0; pointer-events:none; z-index:99;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-      opacity:.03; mix-blend-mode:overlay;
+    /* NOISE TEXTURE */
+    .noise-bg {
+      position: fixed; inset: 0; z-index: 100; pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.03; mix-blend-mode: screen;
     }
 
-    .container { max-width:95vw; margin:0 auto; padding:0 24px; }
+    /* TYPOGRAPHY */
+    h1, h2, h3, h4, h5, .font-display {
+      font-family: 'Space Grotesk', sans-serif;
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      line-height: 1.1;
+    }
+    
+    a:focus-visible, button:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; }
 
-    /* NAV */
-    header { border-bottom:2px solid var(--border); padding:20px 5vw; display:flex; align-items:center; justify-content:space-between; }
-    .logo { font-size:18px; font-weight:700; text-transform:uppercase; letter-spacing:-.02em; color:var(--fg); text-decoration:none; }
-    .logo span { color:var(--accent); }
-    nav ul { list-style:none; display:flex; gap:0; }
-    nav a {
-      display:block; padding:10px 20px;
-      font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.05em;
-      color:var(--muted-fg); text-decoration:none;
-      border:2px solid transparent; transition:all 0s;
+    .container { max-width: 1400px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 10; }
+
+    /* BUTTONS */
+    .btn {
+      font-family: 'Space Grotesk', sans-serif; font-size: 14px; font-weight: 700; text-transform: uppercase;
+      padding: 16px 32px; border: 2px solid transparent; text-decoration: none; display: inline-flex;
+      transition: all var(--transition); cursor: pointer; letter-spacing: 0.05em;
     }
-    nav a:hover { color:var(--accent); }
-    .btn-accent {
-      background:var(--accent); color:#000;
-      font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:-.02em;
-      padding:14px 28px; text-decoration:none; display:inline-block;
-      transition:transform .2s;
+    .btn-accent { background: var(--accent); color: #000; }
+    .btn-accent:hover { transform: scale(1.05); }
+    .btn-outline { background: transparent; color: var(--fg); border-color: var(--fg); }
+    .btn-outline:hover { background: var(--fg); color: var(--bg); }
+
+    /* HEADER */
+    header {
+      border-bottom: 2px solid var(--border); padding: 24px 40px;
+      display: flex; justify-content: space-between; align-items: center;
+      background: var(--bg); position: sticky; top: 0; z-index: 50;
     }
-    .btn-accent:hover { transform:scale(1.05); }
+    .logo { font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 700; color: var(--fg); text-decoration: none; text-transform: uppercase; letter-spacing: -0.05em; }
+    .logo span { color: var(--accent); }
+    
+    nav { display: flex; align-items: center; gap: 40px; }
+    nav ul { list-style: none; display: flex; gap: 32px; margin: 0; padding: 0; }
+    nav a { font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted-fg); text-decoration: none; transition: color 0.2s; }
+    nav a:hover { color: var(--accent); }
+
+    /* MOBILE MENU */
+    .menu-toggle { display: none; flex-direction: column; gap: 6px; cursor: pointer; background: transparent; border: none; padding: 8px; }
+    .menu-toggle span { width: 30px; height: 2px; background: var(--fg); transition: 0.3s; }
+    #mobile-menu-checkbox { display: none; }
+    
+    @media (max-width: 900px) {
+      .menu-toggle { display: flex; }
+      nav { 
+        position: absolute; top: 100%; left: 0; right: 0; 
+        background: var(--bg); flex-direction: column; 
+        padding: 40px; border-bottom: 2px solid var(--border);
+        transform: translateY(-10px); opacity: 0; pointer-events: none; transition: all 0.3s ease;
+      }
+      nav ul { flex-direction: column; text-align: center; gap: 32px; width: 100%; }
+      .btn { width: 100%; justify-content: center; margin-top: 24px; }
+      #mobile-menu-checkbox:checked ~ nav { transform: translateY(0); opacity: 1; pointer-events: auto; }
+      #mobile-menu-checkbox:checked ~ .menu-toggle span:nth-child(1) { transform: rotate(45deg) translate(6px, 6px); }
+      #mobile-menu-checkbox:checked ~ .menu-toggle span:nth-child(2) { opacity: 0; }
+      #mobile-menu-checkbox:checked ~ .menu-toggle span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+    }
 
     /* HERO */
-    .hero { padding:80px 5vw 64px; border-bottom:2px solid var(--border); }
-    .hero-label { font-size:12px; text-transform:uppercase; letter-spacing:.15em; color:var(--muted-fg); margin-bottom:24px; }
-    h1.hero-headline {
-      font-size: clamp(3rem,10vw,11rem);
-      font-weight: 700;
-      line-height: .88;
-      text-transform: uppercase;
-      letter-spacing: -.03em;
-      color: var(--fg);
-      margin-bottom:0;
+    .hero { padding: 120px 0 160px; position: relative; overflow: hidden; }
+    
+    .bg-text {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      font-size: clamp(10rem, 30vw, 40rem); font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+      color: var(--muted); opacity: 0.3; line-height: 0.8; pointer-events: none; z-index: 1; letter-spacing: -0.08em;
     }
-    h1.hero-headline .accent { color:var(--accent); }
-    .hero-bottom { display:flex; align-items:flex-end; justify-content:space-between; gap:32px; margin-top:40px; flex-wrap:wrap; }
-    .hero-body { font-size:18px; color:var(--muted-fg); max-width:480px; line-height:1.5; }
-    .hero-ctas { display:flex; gap:16px; flex-shrink:0; }
-    .btn-outline {
-      border:2px solid var(--border); color:var(--fg); background:transparent;
-      font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:-.02em;
-      padding:14px 28px; text-decoration:none; display:inline-block;
-      transition:background 0s, color 0s;
-    }
-    .btn-outline:hover { background:var(--fg); color:var(--bg); }
+    
+    .hero-content { position: relative; z-index: 2; max-width: 1400px; margin: 0 auto; padding: 0 40px; }
+    .hero-label { font-family: 'Space Grotesk', sans-serif; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.2em; color: var(--muted-fg); margin-bottom: 40px; display: block; }
+    .hero-headline { font-size: clamp(3rem, 12vw, 14rem); margin-bottom: 48px; max-width: 100%; word-wrap: break-word; }
+    .hero-headline span { color: var(--accent); }
+    .hero-body { font-size: 20px; color: var(--muted-fg); max-width: 500px; margin-bottom: 48px; }
+    .hero-ctas { display: flex; gap: 16px; flex-wrap: wrap; }
 
-    /* MARQUEE */
-    .marquee-wrapper {
-      background:var(--accent); padding:16px 0; overflow:hidden;
-      border-top:2px solid var(--border); border-bottom:2px solid var(--border);
+    /* FAST MARQUEE */
+    .marquee-container {
+      background: var(--accent); border-top: 2px solid var(--border); border-bottom: 2px solid var(--border);
+      padding: 24px 0; overflow: hidden; position: relative;
     }
-    .marquee-track {
-      display:flex; gap:48px; white-space:nowrap;
-      animation:marquee-scroll 12s linear infinite;
+    .marquee-inner {
+      display: flex; white-space: nowrap; animation: marquee 15s linear infinite;
     }
-    .marquee-item {
-      font-size:clamp(1.5rem,3vw,2.25rem); font-weight:700;
-      text-transform:uppercase; letter-spacing:-.02em; color:#000;
-      display:flex; align-items:center; gap:48px; flex-shrink:0;
+    .marquee-content {
+      display: flex; gap: 40px; padding-right: 40px; font-family: 'Space Grotesk', sans-serif;
+      font-size: 48px; font-weight: 700; text-transform: uppercase; color: #000; letter-spacing: -0.04em;
     }
-    .marquee-sep { font-size:24px; opacity:.4; }
-    @keyframes marquee-scroll { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+    @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
     /* NUMBERS GRID */
-    .numbers-section { border-bottom:2px solid var(--border); }
-    .numbers-grid { display:grid; grid-template-columns:1fr 1fr 1fr; background:var(--muted); gap:1px; }
-    .num-cell { background:var(--bg); padding:48px 40px; }
-    .num-bg { font-size:clamp(5rem,10vw,10rem); font-weight:700; line-height:1; color:var(--muted); letter-spacing:-.05em; display:block; }
-    .num-label { font-size:13px; text-transform:uppercase; letter-spacing:.1em; color:var(--muted-fg); margin-top:8px; }
+    .numbers-section { border-bottom: 2px solid var(--border); }
+    .numbers-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; background: var(--border); }
+    .num-cell { background: var(--bg); padding: 60px 40px; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; height: 300px; transition: background 0.3s; }
+    .num-cell:hover { background: var(--accent); }
+    .num-cell:hover .num-bg { color: #000; opacity: 0.1; }
+    .num-cell:hover .num-label { color: #000; }
+    
+    .num-bg { position: absolute; top: -20px; right: -10px; font-family: 'Space Grotesk', sans-serif; font-size: 200px; font-weight: 700; color: var(--muted); line-height: 1; z-index: 1; transition: color 0.3s, opacity 0.3s; }
+    .num-label { position: relative; z-index: 2; font-family: 'Space Grotesk', sans-serif; font-size: 16px; font-weight: 700; text-transform: uppercase; color: var(--muted-fg); letter-spacing: 0.1em; transition: color 0.3s; }
 
-    /* FEATURES */
-    .features-section { padding:80px 5vw; border-bottom:2px solid var(--border); }
-    .feat-label { font-size:12px; text-transform:uppercase; letter-spacing:.15em; color:var(--muted-fg); margin-bottom:48px; }
-    h2.feat-headline {
-      font-size:clamp(2.5rem,6vw,6rem); font-weight:700;
-      text-transform:uppercase; letter-spacing:-.03em; line-height:.9;
-      color:var(--fg); margin-bottom:64px;
+    /* STICKY CARDS */
+    .sticky-section { padding: 120px 0; }
+    .sticky-cards-wrapper { display: flex; flex-direction: column; gap: 40px; }
+    .scard {
+      background: var(--bg); border: 2px solid var(--border); padding: 80px 60px;
+      position: sticky; top: 120px; transition: all 0.3s;
+      display: grid; grid-template-columns: auto 1fr; gap: 60px; align-items: start;
     }
-    .features-grid { display:grid; grid-template-columns:1fr 1fr; background:var(--border); gap:1px; }
-    .feat-card {
-      background:var(--bg); padding:40px;
-      border:none; cursor:pointer;
-      transition:background .3s, color .3s;
-    }
-    .feat-card:hover { background:var(--accent); }
-    .feat-card h3 {
-      font-size:clamp(1.5rem,3vw,2.5rem); font-weight:700;
-      text-transform:uppercase; letter-spacing:-.02em;
-      color:var(--fg); margin-bottom:16px; line-height:1;
-      transition:color .3s;
-    }
-    .feat-card:hover h3 { color:#000; }
-    .feat-card p { font-size:15px; color:var(--muted-fg); line-height:1.6; transition:color .3s; }
-    .feat-card:hover p { color:rgba(0,0,0,.7); }
+    .scard:nth-child(2) { top: 140px; }
+    .scard:nth-child(3) { top: 160px; }
+    
+    .scard:hover { background: var(--accent); border-color: #000; color: #000; }
+    .scard:hover h3, .scard:hover p, .scard:hover .scard-index { color: #000; }
+    
+    .scard-index { font-family: 'Space Grotesk', sans-serif; font-size: 120px; font-weight: 700; line-height: 0.8; color: var(--muted-fg); transition: color 0.3s; }
+    .scard-content h3 { font-size: 48px; margin-bottom: 24px; transition: color 0.3s; }
+    .scard-content p { font-size: 20px; color: var(--muted-fg); max-width: 600px; transition: color 0.3s; }
 
-    /* CTA SECTION */
-    .cta-section { background:var(--accent); padding:80px 5vw; }
-    .cta-section h2 {
-      font-size:clamp(3rem,8vw,8rem); font-weight:700;
-      text-transform:uppercase; letter-spacing:-.03em; line-height:.88;
-      color:#000; margin-bottom:40px;
-    }
-    .btn-cta {
-      background:#000; color:var(--accent);
-      font-size:14px; font-weight:700; text-transform:uppercase; letter-spacing:-.02em;
-      padding:18px 40px; text-decoration:none; display:inline-block;
-      transition:transform .2s;
-    }
-    .btn-cta:hover { transform:scale(1.05); }
+    /* FEATURE GRID */
+    .feature-section { border-top: 2px solid var(--border); border-bottom: 2px solid var(--border); }
+    .f-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px; background: var(--border); }
+    .f-card { background: var(--bg); padding: 80px 60px; transition: all 0.3s; display: flex; flex-direction: column; justify-content: center; }
+    .f-card:hover { background: var(--fg); color: var(--bg); }
+    .f-card:hover h3, .f-card:hover p { color: var(--bg); }
+    
+    .f-card h3 { font-size: 40px; margin-bottom: 24px; transition: color 0.3s; }
+    .f-card p { font-size: 18px; color: var(--muted-fg); transition: color 0.3s; }
+
+    /* SLOW MARQUEE */
+    .slow-marquee { padding: 60px 0; overflow: hidden; border-bottom: 2px solid var(--border); }
+    .sm-inner { display: flex; white-space: nowrap; animation: marquee 30s linear infinite reverse; }
+    .sm-content { display: flex; gap: 60px; padding-right: 60px; align-items: center; }
+    .sm-item { font-family: 'Space Grotesk', sans-serif; font-size: 32px; font-weight: 500; color: var(--muted-fg); text-transform: uppercase; }
+    .sm-item span { color: var(--fg); }
+
+    /* FINAL CTA */
+    .final-cta { background: var(--accent); padding: 160px 40px; text-align: center; }
+    .final-cta h2 { color: #000; font-size: clamp(4rem, 12vw, 10rem); margin-bottom: 64px; }
+    .final-cta .btn { background: #000; color: var(--accent); font-size: 20px; padding: 24px 64px; }
+    .final-cta .btn:hover { background: var(--bg); transform: scale(1.05); }
 
     /* FOOTER */
-    footer { border-top:2px solid var(--border); padding:24px 5vw; display:flex; justify-content:space-between; align-items:center; }
-    footer span { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--muted-fg); }
+    footer { border-top: 2px solid var(--border); padding: 40px; display: flex; justify-content: space-between; align-items: center; }
+    footer span { font-family: 'Space Grotesk', sans-serif; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted-fg); }
+
+    /* RESPONSIVE */
+    @media (max-width: 1000px) {
+      .scard { grid-template-columns: 1fr; gap: 32px; padding: 40px 32px; }
+      .scard-index { font-size: 80px; }
+      .f-grid { grid-template-columns: 1fr; }
+      .f-card { padding: 40px 32px; }
+      .numbers-grid { grid-template-columns: 1fr; }
+      .num-cell { height: 200px; }
+    }
+    @media (max-width: 600px) {
+      .hero { padding: 80px 0 100px; }
+      .hero-ctas { flex-direction: column; }
+      .btn { width: 100%; justify-content: center; }
+      .marquee-content { font-size: 32px; }
+      .sm-item { font-size: 24px; }
+      .final-cta { padding: 100px 24px; }
+      footer { flex-direction: column; gap: 24px; text-align: center; }
+    }
   </style>
 </head>
 <body>
+  
+  <div class="noise-bg" aria-hidden="true"></div>
 
-<header>
-  <a href="#" class="logo">scaffold<span>.</span></a>
-  <nav><ul>
-    <li><a href="#">Design</a></li>
-    <li><a href="#">Workflow</a></li>
-    <li><a href="#">Docs</a></li>
-  </ul></nav>
-  <a href="#" class="btn-accent">Copy Prompt</a>
-</header>
+  <header>
+    <a href="#" class="logo">Scaffold<span>.</span></a>
+    
+    <input type="checkbox" id="mobile-menu-checkbox">
+    <label for="mobile-menu-checkbox" class="menu-toggle" aria-label="Toggle Navigation">
+      <span></span><span></span><span></span>
+    </label>
 
-<section class="hero">
-  <div class="hero-label">Kinetic Typography System</div>
-  <h1 class="hero-headline">Motion<br>is the<br><span class="accent">Message.</span></h1>
-  <div class="hero-bottom">
-    <p class="hero-body">Typography becomes image. Headlines become heroes. Every element alive through constant motion, aggressive scale, and high-energy contrast.</p>
-    <div class="hero-ctas">
-      <a href="#" class="btn-accent">Copy This System →</a>
-      <a href="#" class="btn-outline">All Prompts</a>
+    <nav>
+      <ul>
+        <li><a href="#">Foundations</a></li>
+        <li><a href="#">Type Scale</a></li>
+        <li><a href="#">Motion</a></li>
+      </ul>
+      <a href="#" class="btn btn-accent">Initialize</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="bg-text" aria-hidden="true">KINETIC</div>
+      <div class="hero-content">
+        <span class="hero-label">Kinetic Typography System</span>
+        <h1 class="hero-headline">Motion is <br>the <span>Message.</span></h1>
+        <p class="hero-body">
+          Abandon static layouts. Use viewport-scaled typography, hard color inversions, and continuous marquees to build interfaces with extreme energy.
+        </p>
+        <div class="hero-ctas">
+          <a href="#" class="btn btn-accent">Copy The System</a>
+          <a href="#" class="btn btn-outline">Read The Docs</a>
+        </div>
+      </div>
+    </section>
+
+    <div class="marquee-container" aria-hidden="true">
+      <div class="marquee-inner">
+        <div class="marquee-content">
+          <span>Kinetic Typography ✦ Motion Is Structure ✦ Scale Creates Drama ✦ </span>
+          <span>Kinetic Typography ✦ Motion Is Structure ✦ Scale Creates Drama ✦ </span>
+        </div>
+        <div class="marquee-content">
+          <span>Kinetic Typography ✦ Motion Is Structure ✦ Scale Creates Drama ✦ </span>
+          <span>Kinetic Typography ✦ Motion Is Structure ✦ Scale Creates Drama ✦ </span>
+        </div>
+      </div>
     </div>
-  </div>
-</section>
 
-<div class="marquee-wrapper" aria-hidden="true">
-  <div class="marquee-track">
-    <span class="marquee-item">Kinetic Typography <span class="marquee-sep">✦</span></span>
-    <span class="marquee-item">Motion Is Structure <span class="marquee-sep">✦</span></span>
-    <span class="marquee-item">Scale Creates Drama <span class="marquee-sep">✦</span></span>
-    <span class="marquee-item">Uppercase Always <span class="marquee-sep">✦</span></span>
-    <span class="marquee-item">Acid Yellow Accent <span class="marquee-sep">✦</span></span>
-    <span class="marquee-item">Kinetic Typography <span class="marquee-sep">✦</span></span>
-    <span class="marquee-item">Motion Is Structure <span class="marquee-sep">✦</span></span>
-    <span class="marquee-item">Scale Creates Drama <span class="marquee-sep">✦</span></span>
-    <span class="marquee-item">Uppercase Always <span class="marquee-sep">✦</span></span>
-    <span class="marquee-item">Acid Yellow Accent <span class="marquee-sep">✦</span></span>
-  </div>
-</div>
+    <div class="numbers-section">
+      <div class="container" style="padding:0; max-width:none;">
+        <div class="numbers-grid">
+          <div class="num-cell">
+            <div class="num-bg">08</div>
+            <div class="num-label">Design Systems</div>
+          </div>
+          <div class="num-cell">
+            <div class="num-bg">∞</div >
+            <div class="num-label">Marquee Loops</div>
+          </div>
+          <div class="num-cell">
+            <div class="num-bg">1×</div>
+            <div class="num-label">Copy to Ship</div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-<div class="numbers-section">
-  <div class="numbers-grid">
-    <div class="num-cell"><span class="num-bg">08+</span><span class="num-label">Design Systems</span></div>
-    <div class="num-cell"><span class="num-bg">∞</span><span class="num-label">Marquee Loops</span></div>
-    <div class="num-cell"><span class="num-bg">1×</span><span class="num-label">Copy to Ship</span></div>
-  </div>
-</div>
+    <section class="container sticky-section">
+      <div class="sticky-cards-wrapper">
+        <div class="scard">
+          <div class="scard-index">01</div>
+          <div class="scard-content">
+            <h3>Viewport Scale Type</h3>
+            <p>Headlines use responsive clamp() functions to scale massively, filling empty space and treating typography as the primary architectural element of the page.</p>
+          </div>
+        </div>
+        <div class="scard">
+          <div class="scard-index">02</div>
+          <div class="scard-content">
+            <h3>Zero Radius</h3>
+            <p>Soft corners dampen energy. By enforcing a strict 0px border-radius across all components, the design feels aggressive, sharp, and decisively modern.</p>
+          </div>
+        </div>
+        <div class="scard">
+          <div class="scard-index">03</div>
+          <div class="scard-content">
+            <h3>Hard Inversions</h3>
+            <p>Hover states don't rely on subtle opacity shifts. They execute complete color inversions (black to acid yellow, or black to white) for maximum tactile feedback.</p>
+          </div>
+        </div>
+      </div>
+    </section>
 
-<section class="features-section">
-  <div class="feat-label">// System Features</div>
-  <h2 class="feat-headline">Bold.<br>Fast.<br>Alive.</h2>
-  <div class="features-grid">
-    <div class="feat-card"><h3>Viewport Type</h3><p>Headlines use clamp() with 10vw+ values. Text fills the screen. Scale IS the design.</p></div>
-    <div class="feat-card"><h3>Infinite Marquees</h3><p>Stats and testimonials scroll endlessly, no gradients, no pausing. Motion never stops.</p></div>
-    <div class="feat-card"><h3>Hard Inversions</h3><p>Cards flip from black to acid yellow on hover. Instant. Dramatic. No gradual transitions.</p></div>
-    <div class="feat-card"><h3>Zero Radius</h3><p>Sharp corners only. Brutalist geometry. 2px borders in zinc tones. Completely flat depth.</p></div>
-  </div>
-</section>
+    <section class="feature-section">
+      <div class="f-grid">
+        <div class="f-card">
+          <h3>Infinite Marquees</h3>
+          <p>Moving text replaces static borders and dividers, keeping the eye constantly engaged and moving down the page.</p>
+        </div>
+        <div class="f-card">
+          <h3>Brutal Borders</h3>
+          <p>Consistent 2px borders establish rigid grid structures, preventing the massive typography from turning into chaotic noise.</p>
+        </div>
+        <div class="f-card">
+          <h3>High Contrast</h3>
+          <p>Rich black (#09090B) and off-white (#FAFAFA) provide the ultimate foundation for legibility at extreme scales.</p>
+        </div>
+        <div class="f-card">
+          <h3>Acid Accents</h3>
+          <p>Yellow is used sparingly as a highlight color, drawing attention instantly to CTA buttons and key headline phrases.</p>
+        </div>
+      </div>
+    </section>
 
-<div class="cta-section">
-  <h2>Copy.<br>Paste.<br>Ship.</h2>
-  <a href="#" class="btn-cta">[ Copy This Prompt ]</a>
-</div>
+    <div class="slow-marquee" aria-hidden="true">
+      <div class="sm-inner">
+        <div class="sm-content">
+          <div class="sm-item">"The grid is <span>alive</span>."</div>
+          <div class="sm-item">"Typography <span>as interface</span>."</div>
+          <div class="sm-item">"Never <span>stop moving</span>."</div>
+          <div class="sm-item">"Scale is <span>everything</span>."</div>
+        </div>
+        <div class="sm-content">
+          <div class="sm-item">"The grid is <span>alive</span>."</div>
+          <div class="sm-item">"Typography <span>as interface</span>."</div>
+          <div class="sm-item">"Never <span>stop moving</span>."</div>
+          <div class="sm-item">"Scale is <span>everything</span>."</div>
+        </div>
+      </div>
+    </div>
 
-<footer>
-  <span>scaffold — prompt directory</span>
-  <span>Kinetic Typography System</span>
-</footer>
+    <section class="final-cta">
+      <h2 class="font-display">Copy. Paste. Ship.</h2>
+      <a href="#" class="btn">Deploy The System</a>
+    </section>
+  </main>
+
+  <footer>
+    <span>scaffold — prompt directory</span>
+    <span>Kinetic Typography System</span>
+  </footer>
 
 </body>
 </html>

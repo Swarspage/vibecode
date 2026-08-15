@@ -3,617 +3,313 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>The Daily Scaffold — Newsprint Edition</title>
+  <title>Newsprint — Design System Preview</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Lora:ital,wght@0,400;0,600;1,400&family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600&display=block" rel="stylesheet">
 
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400&family=Lora:ital,wght@0,400;0,600;1,400&display=block');
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; border-radius: 0 !important; }
 
-    /* ─── Reset ─── */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    /* ─── Tokens ─── */
     :root {
-      --bg:       #F9F9F7;
-      --fg:       #111111;
-      --muted:    #E5E5E0;
-      --accent:   #CC0000;
-      --border:   #111111;
-      --neutral-500: #737373;
-      --neutral-600: #525252;
+      --bg:     #F9F9F7;
+      --fg:     #111111;
+      --muted:  #E5E5E0;
+      --accent: #CC0000;
+      --border: #111111;
+      --gray:   #737373;
+      
+      --shadow-offset: 6px 6px 0 var(--border);
+      --transition: 200ms ease;
     }
 
-    /* ─── Base ─── */
-    html, body {
-      height: 100%;
-      background-color: var(--bg);
-      color: var(--fg);
-      font-family: 'Lora', Georgia, serif;
-      font-size: 16px;
-      line-height: 1.625;
-      -webkit-font-smoothing: antialiased;
-
-      /* Dot-grid texture from spec */
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4' viewBox='0 0 4 4'%3E%3Cpath fill='%23111111' fill-opacity='0.04' d='M1 3h1v1H1V3zm2-2h1v1H3V1z'%3E%3C/path%3E%3C/svg%3E");
+    @media (prefers-reduced-motion: reduce) {
+      * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
     }
 
-    /* ─── Utilities ─── */
-    .sharp       { border-radius: 0 !important; }
-    .font-serif  { font-family: 'Playfair Display', 'Times New Roman', serif; }
-    .font-body   { font-family: 'Lora', Georgia, serif; }
-    .font-sans   { font-family: 'Inter', 'Helvetica Neue', sans-serif; }
-    .font-mono   { font-family: 'JetBrains Mono', 'Courier New', monospace; }
-
-    .label {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--neutral-500);
+    html, body { 
+      min-height: 100%; background: var(--bg); color: var(--fg); 
+      font-family: 'Lora', serif; font-size: 17px; line-height: 1.6; overflow-x: hidden;
     }
 
-    .hard-shadow-hover {
-      transition: box-shadow 0.2s ease-out, transform 0.2s ease-out;
-    }
-    .hard-shadow-hover:hover {
-      box-shadow: 4px 4px 0px 0px #111111;
-      transform: translate(-2px, -2px);
-    }
-
-    /* ─── Container ─── */
-    .container {
-      max-width: 1280px;
-      margin: 0 auto;
-      padding: 0 24px;
+    /* TEXTURES */
+    .dot-grid {
+      position: fixed; inset: 0; z-index: -1; pointer-events: none;
+      background-image: radial-gradient(var(--border) 1px, transparent 1px);
+      background-size: 24px 24px; opacity: 0.05;
     }
 
-    /* ─── Header / Nav ─── */
+    /* TYPOGRAPHY */
+    h1, h2, h3, h4 { font-family: 'Playfair Display', serif; color: var(--fg); line-height: 1.1; letter-spacing: -0.02em; }
+    .font-sans { font-family: 'Inter', sans-serif; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; text-transform: uppercase; font-size: 12px; letter-spacing: 0.05em; }
+    
+    a:focus-visible, button:focus-visible { outline: 2px solid var(--border); outline-offset: 4px; }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 32px; }
+
+    /* BUTTONS */
+    .btn {
+      font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;
+      padding: 14px 28px; border: 2px solid var(--border); cursor: pointer;
+      text-decoration: none; display: inline-flex; align-items: center; justify-content: center;
+      background: var(--fg); color: var(--bg); transition: all var(--transition);
+    }
+    .btn:hover { background: var(--bg); color: var(--fg); box-shadow: var(--shadow-offset); transform: translate(-2px, -2px); }
+
+    /* HEADER */
+    .meta-row { border-bottom: 1px solid var(--border); padding: 8px 32px; display: flex; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; color: var(--gray); background: var(--bg); }
+    
     header {
-      position: sticky;
-      top: 0;
-      z-index: 40;
-      background-color: var(--bg);
-      border-bottom: 4px solid var(--border);
+      background: var(--bg); border-bottom: 4px solid var(--border); padding: 24px 32px;
+      display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 50;
     }
+    .masthead { font-family: 'Playfair Display', serif; font-size: 40px; font-weight: 900; color: var(--fg); text-decoration: none; }
+    
+    nav { display: flex; align-items: center; gap: 16px; }
+    nav ul { list-style: none; display: flex; gap: 8px; margin: 0; padding: 0; }
+    nav a { font-family: 'Inter', sans-serif; text-transform: uppercase; font-size: 12px; font-weight: 600; color: var(--fg); text-decoration: none; padding: 8px 16px; border: 1px solid var(--border); transition: all var(--transition); }
+    nav a:hover { color: var(--bg); background: var(--accent); border-color: var(--accent); }
 
-    .header-meta {
-      border-bottom: 1px solid var(--border);
-      padding: 6px 0;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .header-meta span {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--neutral-500);
-    }
-
-    .header-meta .breaking {
-      background: var(--accent);
-      color: #fff;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      padding: 2px 8px;
-    }
-
-    .nav-bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 12px 0;
-    }
-
-    .masthead {
-      font-family: 'Playfair Display', serif;
-      font-size: 28px;
-      font-weight: 900;
-      letter-spacing: -0.03em;
-      color: var(--fg);
-      text-decoration: none;
-      line-height: 1;
-    }
-
-    nav ul {
-      list-style: none;
-      display: flex;
-      gap: 0;
-    }
-
-    nav ul li a {
-      display: block;
-      padding: 8px 16px;
-      font-family: 'Inter', sans-serif;
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      text-decoration: none;
-      color: var(--fg);
-      border-left: 1px solid var(--border);
-      transition: color 0.2s ease-out, background-color 0.2s ease-out;
-    }
-
-    nav ul li:last-child a {
-      border-right: 1px solid var(--border);
-    }
-
-    nav ul li a:hover {
-      color: var(--accent);
-    }
-
-    /* ─── Ticker / Crawl ─── */
-    .ticker {
-      background: var(--fg);
-      color: var(--bg);
-      padding: 8px 0;
-      overflow: hidden;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .ticker-track {
-      display: flex;
-      gap: 64px;
-      animation: scroll-left 18s linear infinite;
-      white-space: nowrap;
-    }
-
-    .ticker-track span {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--bg);
-    }
-
-    .ticker-track .tick-accent {
-      color: var(--accent);
-      font-weight: 600;
-    }
-
-    @keyframes scroll-left {
-      from { transform: translateX(0); }
-      to   { transform: translateX(-50%); }
-    }
-
-    /* ─── Hero Section ─── */
-    .hero {
-      border-bottom: 4px solid var(--border);
-      padding: 48px 0 40px;
-    }
-
-    .hero-inner {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 0;
-    }
-
-    @media (min-width: 768px) {
-      .hero-inner {
-        grid-template-columns: 8fr 4fr;
+    /* MOBILE MENU TOGGLE */
+    .menu-toggle { display: none; flex-direction: column; gap: 4px; cursor: pointer; background: transparent; border: none; padding: 8px; }
+    .menu-toggle span { width: 24px; height: 2px; background: var(--fg); transition: 0.3s; }
+    #mobile-menu-checkbox { display: none; }
+    
+    @media (max-width: 900px) {
+      .menu-toggle { display: flex; }
+      nav { 
+        position: absolute; top: 100%; left: 0; right: 0; 
+        background: var(--bg); border-bottom: 4px solid var(--border);
+        flex-direction: column; padding: 24px; display: none;
       }
+      nav ul { flex-direction: column; width: 100%; }
+      nav a { display: block; text-align: center; }
+      #mobile-menu-checkbox:checked ~ nav { display: flex; }
+      .masthead { font-size: 28px; }
     }
 
-    .hero-main {
-      padding-right: 0;
-      border-bottom: 1px solid var(--border);
-    }
+    /* TICKER */
+    .ticker { background: var(--fg); color: var(--bg); border-bottom: 2px solid var(--border); padding: 12px 0; overflow: hidden; display: flex; white-space: nowrap; font-family: 'JetBrains Mono', monospace; font-size: 12px; text-transform: uppercase; }
+    .ticker-inner { display: flex; animation: marquee 20s linear infinite; }
+    .ticker-content { display: flex; gap: 40px; padding-right: 40px; align-items: center; }
+    .ticker-content span.red { color: var(--accent); font-weight: bold; }
+    @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
-    @media (min-width: 768px) {
-      .hero-main {
-        padding-right: 40px;
-        border-bottom: none;
-        border-right: 1px solid var(--border);
-      }
-    }
+    /* HERO */
+    .hero { padding: 80px 0; display: grid; grid-template-columns: 8fr 4fr; gap: 0; border-bottom: 4px solid var(--border); }
+    .hero-left { padding-right: 40px; }
+    .hero-right { border-left: 2px solid var(--border); padding-left: 40px; display: flex; flex-direction: column; }
+    
+    .badge { display: inline-block; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--bg); background: var(--accent); padding: 4px 12px; margin-bottom: 24px; }
+    
+    .hero-headline { font-size: clamp(3rem, 7vw, 6rem); margin-bottom: 32px; font-weight: 900; line-height: 1; }
+    
+    .drop-cap { float: left; font-family: 'Playfair Display', serif; font-size: 72px; line-height: 0.8; margin-right: 12px; font-weight: 900; margin-top: 8px; color: var(--accent); }
+    
+    .hero-body { font-size: 18px; color: var(--fg); margin-bottom: 40px; text-align: justify; }
+    
+    .sidebar-title { font-family: 'Inter', sans-serif; font-size: 12px; text-transform: uppercase; font-weight: 700; border-bottom: 2px solid var(--border); padding-bottom: 8px; margin-bottom: 24px; }
+    .sidebar-list { list-style: none; padding: 0; margin: 0; }
+    .sidebar-list li { padding: 16px 0; border-bottom: 1px solid var(--muted); font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 600; line-height: 1.3; cursor: pointer; transition: color 0.2s; }
+    .sidebar-list li:hover { color: var(--accent); }
 
-    .hero-kicker {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 20px;
-    }
+    /* ORNAMENTAL DIVIDER */
+    .divider { text-align: center; padding: 40px 0; font-size: 24px; color: var(--border); }
 
-    .hero-kicker .badge {
-      background: var(--accent);
-      color: #fff;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-      font-weight: 500;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      padding: 3px 10px;
-    }
-
-    .hero-kicker .kicker-label {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--neutral-500);
-    }
-
-    .hero-headline {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(48px, 8vw, 96px);
-      font-weight: 900;
-      line-height: 0.92;
-      letter-spacing: -0.03em;
-      color: var(--fg);
-      margin-bottom: 24px;
-    }
-
-    .hero-body {
-      font-family: 'Lora', serif;
-      font-size: 17px;
-      line-height: 1.65;
-      color: var(--neutral-600);
-      max-width: 540px;
-      text-align: justify;
-      margin-bottom: 32px;
-    }
-
-    /* Drop cap */
-    .hero-body::first-letter {
-      font-family: 'Playfair Display', serif;
-      font-size: 4.5em;
-      font-weight: 900;
-      float: left;
-      line-height: 0.75;
-      margin-right: 8px;
-      margin-top: 6px;
-      color: var(--fg);
-    }
-
-    .hero-cta-row {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
-
-    .btn-primary {
-      display: inline-block;
-      background: var(--fg);
-      color: var(--bg);
-      font-family: 'Inter', sans-serif;
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      text-decoration: none;
-      padding: 12px 28px;
-      border: 1px solid transparent;
-      min-height: 44px;
-      border-radius: 0;
-      cursor: pointer;
-      transition: background-color 0.2s ease-out, color 0.2s ease-out, border-color 0.2s ease-out;
-    }
-
-    .btn-primary:hover {
-      background: var(--bg);
-      color: var(--fg);
-      border-color: var(--border);
-    }
-
-    .btn-link {
-      font-family: 'Inter', sans-serif;
-      font-size: 12px;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--fg);
-      text-decoration: none;
-      text-underline-offset: 4px;
-      text-decoration-color: var(--accent);
-      text-decoration-thickness: 2px;
-      transition: text-decoration 0.2s;
-    }
-    .btn-link:hover { text-decoration: underline; }
-
-    /* Hero sidebar */
-    .hero-sidebar {
-      padding: 24px 0 0;
-    }
-
-    @media (min-width: 768px) {
-      .hero-sidebar {
-        padding: 0 0 0 32px;
-      }
-    }
-
-    .sidebar-label {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--neutral-500);
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 8px;
-      margin-bottom: 16px;
-    }
-
-    .sidebar-items { list-style: none; }
-
-    .sidebar-items li {
-      border-bottom: 1px solid var(--muted);
-      padding: 12px 0;
-    }
-
-    .sidebar-items li:last-child { border-bottom: none; }
-
-    .sidebar-items .story-cat {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--accent);
-      display: block;
-      margin-bottom: 4px;
-    }
-
-    .sidebar-items a {
-      font-family: 'Playfair Display', serif;
-      font-size: 15px;
-      font-weight: 700;
-      line-height: 1.3;
-      color: var(--fg);
-      text-decoration: none;
-    }
-
-    .sidebar-items a:hover { color: var(--accent); transition: color 0.2s; }
-
-    /* ─── Feature Card Strip ─── */
-    .feature-strip {
-      border-bottom: 4px solid var(--border);
-    }
-
-    .feature-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-    }
-
-    @media (min-width: 640px) {
-      .feature-grid { grid-template-columns: 1fr 1fr; }
-    }
-
-    @media (min-width: 1024px) {
-      .feature-grid { grid-template-columns: 1fr 1fr 1fr; }
-    }
-
+    /* FEATURE CARDS (COLLAPSED GRID) */
+    .features-section { padding: 0 0 80px; }
+    .collapsed-grid { display: grid; grid-template-columns: repeat(3, 1fr); border: 2px solid var(--border); }
     .feature-card {
-      border-top: 1px solid var(--border);
-      padding: 24px;
-      background: var(--bg);
-      text-decoration: none;
-      color: inherit;
-      display: block;
-      transition: background-color 0.2s ease-out, box-shadow 0.2s ease-out, transform 0.2s ease-out;
+      padding: 40px; border-right: 1px solid var(--border); transition: all var(--transition);
+      display: flex; flex-direction: column; align-items: flex-start; background: var(--bg);
     }
+    .feature-card:last-child { border-right: none; }
+    .feature-card:hover { transform: translate(-4px, -4px); box-shadow: var(--shadow-offset); border: 2px solid var(--border); z-index: 2; background: #fff; }
+    
+    .fc-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; color: var(--accent); margin-bottom: 16px; font-weight: bold; }
+    .feature-card h3 { font-size: 28px; margin-bottom: 16px; font-weight: 700; }
+    .feature-card p { font-size: 15px; color: var(--gray); line-height: 1.6; margin-bottom: 24px; flex-grow: 1; }
+    .fc-meta { font-family: 'JetBrains Mono', monospace; font-size: 10px; text-transform: uppercase; color: var(--gray); border-top: 1px solid var(--muted); padding-top: 12px; width: 100%; }
 
-    @media (min-width: 640px) {
-      .feature-card { border-right: 1px solid var(--border); }
-      .feature-card:nth-child(2n) { border-right: none; }
+    /* INVERTED STATS */
+    .inverted-strip { background: var(--fg); color: var(--bg); padding: 80px 0; border-bottom: 4px solid var(--border); }
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px; text-align: center; }
+    .stat-val { font-family: 'Playfair Display', serif; font-size: 48px; font-weight: 900; margin-bottom: 12px; line-height: 1; color: var(--bg); }
+    .stat-label { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent); text-transform: uppercase; letter-spacing: 0.05em; }
+
+    /* EDITORIAL SECTION */
+    .editorial-section { padding: 80px 0; border-bottom: 4px solid var(--border); }
+    .ed-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; position: relative; }
+    .ed-grid::after { content: ''; position: absolute; top: 0; bottom: 0; left: 50%; width: 1px; background: var(--border); }
+    .ed-col { text-align: justify; font-size: 16px; line-height: 1.7; }
+    .ed-col p { margin-bottom: 24px; }
+
+    /* FINAL CTA */
+    .final-cta { padding: 120px 0; text-align: center; }
+    .cta-box { border: 4px solid var(--border); border-top: 8px solid var(--accent); padding: 80px 40px; max-width: 800px; margin: 0 auto; background: #fff; }
+    .cta-box h2 { font-size: clamp(2.5rem, 5vw, 4rem); margin-bottom: 32px; }
+
+    /* FOOTER */
+    footer { border-top: 4px solid var(--border); padding: 32px; display: flex; justify-content: space-between; align-items: center; background: var(--bg); }
+    footer span { font-family: 'JetBrains Mono', monospace; font-size: 12px; text-transform: uppercase; color: var(--fg); font-weight: 500; }
+
+    /* RESPONSIVE */
+    @media (max-width: 1000px) {
+      .hero { grid-template-columns: 1fr; }
+      .hero-right { border-left: none; border-top: 4px solid var(--border); padding-left: 0; padding-top: 40px; margin-top: 40px; }
+      .hero-left { padding-right: 0; }
+      .collapsed-grid { grid-template-columns: 1fr; }
+      .feature-card { border-right: none; border-bottom: 1px solid var(--border); }
+      .feature-card:last-child { border-bottom: none; }
+      .stats-grid { grid-template-columns: 1fr 1fr; gap: 40px; }
+      .ed-grid { grid-template-columns: 1fr; gap: 32px; }
+      .ed-grid::after { display: none; }
     }
-
-    @media (min-width: 1024px) {
-      .feature-card:nth-child(2n) { border-right: 1px solid var(--border); }
-      .feature-card:nth-child(3n) { border-right: none; }
-    }
-
-    .feature-card:hover {
-      background: #F5F5F5;
-      box-shadow: 4px 4px 0px 0px #111111;
-      transform: translate(-2px, -2px);
-    }
-
-    .feature-card .card-cat {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--accent);
-      display: block;
-      margin-bottom: 10px;
-    }
-
-    .feature-card h3 {
-      font-family: 'Playfair Display', serif;
-      font-size: 20px;
-      font-weight: 700;
-      line-height: 1.25;
-      margin-bottom: 8px;
-      color: var(--fg);
-    }
-
-    .feature-card p {
-      font-family: 'Lora', serif;
-      font-size: 14px;
-      color: var(--neutral-600);
-      line-height: 1.55;
-    }
-
-    .feature-card .card-meta {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-top: 16px;
-    }
-
-    .feature-card .card-meta span {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--neutral-500);
-    }
-
-    /* ─── Ornamental Divider ─── */
-    .ornament {
-      text-align: center;
-      font-family: 'Playfair Display', serif;
-      font-size: 22px;
-      color: #A3A3A3;
-      letter-spacing: 1em;
-      padding: 20px 0;
-      border-bottom: 1px solid var(--muted);
+    @media (max-width: 600px) {
+      .stats-grid { grid-template-columns: 1fr; }
+      .btn { width: 100%; }
+      .cta-box { padding: 40px 24px; }
+      footer { flex-direction: column; gap: 16px; text-align: center; }
     }
   </style>
 </head>
 <body>
+  
+  <div class="dot-grid" aria-hidden="true"></div>
 
-<!-- ─── HEADER ─── -->
-<header>
-  <div class="container">
-    <!-- Edition metadata row -->
-    <div class="header-meta">
-      <span>Vol. I &nbsp;·&nbsp; Est. 2025 &nbsp;·&nbsp; Digital Edition</span>
-      <span class="breaking">Breaking</span>
-      <span id="date-display"></span>
-    </div>
+  <div class="meta-row">
+    <span>Vol. XCIII No. 34</span>
+    <span>Est. 2024</span>
+    <span style="text-align:right;">Daily Edition</span>
+  </div>
 
-    <!-- Masthead + Nav -->
-    <div class="nav-bar">
-      <a href="#" class="masthead font-serif">The Daily Scaffold</a>
+  <header>
+    <a href="#" class="masthead">The Daily Scaffold</a>
+    
+    <input type="checkbox" id="mobile-menu-checkbox">
+    <label for="mobile-menu-checkbox" class="menu-toggle" aria-label="Toggle Navigation">
+      <span></span><span></span><span></span>
+    </label>
 
-      <nav aria-label="Primary navigation">
-        <ul>
-          <li><a href="#">Design</a></li>
-          <li><a href="#">Engineering</a></li>
-          <li><a href="#">Systems</a></li>
-          <li><a href="#">Archives</a></li>
-        </ul>
-      </nav>
+    <nav>
+      <ul>
+        <li><a href="#">Front Page</a></li>
+        <li><a href="#">Typography</a></li>
+        <li><a href="#">Grid Systems</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker-inner">
+      <div class="ticker-content">
+        <span class="red">BREAKING</span><span>NEW DESIGN SYSTEM RELEASED</span>
+        <span class="red">UPDATE</span><span>ROUNDED CORNERS ABOLISHED</span>
+        <span class="red">TRENDS</span><span>HIGH DENSITY IS BACK</span>
+      </div>
+      <div class="ticker-content">
+        <span class="red">BREAKING</span><span>NEW DESIGN SYSTEM RELEASED</span>
+        <span class="red">UPDATE</span><span>ROUNDED CORNERS ABOLISHED</span>
+        <span class="red">TRENDS</span><span>HIGH DENSITY IS BACK</span>
+      </div>
     </div>
   </div>
 
-  <!-- Ticker crawl -->
-  <div class="ticker" aria-label="Breaking news ticker">
-    <div class="ticker-track">
-      <!-- Duplicated for seamless loop -->
-      <span>&#9642; &nbsp; Design prompts shipped &nbsp;</span>
-      <span class="tick-accent">NEW RELEASE</span>
-      <span>&#9642; &nbsp; Newsprint system v1.0 live &nbsp;</span>
-      <span>&#9642; &nbsp; Four design systems available &nbsp;</span>
-      <span class="tick-accent">SCAFFOLD</span>
-      <span>&#9642; &nbsp; Copy once. Ship everywhere. &nbsp;</span>
-      <span>&#9642; &nbsp; Bauhaus · Monochrome · Modern Dark &nbsp;</span>
-      <span class="tick-accent">READ MORE</span>
-      <span>&#9642; &nbsp; Design prompts shipped &nbsp;</span>
-      <span class="tick-accent">NEW RELEASE</span>
-      <span>&#9642; &nbsp; Newsprint system v1.0 live &nbsp;</span>
-      <span>&#9642; &nbsp; Four design systems available &nbsp;</span>
-      <span class="tick-accent">SCAFFOLD</span>
-      <span>&#9642; &nbsp; Copy once. Ship everywhere. &nbsp;</span>
-      <span>&#9642; &nbsp; Bauhaus · Monochrome · Modern Dark &nbsp;</span>
-      <span class="tick-accent">READ MORE</span>
-    </div>
-  </div>
-</header>
-
-<!-- ─── HERO ─── -->
-<section class="hero">
-  <div class="container">
-    <div class="hero-inner">
-
-      <!-- Main story -->
-      <article class="hero-main">
-        <div class="hero-kicker">
-          <span class="badge">Front Page</span>
-          <span class="kicker-label">Design Systems</span>
+  <main>
+    <section class="container hero">
+      <div class="hero-left">
+        <div class="badge">Editorial Lead</div>
+        <h1 class="hero-headline">Words shape <br>the world.</h1>
+        <div class="hero-body">
+          <span class="drop-cap">T</span>he Newsprint design system brings the density, authority, and rigorous grid structures of traditional print journalism to the digital realm. By combining massive serif headlines with tightly packed, justified body copy, we create an interface that demands to be read.
         </div>
-
-        <h1 class="hero-headline font-serif">
-          Words shape<br>the world.
-        </h1>
-
-        <p class="hero-body font-body">
-          Every great publication earns trust through clarity. The Newsprint
-          design system applies a century of editorial discipline to the modern
-          interface — zero-radius geometry, ink-black typography, and the kind
-          of grid that makes a reader lean in rather than scroll past.
-        </p>
-
-        <div class="hero-cta-row">
-          <a href="#" class="btn-primary sharp">Copy This System</a>
-          <a href="#" class="btn-link">View all systems →</a>
-        </div>
-      </article>
-
-      <!-- Sidebar stories -->
-      <aside class="hero-sidebar">
-        <p class="sidebar-label">Also in this edition</p>
-        <ul class="sidebar-items">
-          <li>
-            <span class="story-cat">Bauhaus</span>
-            <a href="#">Primary colors and radical geometry define this Constructivist masterwork.</a>
-          </li>
-          <li>
-            <span class="story-cat">Monochrome</span>
-            <a href="#">Pure black on white — when the serif does all the talking.</a>
-          </li>
-          <li>
-            <span class="story-cat">Linear / Modern</span>
-            <a href="#">Ambient depth and precise motion for the product era.</a>
-          </li>
+        <a href="#" class="btn">Read Full Article</a>
+      </div>
+      <div class="hero-right">
+        <div class="sidebar-title">Also in this edition</div>
+        <ul class="sidebar-list">
+          <li>The return of the collapsed grid: Why shared borders are structurally superior.</li>
+          <li>Red accents: Using color sparingly to signal urgency and breaking moments.</li>
+          <li>Drop caps and ornamental dividers in modern CSS.</li>
         </ul>
-      </aside>
-
-    </div>
-  </div>
-</section>
-
-<!-- ─── ORNAMENT ─── -->
-<div class="ornament container" aria-hidden="true">&#x2727; &nbsp; &#x2727; &nbsp; &#x2727;</div>
-
-<!-- ─── FEATURE STRIP ─── -->
-<section class="feature-strip">
-  <div class="feature-grid container" style="padding-left: 24px; padding-right: 24px;">
-
-    <a href="#" class="feature-card hard-shadow-hover">
-      <span class="card-cat">Typography</span>
-      <h3 class="font-serif">Why Serif Still Dominates Editorial UI</h3>
-      <p class="font-body">Playfair Display brings 200 years of typographic authority to the browser. High contrast, high drama.</p>
-      <div class="card-meta">
-        <span>5 min read</span>
-        <span>&#9642; Systems</span>
       </div>
-    </a>
+    </section>
 
-    <a href="#" class="feature-card hard-shadow-hover">
-      <span class="card-cat">Layout</span>
-      <h3 class="font-serif">The Art of the Collapsed Grid Border</h3>
-      <p class="font-body">Adjacent cells share one border. Double borders are an editorial sin. Here is how the grid holds itself together.</p>
-      <div class="card-meta">
-        <span>3 min read</span>
-        <span>&#9642; Engineering</span>
+    <div class="divider" aria-hidden="true">✦ ✦ ✦</div>
+
+    <section class="container features-section">
+      <div class="collapsed-grid">
+        <div class="feature-card">
+          <div class="fc-label">Typography</div>
+          <h3>The Scale</h3>
+          <p>Massive Playfair Display headlines contrast against dense Lora body text, creating a hierarchy that is instantly recognizable to anyone who has read a newspaper.</p>
+          <div class="fc-meta">Pg. 2 — Style Guide</div>
+        </div>
+        <div class="feature-card">
+          <div class="fc-label">Layout</div>
+          <h3>The Grid</h3>
+          <p>Elements share borders. The collapsed grid maximizes information density and eliminates the need for empty whitespace to separate content blocks.</p>
+          <div class="fc-meta">Pg. 3 — Structure</div>
+        </div>
+        <div class="feature-card">
+          <div class="fc-label">Color</div>
+          <h3>The Ink</h3>
+          <p>Strictly limited to off-white paper, ink black, and a single urgent red accent. This constraint ensures the content remains the absolute focal point.</p>
+          <div class="fc-meta">Pg. 4 — Palette</div>
+        </div>
       </div>
-    </a>
+    </section>
 
-    <a href="#" class="feature-card hard-shadow-hover">
-      <span class="card-cat">Colour</span>
-      <h3 class="font-serif">Red as Punctuation, Not Decoration</h3>
-      <p class="font-body">One accent, used twice per page. The editorial red earns its place by being almost entirely absent.</p>
-      <div class="card-meta">
-        <span>4 min read</span>
-        <span>&#9642; Design</span>
+    <section class="inverted-strip">
+      <div class="container stats-grid">
+        <div class="stat-item">
+          <div class="stat-val">9xl</div>
+          <div class="stat-label">Headline Scale</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-val">0px</div>
+          <div class="stat-label">Border Radius</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-val">1</div>
+          <div class="stat-label">Red Accent</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-val">4px</div>
+          <div class="stat-label">Section Rules</div>
+        </div>
       </div>
-    </a>
+    </section>
 
-  </div>
-</section>
+    <section class="container editorial-section">
+      <div class="ed-grid">
+        <div class="ed-col">
+          <p><span class="drop-cap" style="font-size: 56px; margin-top: 4px; color: var(--fg);">I</span>n modern web design, whitespace is often treated as a luxury—a sign of premium aesthetics. However, the Newsprint system challenges this notion. It argues that high information density, when organized by a rigorous grid and clear typographic hierarchy, is not cluttered, but authoritative.</p>
+          <p>By studying the layout of broadsheet newspapers, we can extract patterns that have guided readers through massive amounts of information for centuries. Thick rules (4px) separate major sections, while thin rules (1px) divide individual stories.</p>
+        </div>
+        <div class="ed-col">
+          <p>The use of justified text creates clean blocks of content that align perfectly with the grid, reinforcing the structural integrity of the page. The occasional drop cap anchors the eye, providing a clear entry point into long-form reading.</p>
+          <p>When interacting with the system, hover states avoid soft fades. Instead, elements exhibit a hard offset shadow—a sudden physical jump that feels deliberate, snappy, and unpolished in the best way possible.</p>
+        </div>
+      </div>
+    </section>
 
-<script>
-  // Inject today's date into the header meta
-  const d = new Date();
-  const fmt = d.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-  document.getElementById('date-display').textContent = fmt;
-</script>
+    <section class="final-cta">
+      <div class="container">
+        <div class="cta-box">
+          <h2>Stop scrolling. Start reading.</h2>
+          <a href="#" class="btn" style="padding: 16px 40px;">Get The Code</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>scaffold — prompt directory</span>
+    <span>Newsprint System Edition</span>
+  </footer>
 
 </body>
 </html>

@@ -4,536 +4,306 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Minimalist Monochrome — Design System Preview</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&family=Source+Serif+4:ital,wght@0,400;0,600;1,400;1,600&display=block" rel="stylesheet">
 
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=block');
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; border-radius: 0 !important; }
 
-    /* ─── Reset ─── */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    /* ─── Tokens ─── */
     :root {
-      --bg:          #FFFFFF;
-      --fg:          #000000;
-      --muted:       #F5F5F5;
-      --fg-muted:    #525252;
-      --border:      #000000;
-      --border-light:#E5E5E5;
+      --bg:     #FFFFFF;
+      --fg:     #000000;
+      --muted:  #F5F5F5;
+      --muted-fg: #525252;
+      --border: #000000;
+      
+      --transition: 100ms linear;
     }
 
-    /* ─── Base ─── */
-    html, body {
-      min-height: 100%;
-      background-color: var(--bg);
-      color: var(--fg);
-      font-family: 'Source Serif 4', Georgia, serif;
-      font-size: 16px;
-      line-height: 1.625;
-      -webkit-font-smoothing: antialiased;
+    @media (prefers-reduced-motion: reduce) {
+      * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
     }
 
-    /* ─── Horizontal lines texture (global) ─── */
-    body::after {
-      content: '';
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      background-image: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 1px,
-        #000 1px,
-        #000 2px
-      );
-      background-size: 100% 4px;
+    html, body { 
+      min-height: 100%; background: var(--bg); color: var(--fg); 
+      font-family: 'Source Serif 4', serif; font-size: 17px; line-height: 1.6; overflow-x: hidden;
+    }
+
+    /* TEXTURES */
+    .noise-bg {
+      position: fixed; inset: 0; z-index: 100; pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.02; mix-blend-mode: multiply;
+    }
+    .hline-bg {
+      position: fixed; inset: 0; z-index: -1; pointer-events: none;
+      background-image: repeating-linear-gradient(180deg, transparent, transparent 4px, #000 4px, #000 5px);
       opacity: 0.012;
-      z-index: 0;
     }
 
-    /* ─── Container ─── */
-    .container {
-      position: relative;
-      z-index: 1;
-      max-width: 1152px;
-      margin: 0 auto;
-      padding: 0 24px;
-    }
+    /* TYPOGRAPHY */
+    h1, h2, h3, h4 { font-family: 'Playfair Display', serif; color: var(--fg); line-height: 1.1; letter-spacing: -0.02em; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; text-transform: uppercase; font-size: 13px; letter-spacing: 0.05em; }
+    
+    a:focus-visible, button:focus-visible { outline: 3px solid var(--fg); outline-offset: 4px; }
 
-    /* ─── Header / Nav ─── */
+    .container { max-width: 1300px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 10; }
+
+    /* BUTTONS */
+    .btn {
+      font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 500; text-transform: uppercase;
+      padding: 16px 32px; border: 2px solid var(--fg); cursor: pointer;
+      text-decoration: none; display: inline-flex; align-items: center; justify-content: center;
+      transition: all var(--transition); letter-spacing: 0.05em;
+    }
+    .btn-primary { background: var(--fg); color: var(--bg); }
+    .btn-primary:hover { background: var(--bg); color: var(--fg); }
+    
+    .btn-ghost { background: transparent; color: var(--fg); border-color: transparent; text-decoration: underline; text-underline-offset: 6px; padding: 16px 16px; }
+    .btn-ghost:hover { background: var(--fg); color: var(--bg); text-decoration-color: transparent; }
+
+    /* HEADER */
     header {
-      position: sticky;
-      top: 0;
-      z-index: 40;
-      background-color: var(--bg);
-      border-bottom: 4px solid var(--border);
+      background: var(--bg); border-bottom: 4px solid var(--border); padding: 24px 40px;
+      display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 50;
     }
+    .logo { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 900; font-style: italic; color: var(--fg); text-decoration: none; }
+    
+    nav { display: flex; align-items: center; gap: 0; }
+    nav ul { list-style: none; display: flex; margin: 0; padding: 0; }
+    nav a { font-family: 'JetBrains Mono', monospace; text-transform: uppercase; font-size: 13px; color: var(--fg); text-decoration: none; padding: 12px 24px; border-left: 1px solid var(--border); transition: all var(--transition); }
+    nav li:last-child a { border-right: 1px solid var(--border); }
+    nav a:hover { background: var(--fg); color: var(--bg); }
 
-    .nav-bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 16px 0;
-    }
-
-    .wordmark {
-      font-family: 'Playfair Display', serif;
-      font-size: 22px;
-      font-weight: 900;
-      letter-spacing: -0.03em;
-      color: var(--fg);
-      text-decoration: none;
-      line-height: 1;
-      font-style: italic;
-    }
-
-    nav ul {
-      list-style: none;
-      display: flex;
-      gap: 0;
-    }
-
-    nav ul li a {
-      display: block;
-      padding: 8px 18px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-      font-weight: 500;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      text-decoration: none;
-      color: var(--fg);
-      border-left: 1px solid var(--border);
-      transition: background-color 0ms, color 0ms;
-    }
-
-    nav ul li:last-child a { border-right: 1px solid var(--border); }
-
-    nav ul li a:hover {
-      background: var(--fg);
-      color: var(--bg);
-    }
-
-    /* ─── Hero ─── */
-    .hero {
-      border-bottom: 4px solid var(--border);
-      padding: 56px 0 48px;
-    }
-
-    .hero-inner {
-      display: grid;
-      grid-template-columns: 1fr;
-    }
-
-    @media (min-width: 768px) {
-      .hero-inner { grid-template-columns: 8fr 4fr; }
-    }
-
-    .hero-main {
-      border-bottom: 1px solid var(--border);
-    }
-
-    @media (min-width: 768px) {
-      .hero-main {
-        padding-right: 48px;
-        border-bottom: none;
-        border-right: 1px solid var(--border);
+    /* MOBILE MENU TOGGLE */
+    .menu-toggle { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: transparent; border: none; padding: 8px; }
+    .menu-toggle span { width: 24px; height: 2px; background: var(--fg); transition: 0.3s; }
+    #mobile-menu-checkbox { display: none; }
+    
+    @media (max-width: 900px) {
+      .menu-toggle { display: flex; }
+      nav { 
+        position: absolute; top: 100%; left: 0; right: 0; 
+        background: var(--bg); border-bottom: 4px solid var(--border);
+        flex-direction: column; padding: 0; display: none;
       }
+      nav ul { flex-direction: column; width: 100%; }
+      nav a { display: block; padding: 16px; border: none; border-bottom: 1px solid var(--border); }
+      nav li:last-child a { border: none; border-bottom: 1px solid var(--border); }
+      #mobile-menu-checkbox:checked ~ nav { display: flex; }
     }
 
-    /* Small caps section label */
-    .hero-kicker {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      margin-bottom: 32px;
-    }
+    /* HERO */
+    .hero { padding: 120px 0; display: grid; grid-template-columns: 8fr 4fr; gap: 64px; align-items: stretch; border-bottom: 8px solid var(--border); }
+    .hero-left { padding-right: 40px; }
+    .hero-right { border-left: 2px solid var(--border); padding-left: 40px; display: flex; flex-direction: column; }
+    
+    .kicker { display: inline-flex; align-items: center; gap: 16px; margin-bottom: 32px; font-family: 'JetBrains Mono', monospace; font-size: 12px; text-transform: uppercase; font-weight: 500; }
+    .kicker::before { content: ''; width: 40px; height: 2px; background: var(--border); }
+    
+    .hero-headline { font-size: clamp(4rem, 8vw, 7rem); margin-bottom: 40px; max-width: 800px; font-weight: 900; }
+    .hero-headline i { font-style: italic; font-weight: 400; }
+    
+    .drop-cap { float: left; font-family: 'Playfair Display', serif; font-size: 80px; line-height: 0.8; margin-right: 12px; font-weight: 900; margin-top: 4px; }
+    .drop-cap-box { display: inline-flex; align-items: center; justify-content: center; width: 72px; height: 72px; border: 4px solid var(--border); font-family: 'Playfair Display', serif; font-size: 48px; font-weight: 900; float: left; margin-right: 16px; margin-top: 4px; margin-bottom: 4px; line-height: 1; }
+    
+    .hero-body { font-size: 20px; color: var(--muted-fg); max-width: 600px; margin-bottom: 48px; text-align: justify; }
+    .hero-ctas { display: flex; gap: 16px; align-items: center; }
 
-    .kicker-rule {
-      flex: 0 0 48px;
-      height: 2px;
-      background: var(--border);
-    }
+    .sidebar-list { list-style: none; padding: 0; margin: 0; flex-grow: 1; }
+    .sidebar-list li { padding: 24px 0; border-bottom: 1px solid var(--border); display: flex; gap: 16px; align-items: baseline; }
+    .sidebar-list li:first-child { padding-top: 0; }
+    .sl-num { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--muted-fg); }
+    .sl-text { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; }
 
-    .kicker-label {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-      font-weight: 500;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--fg-muted);
-    }
+    /* INVERTED STATS */
+    .inverted-strip { background: var(--fg); color: var(--bg); padding: 80px 0; position: relative; border-bottom: 8px solid var(--border); }
+    .vline-bg { position: absolute; inset: 0; background-image: repeating-linear-gradient(90deg, transparent, transparent 4px, rgba(255,255,255,0.1) 4px, rgba(255,255,255,0.1) 5px); pointer-events: none; opacity: 0.2; }
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px; position: relative; z-index: 2; text-align: center; }
+    .stat-val { font-family: 'Playfair Display', serif; font-size: 56px; font-weight: 900; margin-bottom: 16px; line-height: 1; color: var(--bg); }
+    .stat-label { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #A3A3A3; text-transform: uppercase; letter-spacing: 0.1em; }
 
-    /* Oversized display headline */
-    .hero-headline {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(56px, 10vw, 112px);
-      font-weight: 900;
-      line-height: 0.9;
-      letter-spacing: -0.04em;
-      color: var(--fg);
-      margin-bottom: 32px;
-    }
-
-    /* Italic word */
-    .hero-headline em {
-      font-style: italic;
-    }
-
-    .hero-body {
-      font-family: 'Source Serif 4', Georgia, serif;
-      font-size: 18px;
-      line-height: 1.7;
-      color: var(--fg-muted);
-      max-width: 440px;
-      margin-bottom: 40px;
-    }
-
-    .hero-cta-row {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      flex-wrap: wrap;
-    }
-
-    /* Primary: black, instant inversion */
-    .btn-primary {
-      display: inline-block;
-      background: var(--fg);
-      color: var(--bg);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      text-decoration: none;
-      padding: 14px 28px;
-      border: 1px solid var(--border);
-      min-height: 44px;
-      border-radius: 0;
-      cursor: pointer;
-      transition: background-color 0.1s, color 0.1s;
-    }
-
-    .btn-primary:hover {
-      background: var(--bg);
-      color: var(--fg);
-    }
-
-    /* Ghost: text link with underline */
-    .btn-ghost {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--fg);
-      text-decoration: none;
-    }
-
-    .btn-ghost:hover {
-      text-decoration: underline;
-      text-underline-offset: 3px;
-      text-decoration-thickness: 1px;
-    }
-
-    /* Hero sidebar: vertical ruled list */
-    .hero-sidebar {
-      padding: 24px 0 0;
-    }
-
-    @media (min-width: 768px) {
-      .hero-sidebar { padding: 0 0 0 40px; }
-    }
-
-    .sidebar-label {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-      font-weight: 500;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--fg-muted);
-      border-bottom: 2px solid var(--border);
-      padding-bottom: 8px;
-      margin-bottom: 0;
-    }
-
-    .sidebar-items { list-style: none; }
-
-    .sidebar-items li {
-      border-bottom: 1px solid var(--border-light);
-      padding: 14px 0;
-    }
-
-    .sidebar-items li:last-child { border-bottom: none; }
-
-    .sidebar-items h4 {
-      font-family: 'Playfair Display', serif;
-      font-size: 16px;
-      font-weight: 700;
-      line-height: 1.3;
-      color: var(--fg);
-    }
-
-    .sidebar-items p {
-      font-family: 'Source Serif 4', serif;
-      font-size: 13px;
-      color: var(--fg-muted);
-      line-height: 1.5;
-      margin-top: 4px;
-    }
-
-    /* ─── Inverted stats strip ─── */
-    .stats-strip {
-      background: var(--fg);
-      border-bottom: 4px solid var(--border);
-      padding: 40px 0;
-      position: relative;
-      overflow: hidden;
-    }
-
-    /* Vertical line texture on dark bg */
-    .stats-strip::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background-image: repeating-linear-gradient(
-        90deg,
-        transparent,
-        transparent 1px,
-        #fff 1px,
-        #fff 2px
-      );
-      background-size: 4px 100%;
-      opacity: 0.03;
-      pointer-events: none;
-    }
-
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      position: relative;
-    }
-
-    .stat-cell {
-      padding: 0 32px;
-      border-right: 1px solid rgba(255,255,255,0.12);
-      text-align: left;
-    }
-
-    .stat-cell:last-child { border-right: none; }
-
-    .stat-value {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(36px, 5vw, 64px);
-      font-weight: 900;
-      letter-spacing: -0.04em;
-      color: var(--bg);
-      display: block;
-      line-height: 1;
-      margin-bottom: 8px;
-    }
-
-    .stat-key {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-      font-weight: 500;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.4);
-    }
-
-    /* ─── Feature cards ─── */
-    .feature-strip {
-      border-bottom: 4px solid var(--border);
-    }
-
-    .feature-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      border-top: 1px solid var(--border);
-    }
-
-    @media (min-width: 640px) {
-      .feature-grid { grid-template-columns: 1fr 1fr; }
-    }
-
-    @media (min-width: 1024px) {
-      .feature-grid { grid-template-columns: 1fr 1fr 1fr; }
-    }
-
+    /* FEATURE CARDS (COLLAPSED GRID) */
+    .features-section { padding: 0; border-bottom: 8px solid var(--border); }
+    .collapsed-grid { display: grid; grid-template-columns: repeat(3, 1fr); border: 2px solid var(--border); border-top: none; border-bottom: none; }
     .feature-card {
-      border-right: 1px solid var(--border);
-      padding: 28px;
-      background: var(--bg);
-      text-decoration: none;
-      color: inherit;
-      display: block;
-      transition: background-color 0.1s, color 0.1s;
+      padding: 60px 40px; border-right: 2px solid var(--border); transition: all var(--transition);
+      display: flex; flex-direction: column; align-items: flex-start; background: var(--bg); color: var(--fg);
     }
+    .feature-card:last-child { border-right: none; }
+    .feature-card:hover { background: var(--fg); color: var(--bg); }
+    .feature-card:hover .fc-label { color: var(--bg); border-bottom-color: var(--bg); }
+    .feature-card:hover h3 { color: var(--bg); }
+    .feature-card:hover p { color: #ccc; }
+    
+    .fc-label { font-family: 'JetBrains Mono', monospace; font-size: 12px; text-transform: uppercase; border-bottom: 1px solid var(--border); padding-bottom: 8px; margin-bottom: 32px; width: 100%; transition: all var(--transition); }
+    .feature-card h3 { font-size: 32px; margin-bottom: 16px; font-weight: 700; transition: color var(--transition); }
+    .feature-card p { font-size: 16px; color: var(--muted-fg); line-height: 1.6; transition: color var(--transition); }
 
-    @media (min-width: 640px) {
-      .feature-card:nth-child(2n) { border-right: none; }
+    /* PULL QUOTE */
+    .quote-section { padding: 120px 0; border-bottom: 8px solid var(--border); text-align: center; position: relative; }
+    .quote-mark { font-family: 'Playfair Display', serif; font-size: 160px; line-height: 0; color: var(--muted); position: absolute; top: 140px; left: 50%; transform: translateX(-50%); z-index: -1; font-weight: 900; }
+    .pull-quote { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 4vw, 3.5rem); font-style: italic; max-width: 900px; margin: 0 auto 32px; font-weight: 400; line-height: 1.3; }
+    .quote-attr { font-family: 'JetBrains Mono', monospace; font-size: 14px; text-transform: uppercase; font-weight: 500; }
+    .quote-attr::before { content: '— '; }
+
+    /* PRODUCT MANIFESTO */
+    .manifesto-section { padding: 120px 0; border-bottom: 8px solid var(--border); }
+    .manifesto-box { border: 4px solid var(--border); padding: 80px; max-width: 900px; margin: 0 auto; background: var(--bg); position: relative; }
+    .manifesto-box::before { content: ''; position: absolute; top: -16px; left: -16px; right: -16px; bottom: -16px; border: 1px solid var(--border); pointer-events: none; }
+    
+    .manifesto-text { font-size: 18px; line-height: 1.8; text-align: justify; }
+    .manifesto-text p { margin-bottom: 24px; }
+
+    /* FINAL CTA */
+    .final-cta { background: var(--fg); color: var(--bg); padding: 140px 0; text-align: center; }
+    .final-cta h2 { color: var(--bg); font-size: clamp(3rem, 6vw, 5rem); margin-bottom: 24px; font-weight: 900; }
+    .final-cta p { color: #A3A3A3; font-size: 20px; max-width: 600px; margin: 0 auto 40px; font-family: 'Source Serif 4', serif; }
+    .btn-inverted { background: var(--bg); color: var(--fg); border-color: var(--bg); }
+    .btn-inverted:hover { background: var(--fg); color: var(--bg); border-color: var(--bg); }
+
+    /* FOOTER */
+    footer { border-top: 4px solid var(--border); padding: 40px; display: flex; justify-content: space-between; align-items: center; background: var(--bg); }
+    footer span { font-family: 'JetBrains Mono', monospace; font-size: 13px; text-transform: uppercase; color: var(--fg); font-weight: 500; }
+
+    /* RESPONSIVE */
+    @media (max-width: 1000px) {
+      .hero { grid-template-columns: 1fr; gap: 40px; }
+      .hero-right { border-left: none; border-top: 2px solid var(--border); padding-left: 0; padding-top: 40px; }
+      .hero-left { padding-right: 0; }
+      .collapsed-grid { grid-template-columns: 1fr; }
+      .feature-card { border-right: none; border-bottom: 2px solid var(--border); }
+      .feature-card:last-child { border-bottom: none; }
+      .stats-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+      .manifesto-box { padding: 40px; }
     }
-
-    @media (min-width: 1024px) {
-      .feature-card:nth-child(2n) { border-right: 1px solid var(--border); }
-      .feature-card:nth-child(3n) { border-right: none; }
-    }
-
-    /* Color inversion on hover */
-    .feature-card:hover {
-      background: var(--fg);
-      color: var(--bg);
-    }
-
-    .feature-card:hover .card-key { color: rgba(255,255,255,0.4); }
-    .feature-card:hover p { color: rgba(255,255,255,0.7); }
-
-    .card-key {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-      font-weight: 500;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--fg-muted);
-      display: block;
-      margin-bottom: 14px;
-      transition: color 0.1s;
-    }
-
-    .feature-card h3 {
-      font-family: 'Playfair Display', serif;
-      font-size: 22px;
-      font-weight: 700;
-      line-height: 1.2;
-      margin-bottom: 10px;
-      color: inherit;
-    }
-
-    .feature-card p {
-      font-family: 'Source Serif 4', serif;
-      font-size: 14px;
-      color: var(--fg-muted);
-      line-height: 1.6;
-      transition: color 0.1s;
+    @media (max-width: 600px) {
+      .stats-grid { grid-template-columns: 1fr; }
+      .quote-mark { font-size: 100px; top: 110px; }
+      .btn { width: 100%; justify-content: center; }
+      .hero-ctas { flex-direction: column; }
+      footer { flex-direction: column; gap: 16px; text-align: center; }
     }
   </style>
 </head>
 <body>
+  
+  <div class="noise-bg" aria-hidden="true"></div>
+  <div class="hline-bg" aria-hidden="true"></div>
 
-<!-- ─── HEADER ─── -->
-<header>
-  <div class="container">
-    <div class="nav-bar">
-      <a href="#" class="wordmark">Monochrome</a>
+  <header>
+    <a href="#" class="logo">Monochrome</a>
+    
+    <input type="checkbox" id="mobile-menu-checkbox">
+    <label for="mobile-menu-checkbox" class="menu-toggle" aria-label="Toggle Navigation">
+      <span></span><span></span><span></span>
+    </label>
 
-      <nav aria-label="Primary navigation">
-        <ul>
-          <li><a href="#">Collection</a></li>
-          <li><a href="#">Editorial</a></li>
-          <li><a href="#">Archive</a></li>
-          <li><a href="#">Contact</a></li>
-        </ul>
-      </nav>
-    </div>
-  </div>
-</header>
+    <nav>
+      <ul>
+        <li><a href="#">Foundations</a></li>
+        <li><a href="#">Typography</a></li>
+        <li><a href="#">Components</a></li>
+      </ul>
+    </nav>
+  </header>
 
-<!-- ─── HERO ─── -->
-<section class="hero">
-  <div class="container">
-    <div class="hero-inner">
-
-      <!-- Main -->
-      <article class="hero-main">
-        <div class="hero-kicker">
-          <div class="kicker-rule"></div>
-          <span class="kicker-label">Design System</span>
+  <main>
+    <section class="container hero">
+      <div class="hero-left">
+        <div class="kicker">Est. 2024</div>
+        <h1 class="hero-headline">Nothing but <i>type.</i></h1>
+        <div class="hero-body">
+          <div class="drop-cap-box">E</div>
+          mbrace the stark beauty of pure black and white. By stripping away color, rounded corners, and complex gradients, we force a reliance on typographic scale, rigid grids, and high-contrast composition to establish visual hierarchy.
         </div>
-
-        <h1 class="hero-headline">
-          Nothing<br>but <em>type.</em>
-        </h1>
-
-        <p class="hero-body">
-          Minimalist Monochrome strips the interface to its absolute core.
-          Black on white. Serif on silence. When every decision is a
-          constraint, every constraint becomes an expression.
-        </p>
-
-        <div class="hero-cta-row">
-          <a href="#" class="btn-primary">Apply This System →</a>
-          <a href="#" class="btn-ghost">View all systems</a>
+        <div class="hero-ctas">
+          <a href="#" class="btn btn-primary">Initialize System</a>
+          <a href="#" class="btn btn-ghost">Read the Manifesto</a>
         </div>
-      </article>
-
-      <!-- Sidebar -->
-      <aside class="hero-sidebar">
-        <p class="sidebar-label">Principles</p>
-        <ul class="sidebar-items">
-          <li>
-            <h4>Zero radius, always</h4>
-            <p>Every corner is 90 degrees. Sharp geometry is non-negotiable.</p>
-          </li>
-          <li>
-            <h4>No accent colors. Ever.</h4>
-            <p>Black IS the accent. Inversion replaces color for emphasis.</p>
-          </li>
-          <li>
-            <h4>Typography as structure</h4>
-            <p>Headlines don't inform — they dominate. Scale is the hierarchy.</p>
-          </li>
+      </div>
+      <div class="hero-right">
+        <ul class="sidebar-list">
+          <li><span class="sl-num">01</span> <span class="sl-text">Zero Border Radius</span></li>
+          <li><span class="sl-num">02</span> <span class="sl-text">Massive Display Scale</span></li>
+          <li><span class="sl-num">03</span> <span class="sl-text">Instant Feedback</span></li>
+          <li><span class="sl-num">04</span> <span class="sl-text">Collapsed Grids</span></li>
         </ul>
-      </aside>
-
-    </div>
-  </div>
-</section>
-
-<!-- ─── INVERTED STATS STRIP ─── -->
-<section class="stats-strip" aria-label="System metrics">
-  <div class="container">
-    <div class="stats-grid">
-      <div class="stat-cell">
-        <span class="stat-value">0</span>
-        <span class="stat-key">Border radius values</span>
       </div>
-      <div class="stat-cell">
-        <span class="stat-value">2</span>
-        <span class="stat-key">Colors in the palette</span>
+    </section>
+
+    <section class="inverted-strip">
+      <div class="vline-bg"></div>
+      <div class="container stats-grid">
+        <div class="stat-item">
+          <div class="stat-val">0</div>
+          <div class="stat-label">Corner Radius</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-val">2</div>
+          <div class="stat-label">Colors Allowed</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-val">21:1</div>
+          <div class="stat-label">Contrast Ratio</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-val">9xl</div>
+          <div class="stat-label">Display Scale</div>
+        </div>
       </div>
-      <div class="stat-cell">
-        <span class="stat-value">21:1</span>
-        <span class="stat-key">Contrast ratio (WCAG AAA)</span>
+    </section>
+
+    <section class="container features-section">
+      <div class="collapsed-grid">
+        <div class="feature-card">
+          <div class="fc-label">Vol 1. Typography</div>
+          <h3>The Scale</h3>
+          <p>Utilize Playfair Display at massive sizes for headlines, paired with highly legible Source Serif 4 for long-form reading. JetBrains Mono provides technical contrast.</p>
+        </div>
+        <div class="feature-card">
+          <div class="fc-label">Vol 2. Structure</div>
+          <h3>The Grid</h3>
+          <p>Borders are not just decorative; they are structural. Use 1px, 2px, 4px, and 8px solid black rules to delineate space and organize complex information.</p>
+        </div>
+        <div class="feature-card">
+          <div class="fc-label">Vol 3. Interaction</div>
+          <h3>The Inversion</h3>
+          <p>Hover states and interactions rely on immediate, high-contrast color inversion. 100ms transitions provide a snappy, brutalist feel without feeling broken.</p>
+        </div>
       </div>
-    </div>
-  </div>
-</section>
+    </section>
 
-<!-- ─── FEATURE STRIP ─── -->
-<section class="feature-strip">
-  <div class="feature-grid container" style="padding-left: 24px; padding-right: 24px;">
+    <section class="container quote-section">
+      <div class="quote-mark">"</div>
+      <h2 class="pull-quote">Perfection is achieved, not when there is nothing more to add, but when there is nothing left to take away.</h2>
+      <div class="quote-attr">Antoine de Saint-Exupéry</div>
+    </section>
 
-    <a href="#" class="feature-card">
-      <span class="card-key">Typography</span>
-      <h3>Playfair Display at full volume</h3>
-      <p>Headlines at 9xl. Words that function as graphic elements. The serif is not decoration — it is the design.</p>
-    </a>
+    <section class="container manifesto-section">
+      <div class="manifesto-box">
+        <div class="manifesto-text">
+          <p><span class="drop-cap">T</span>he Minimalist Monochrome design system is an exercise in restraint. In an era of infinite hex codes, layered shadows, and complex bezier curves, choosing pure black and white is a radical act of simplification. It demands that the content itself be compelling.</p>
+          <p>When you remove color as a crutch for establishing hierarchy, you are forced to master spacing, typographic scale, and structural borders. This system provides the raw materials to build editorial experiences that feel timeless, authoritative, and distinctly premium.</p>
+        </div>
+      </div>
+    </section>
 
-    <a href="#" class="feature-card">
-      <span class="card-key">Depth without shadows</span>
-      <h3>Inversion creates emphasis</h3>
-      <p>Color inversion — black to white, white to black — replaces elevation. No shadows, no gradients. Depth through contrast alone.</p>
-    </a>
+    <section class="final-cta">
+      <div class="container">
+        <h2>Strip away the noise.</h2>
+        <p>Get the complete typographic scale and CSS foundations.</p>
+        <a href="#" class="btn btn-inverted" style="margin-top: 24px;">Deploy Monochrome</a>
+      </div>
+    </section>
+  </main>
 
-    <a href="#" class="feature-card">
-      <span class="card-key">Motion</span>
-      <h3>Instant. Binary. Purposeful.</h3>
-      <p>100ms transitions maximum. States are on or off. Nothing eases in — it arrives.</p>
-    </a>
-
-  </div>
-</section>
+  <footer>
+    <span>scaffold — prompt directory</span>
+    <span>Minimalist Monochrome System</span>
+  </footer>
 
 </body>
 </html>

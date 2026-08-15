@@ -4,102 +4,409 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Corporate Trust — Design System Preview</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=block');
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=block" rel="stylesheet">
 
+  <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
       --bg:      #F8FAFC;
-      --fg:      #0F172A;
-      --muted:   #64748B;
-      --primary: #4F46E5;
-      --secondary:#8B5CF6;
       --surface: #FFFFFF;
+      --primary: #4F46E5; /* Indigo */
+      --secondary: #7C3AED; /* Violet */
+      --text:    #0F172A;
+      --muted:   #64748B;
+      --success: #10B981;
       --border:  #E2E8F0;
-      --shadow:  0 10px 25px -5px rgba(79,70,229,0.1);
+      
+      --gradient-brand: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      
+      --shadow-color: 0 10px 30px -10px rgba(79, 70, 229, 0.2);
+      --shadow-hover: 0 20px 40px -10px rgba(124, 58, 237, 0.25);
+      --shadow-card:  0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+      
+      --transition: 300ms cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    html, body { min-height:100%; background:var(--bg); color:var(--fg); font-family:'Plus Jakarta Sans',sans-serif; font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased; overflow-x:hidden; }
+    @media (prefers-reduced-motion: reduce) {
+      * { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+    }
 
-    /* Soft blob bg */
-    body::before { content:''; position:fixed; top:-200px; right:-200px; width:600px; height:600px; background:radial-gradient(circle, rgba(79,70,229,.15) 0%, transparent 70%); filter:blur(60px); z-index:-1; }
-    body::after { content:''; position:fixed; bottom:-200px; left:-200px; width:600px; height:600px; background:radial-gradient(circle, rgba(139,92,246,.15) 0%, transparent 70%); filter:blur(60px); z-index:-1; }
+    html, body { 
+      min-height: 100%; 
+      background: var(--bg); 
+      color: var(--text); 
+      font-family: 'Plus Jakarta Sans', sans-serif; 
+      font-size: 16px; 
+      line-height: 1.6; 
+      overflow-x: hidden;
+    }
 
-    .container { max-width:1152px; margin:0 auto; padding:0 32px; }
+    /* ATMOSPHERIC ORBS */
+    .orb { position: fixed; border-radius: 50%; filter: blur(80px); opacity: 0.2; z-index: -1; pointer-events: none; }
+    .orb-1 { top: -10%; right: -10%; width: 60vw; height: 60vw; background: var(--primary); }
+    .orb-2 { bottom: -10%; left: -10%; width: 50vw; height: 50vw; background: var(--secondary); opacity: 0.15; }
+    .orb-3 { top: 40%; left: 40%; width: 40vw; height: 40vw; background: #FFFFFF; filter: blur(120px); opacity: 0.4; }
 
-    /* NAV */
-    header { background:rgba(255,255,255,.8); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); padding:16px 32px; display:flex; justify-content:space-between; align-items:center; position:sticky; top:0; z-index:50; }
-    .logo { font-size:20px; font-weight:700; color:var(--fg); text-decoration:none; display:flex; align-items:center; gap:8px; }
-    .logo-icon { width:24px; height:24px; background:linear-gradient(135deg,var(--primary),var(--secondary)); border-radius:6px; }
-    nav ul { list-style:none; display:flex; gap:32px; }
-    nav a { font-size:14px; font-weight:500; color:var(--muted); text-decoration:none; transition:color .2s; }
-    nav a:hover { color:var(--primary); }
-    .btn-nav { background:var(--primary); color:#fff; font-size:14px; font-weight:600; padding:10px 24px; border-radius:8px; text-decoration:none; transition:background .2s; box-shadow:0 4px 6px rgba(79,70,229,.2); }
-    .btn-nav:hover { background:#4338CA; }
+    /* TYPOGRAPHY */
+    h1, h2, h3, h4, h5 { font-weight: 700; color: var(--text); letter-spacing: -0.02em; line-height: 1.2; }
+    .text-gradient {
+      background: var(--gradient-brand);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    
+    a:focus-visible, button:focus-visible { outline: 2px solid var(--primary); outline-offset: 4px; }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 32px; position: relative; z-index: 10; }
+
+    /* HEADER */
+    header {
+      background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 32px; display: flex; justify-content: space-between; align-items: center;
+      position: sticky; top: 0; z-index: 50;
+    }
+    .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text); }
+    .logo-icon { width: 32px; height: 32px; border-radius: 8px; background: var(--gradient-brand); box-shadow: var(--shadow-color); }
+    .logo span { font-weight: 800; font-size: 20px; letter-spacing: -0.03em; }
+    
+    nav { display: flex; align-items: center; gap: 32px; }
+    nav ul { list-style: none; display: flex; gap: 24px; margin: 0; padding: 0; }
+    nav a { font-size: 14px; font-weight: 500; color: var(--muted); text-decoration: none; transition: color var(--transition); }
+    nav a:hover { color: var(--primary); }
+    
+    .btn-primary {
+      background: var(--gradient-brand); color: #fff; font-size: 14px; font-weight: 600;
+      padding: 12px 24px; border-radius: 100px; text-decoration: none;
+      box-shadow: var(--shadow-color); transition: all var(--transition); border: none; cursor: pointer;
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
+    
+    .btn-secondary {
+      background: var(--surface); color: var(--text); font-size: 14px; font-weight: 600;
+      padding: 12px 24px; border-radius: 100px; text-decoration: none; border: 1px solid var(--border);
+      box-shadow: var(--shadow-card); transition: all var(--transition); display: inline-block;
+    }
+    .btn-secondary:hover { border-color: var(--muted); background: #f8fafc; }
+
+    /* MOBILE MENU TOGGLE */
+    .menu-toggle { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: transparent; border: none; padding: 8px; }
+    .menu-toggle span { width: 24px; height: 2px; background: var(--text); transition: 0.3s; }
+    #mobile-menu-checkbox { display: none; }
+    
+    @media (max-width: 900px) {
+      .menu-toggle { display: flex; }
+      nav { 
+        position: absolute; top: 100%; left: 0; right: 0; 
+        background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(12px);
+        flex-direction: column; padding: 32px; border-bottom: 1px solid var(--border);
+        transform: translateY(-10px); opacity: 0; pointer-events: none; transition: all 0.3s ease;
+      }
+      nav ul { flex-direction: column; text-align: center; gap: 24px; width: 100%; }
+      nav a { font-size: 16px; }
+      .btn-primary { width: 100%; text-align: center; margin-top: 16px; }
+      #mobile-menu-checkbox:checked ~ nav { transform: translateY(0); opacity: 1; pointer-events: auto; }
+      #mobile-menu-checkbox:checked ~ .menu-toggle span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+      #mobile-menu-checkbox:checked ~ .menu-toggle span:nth-child(2) { opacity: 0; }
+      #mobile-menu-checkbox:checked ~ .menu-toggle span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+    }
 
     /* HERO */
-    .hero { padding:100px 0 80px; text-align:center; }
-    .hero-pill { display:inline-block; background:rgba(79,70,229,.1); color:var(--primary); font-size:13px; font-weight:600; padding:6px 16px; border-radius:999px; margin-bottom:24px; }
-    h1.hero-headline { font-size:clamp(3rem,6vw,4.5rem); font-weight:700; line-height:1.1; letter-spacing:-.02em; margin-bottom:24px; color:var(--fg); }
-    h1.hero-headline span { background:linear-gradient(135deg,var(--primary),var(--secondary)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
-    .hero-sub { color:var(--muted); font-size:18px; max-width:640px; margin:0 auto 40px; line-height:1.6; }
-    .btn-primary { display:inline-block; background:linear-gradient(135deg,var(--primary),var(--secondary)); color:#fff; font-size:15px; font-weight:600; padding:16px 36px; border-radius:8px; text-decoration:none; transition:transform .2s, box-shadow .2s; box-shadow:0 8px 15px rgba(79,70,229,.2); }
-    .btn-primary:hover { transform:translateY(-2px); box-shadow:0 12px 20px rgba(79,70,229,.3); }
+    .hero { padding: 100px 0 120px; display: grid; grid-template-columns: 60% 40%; gap: 40px; align-items: center; perspective: 1000px; }
+    .badge {
+      display: inline-block; background: rgba(79, 70, 229, 0.1); color: var(--primary);
+      padding: 6px 12px; border-radius: 100px; font-size: 13px; font-weight: 600; margin-bottom: 24px;
+    }
+    .hero-headline { font-size: clamp(3rem, 5vw, 4.5rem); margin-bottom: 24px; }
+    .hero-body { font-size: 18px; color: var(--muted); max-width: 540px; margin-bottom: 40px; }
+    .hero-ctas { display: flex; gap: 16px; flex-wrap: wrap; }
+    
+    /* Isometric Dashboard */
+    .iso-wrapper { position: relative; width: 100%; height: 400px; transform-style: preserve-3d; }
+    .iso-card {
+      position: absolute; top: 50%; left: 50%; width: 100%; max-width: 400px; height: 280px;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 24px;
+      box-shadow: 20px 30px 50px rgba(79, 70, 229, 0.15), inset 0 0 0 1px rgba(255,255,255,0.5);
+      transform: translate(-50%, -50%) rotateX(20deg) rotateY(-15deg);
+      display: flex; flex-direction: column; padding: 24px;
+    }
+    .iso-card-header { height: 24px; width: 100%; background: #f1f5f9; border-radius: 8px; margin-bottom: 16px; }
+    .iso-card-graph { flex-grow: 1; background: linear-gradient(180deg, rgba(79,70,229,0.1) 0%, transparent 100%); border-bottom: 2px solid var(--primary); border-radius: 8px 8px 0 0; }
+    
+    .iso-float {
+      position: absolute; background: var(--surface); border-radius: 16px; padding: 16px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1); border: 1px solid var(--border);
+    }
+    .float-1 { top: 0; right: -20px; width: 140px; height: 80px; transform: translateZ(50px) rotateX(20deg) rotateY(-15deg); }
+    .float-2 { bottom: 20px; left: -20px; width: 160px; height: 60px; transform: translateZ(80px) rotateX(20deg) rotateY(-15deg); }
 
-    /* CARDS */
-    .cards { display:grid; grid-template-columns:repeat(3,1fr); gap:32px; padding:0 32px 100px; }
-    .card { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:32px; box-shadow:var(--shadow); transition:transform .3s, box-shadow .3s; }
-    .card:hover { transform:translateY(-5px); box-shadow:0 20px 30px -10px rgba(79,70,229,.15); border-color:rgba(79,70,229,.2); }
-    .card-icon { width:48px; height:48px; background:rgba(79,70,229,.1); border-radius:12px; margin-bottom:24px; display:flex; align-items:center; justify-content:center; color:var(--primary); font-size:24px; }
-    .card h3 { font-size:18px; font-weight:600; margin-bottom:12px; color:var(--fg); }
-    .card p { color:var(--muted); font-size:15px; }
+    /* STATS BAR */
+    .stats-section { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 40px 0; }
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; text-align: center; }
+    .stat-val { font-size: 32px; font-weight: 800; color: var(--text); margin-bottom: 4px; }
+    .stat-label { font-size: 14px; font-weight: 500; color: var(--muted); }
 
-    footer { border-top:1px solid var(--border); padding:32px; display:flex; justify-content:space-between; background:var(--surface); }
-    footer span { color:var(--muted); font-size:14px; font-weight:500; }
+    /* FEATURE CARDS */
+    .features-section { padding: 120px 0; }
+    .section-header { text-align: center; margin-bottom: 64px; }
+    .section-header h2 { font-size: clamp(2rem, 4vw, 2.5rem); margin-bottom: 16px; }
+    
+    .features-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+    .feature-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 24px;
+      padding: 32px 24px; box-shadow: var(--shadow-card); transition: all var(--transition);
+    }
+    .feature-card:hover { transform: translateY(-4px); border-color: rgba(79, 70, 229, 0.2); box-shadow: var(--shadow-color); }
+    .fc-icon {
+      width: 48px; height: 48px; border-radius: 12px; background: var(--primary);
+      color: #fff; display: flex; align-items: center; justify-content: center; margin-bottom: 24px; font-size: 20px; box-shadow: var(--shadow-color);
+    }
+    .feature-card h3 { font-size: 18px; margin-bottom: 12px; }
+    .feature-card p { color: var(--muted); font-size: 14px; }
+
+    /* ZIG ZAG */
+    .zigzag-section { padding: 0 0 120px; }
+    .zz-row { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; margin-bottom: 120px; }
+    .zz-row:nth-child(even) .zz-content { order: 2; }
+    .zz-row:nth-child(even) .zz-visual { order: 1; }
+    
+    .zz-visual {
+      width: 100%; aspect-ratio: 4/3; border-radius: 24px;
+      background: linear-gradient(135deg, rgba(79,70,229,0.1), rgba(124,58,237,0.1));
+      border: 1px solid rgba(79,70,229,0.2); display: flex; align-items: center; justify-content: center;
+      box-shadow: inset 0 0 50px rgba(255,255,255,0.5); transform: perspective(1000px) rotateY(5deg);
+      transition: transform var(--transition);
+    }
+    .zz-row:hover .zz-visual { transform: perspective(1000px) rotateY(0deg); }
+    
+    .zz-content h3 { font-size: 32px; margin-bottom: 16px; }
+    .zz-content p { color: var(--muted); font-size: 16px; margin-bottom: 24px; line-height: 1.7; }
+    .zz-content ul { list-style: none; margin-bottom: 32px; }
+    .zz-content li { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; color: var(--text); font-weight: 500; }
+    .zz-content li::before { content: '✓'; color: var(--success); font-weight: bold; }
+
+    /* PRICING */
+    .pricing-section { padding: 0 0 120px; }
+    .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; align-items: center; max-width: 1000px; margin: 0 auto; }
+    .price-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 24px; padding: 40px 32px;
+      box-shadow: var(--shadow-card); text-align: center; transition: transform var(--transition);
+    }
+    .price-card.featured {
+      transform: scale(1.05); border: 2px solid var(--primary); box-shadow: var(--shadow-color);
+      position: relative; z-index: 2;
+    }
+    .price-name { font-size: 16px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 16px; }
+    .price-val { font-size: 48px; font-weight: 800; margin-bottom: 24px; }
+    .price-val span { font-size: 16px; color: var(--muted); font-weight: 500; }
+    
+    /* FINAL CTA */
+    .final-cta { background: linear-gradient(135deg, #312E81 0%, #1E1B4B 100%); padding: 100px 0; text-align: center; }
+    .final-cta h2 { color: #fff; font-size: clamp(2.5rem, 5vw, 4rem); margin-bottom: 24px; }
+    .final-cta p { color: #CBD5E1; font-size: 18px; max-width: 500px; margin: 0 auto 40px; }
+    .btn-white {
+      background: #fff; color: var(--primary); font-size: 16px; font-weight: 600;
+      padding: 16px 40px; border-radius: 100px; text-decoration: none; display: inline-block;
+      transition: transform var(--transition);
+    }
+    .btn-white:hover { transform: translateY(-2px); }
+
+    /* FOOTER */
+    footer { background: var(--surface); border-top: 1px solid var(--border); padding: 40px 32px; display: flex; justify-content: space-between; align-items: center; }
+    footer span { font-size: 14px; color: var(--muted); font-weight: 500; }
+
+    /* RESPONSIVE */
+    @media (max-width: 1000px) {
+      .hero { grid-template-columns: 1fr; text-align: center; }
+      .hero-body { margin: 0 auto 40px; }
+      .hero-ctas { justify-content: center; }
+      .iso-wrapper { height: 300px; transform: scale(0.8); }
+      .features-grid { grid-template-columns: 1fr 1fr; }
+      .zz-row { grid-template-columns: 1fr; gap: 40px; margin-bottom: 80px; }
+      .zz-row:nth-child(even) .zz-content { order: 1; }
+      .zz-row:nth-child(even) .zz-visual { order: 2; }
+      .pricing-grid { grid-template-columns: 1fr; gap: 24px; }
+      .price-card.featured { transform: scale(1); }
+    }
+    @media (max-width: 600px) {
+      .stats-grid { grid-template-columns: 1fr 1fr; gap: 32px 0; }
+      .features-grid { grid-template-columns: 1fr; }
+      .hero-ctas { flex-direction: column; }
+      .btn-primary, .btn-secondary { width: 100%; text-align: center; }
+      footer { flex-direction: column; gap: 16px; text-align: center; }
+    }
   </style>
 </head>
 <body>
+  
+  <div class="orb orb-1" aria-hidden="true"></div>
+  <div class="orb orb-2" aria-hidden="true"></div>
+  <div class="orb orb-3" aria-hidden="true"></div>
+
   <header>
-    <a href="#" class="logo"><span class="logo-icon"></span> Scaffold</a>
-    <nav><ul>
-      <li><a href="#">Products</a></li>
-      <li><a href="#">Solutions</a></li>
-      <li><a href="#">Pricing</a></li>
-    </ul></nav>
-    <a href="#" class="btn-nav">Get Started</a>
+    <a href="#" class="logo">
+      <div class="logo-icon"></div>
+      <span>Scaffold SaaS</span>
+    </a>
+    
+    <input type="checkbox" id="mobile-menu-checkbox">
+    <label for="mobile-menu-checkbox" class="menu-toggle" aria-label="Toggle Navigation">
+      <span></span><span></span><span></span>
+    </label>
+
+    <nav>
+      <ul>
+        <li><a href="#">Product</a></li>
+        <li><a href="#">Features</a></li>
+        <li><a href="#">Pricing</a></li>
+      </ul>
+      <a href="#" class="btn-primary">Get Started</a>
+    </nav>
   </header>
 
-  <main class="container">
-    <section class="hero">
-      <div class="hero-pill">Enterprise Ready</div>
-      <h1 class="hero-headline">The modern standard for<br><span>SaaS interfaces.</span></h1>
-      <p class="hero-sub">Professional yet approachable. Indigo and violet gradients, soft tinted shadows, and Plus Jakarta Sans. Build trust at a glance.</p>
-      <a href="#" class="btn-primary">Implement System</a>
+  <main>
+    <section class="container hero">
+      <div class="hero-left">
+        <div class="badge">Enterprise Ready</div>
+        <h1 class="hero-headline">The modern standard for <br><span class="text-gradient">SaaS interfaces.</span></h1>
+        <p class="hero-body">
+          Instill immediate trust and credibility with a premium design system built for high-tier B2B products. Colored shadows, isometric depth, and crystal clear typography.
+        </p>
+        <div class="hero-ctas">
+          <a href="#" class="btn-primary">Acquire System</a>
+          <a href="#" class="btn-secondary">View Components</a>
+        </div>
+      </div>
+      <div class="hero-right" aria-hidden="true">
+        <div class="iso-wrapper">
+          <div class="iso-card">
+            <div class="iso-card-header"></div>
+            <div class="iso-card-graph"></div>
+          </div>
+          <div class="iso-float float-1"></div>
+          <div class="iso-float float-2"></div>
+        </div>
+      </div>
     </section>
 
-    <div class="cards">
-      <div class="card">
-        <div class="card-icon">⚡</div>
-        <h3>Colored Shadows</h3>
-        <p>Soft shadows with blue/purple tints instead of harsh neutral grays create an elevated, premium feel.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon">🎯</div>
-        <h3>Gradient Accents</h3>
-        <p>Strategic use of Indigo to Violet gradients on key text and buttons draws the eye without overwhelming the layout.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon">🛡️</div>
-        <h3>Plus Jakarta Sans</h3>
-        <p>A geometric sans-serif that balances professional authority with friendly, rounded terminals.</p>
+    <div class="stats-section">
+      <div class="container stats-grid">
+        <div>
+          <div class="stat-val">99.99%</div>
+          <div class="stat-label">Uptime SLA</div>
+        </div>
+        <div>
+          <div class="stat-val">40+</div>
+          <div class="stat-label">Integrations</div>
+        </div>
+        <div>
+          <div class="stat-val">180+</div>
+          <div class="stat-label">Countries</div>
+        </div>
+        <div>
+          <div class="stat-val">4.9/5</div>
+          <div class="stat-label">User Rating</div>
+        </div>
       </div>
     </div>
+
+    <section class="container features-section">
+      <div class="section-header">
+        <h2>Premium Polish at Scale</h2>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="fc-icon">✨</div>
+          <h3>Colored Shadows</h3>
+          <p>Drop shadows tinted with primary brand colors create an instantly recognizable premium feel.</p>
+        </div>
+        <div class="feature-card">
+          <div class="fc-icon">🧊</div>
+          <h3>Isometric Depth</h3>
+          <p>Strategic use of 3D transforms provides spatial awareness without cluttering the interface.</p>
+        </div>
+        <div class="feature-card">
+          <div class="fc-icon">🖋️</div>
+          <h3>Plus Jakarta Sans</h3>
+          <p>An extremely legible, slightly geometric sans-serif that balances approachability with technical precision.</p>
+        </div>
+        <div class="feature-card">
+          <div class="fc-icon">🏢</div>
+          <h3>Enterprise Ready</h3>
+          <p>Accessible contrast ratios, generous touch targets, and scalable components out of the box.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="container zigzag-section">
+      <div class="zz-row">
+        <div class="zz-content">
+          <h3>Built for high-density data.</h3>
+          <p>The Corporate Trust aesthetic excels at organizing complex information into digestible, non-threatening interfaces. Rounded corners soften the data while high-contrast text ensures readability.</p>
+          <ul>
+            <li>Data grid optimizations</li>
+            <li>Status badge taxonomy</li>
+            <li>Compact list views</li>
+          </ul>
+          <a href="#" class="btn-secondary">Explore Data Components</a>
+        </div>
+        <div class="zz-visual" aria-hidden="true"></div>
+      </div>
+      <div class="zz-row">
+        <div class="zz-content">
+          <h3>Seamless Onboarding.</h3>
+          <p>First impressions matter in enterprise software. The combination of atmospheric blur orbs and smooth, predictable hover states reassures users that they are using top-tier software.</p>
+          <ul>
+            <li>Predictable motion design</li>
+            <li>Clear visual hierarchy</li>
+            <li>Accessible focus states</li>
+          </ul>
+          <a href="#" class="btn-secondary">View Patterns</a>
+        </div>
+        <div class="zz-visual" aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <section class="container pricing-section">
+      <div class="section-header">
+        <h2>Transparent Pricing</h2>
+      </div>
+      <div class="pricing-grid">
+        <div class="price-card">
+          <div class="price-name">Basic</div>
+          <div class="price-val">$29<span>/mo</span></div>
+          <a href="#" class="btn-secondary" style="width:100%;">Select</a>
+        </div>
+        <div class="price-card featured">
+          <div class="badge" style="position:absolute; top:-16px; left:50%; transform:translateX(-50%); margin:0;">Most Popular</div>
+          <div class="price-name">Pro</div>
+          <div class="price-val text-gradient" style="margin-top:16px;">$99<span>/mo</span></div>
+          <a href="#" class="btn-primary" style="width:100%;">Select Pro</a>
+        </div>
+        <div class="price-card">
+          <div class="price-name">Enterprise</div>
+          <div class="price-val">Custom</div>
+          <a href="#" class="btn-secondary" style="width:100%;">Contact Sales</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="final-cta">
+      <div class="container">
+        <h2>Upgrade your product's perceived value.</h2>
+        <p>Deploy the Corporate Trust design system today and win more enterprise deals with an immaculate user interface.</p>
+        <a href="#" class="btn-white">Copy System Prompt</a>
+      </div>
+    </section>
   </main>
 
-  <footer class="container">
+  <footer>
     <span>scaffold — prompt directory</span>
     <span>Corporate Trust System</span>
   </footer>
+
 </body>
 </html>

@@ -4,95 +4,405 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Hand-Drawn — Design System Preview</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Patrick+Hand&display=block');
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Patrick+Hand&display=block" rel="stylesheet">
 
+  <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:      #FAFAFA;
-      --fg:      #111111;
-      --yellow:  #FDE047;
-      --red:     #EF4444;
-      --blue:    #3B82F6;
-      --border:  #111111;
-      --stroke:  2px solid var(--border);
+      --bg:             #fdfbf7;
+      --fg:             #2d2d2d;
+      --muted:          #e5e0d8;
+      --accent-red:     #ff4d4d;
+      --accent-blue:    #2d5da1;
+      --post-it:        #fff9c4;
+      --border:         #2d2d2d;
+      
+      --shadow-hard:    4px 4px 0 #2d2d2d;
+      --shadow-hard-lg: 8px 8px 0 #2d2d2d;
+      
+      --wobbly-1: 255px 15px 225px 15px / 15px 225px 15px 255px;
+      --wobbly-2: 15px 255px 15px 225px / 255px 15px 225px 15px;
+      --wobbly-3: 225px 15px 255px 15px / 15px 225px 15px 255px;
+      --wobbly-circle: 60% 40% 30% 70% / 60% 30% 70% 40%;
+      --wobbly-circle-2: 40% 60% 70% 30% / 50% 60% 30% 60%;
+      
+      --transition: 200ms ease-out;
     }
 
-    html, body { min-height:100%; background:var(--bg); color:var(--fg); font-family:'Patrick Hand',cursive; font-size:18px; line-height:1.5; }
+    @media (prefers-reduced-motion: reduce) {
+      * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
 
-    /* Paper texture */
-    body::before { content:''; position:fixed; inset:0; z-index:-1; background-image:radial-gradient(#d1d5db 1px, transparent 1px); background-size:20px 20px; opacity:0.3; }
+    html, body { 
+      min-height: 100%; 
+      background: var(--bg); 
+      color: var(--fg); 
+      font-family: 'Patrick Hand', cursive; 
+      font-size: 18px; 
+      line-height: 1.6; 
+      overflow-x: hidden;
+    }
 
-    .container { max-width:1000px; margin:0 auto; padding:0 32px; }
+    /* BACKGROUND DOTS */
+    .dot-pattern {
+      position: fixed; inset: 0; z-index: -1; pointer-events: none;
+      background-image: radial-gradient(var(--muted) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
 
-    /* NAV */
-    header { padding:24px 32px; display:flex; justify-content:space-between; align-items:center; }
-    .logo { font-family:'Kalam',cursive; font-size:32px; font-weight:700; color:var(--fg); text-decoration:none; transform:rotate(-2deg); display:inline-block; }
-    nav ul { list-style:none; display:flex; gap:32px; }
-    nav a { font-size:20px; color:var(--fg); text-decoration:none; position:relative; }
-    nav a:hover::after { content:''; position:absolute; bottom:0; left:0; width:100%; height:4px; background:var(--red); border-radius:4px; transform:rotate(2deg); z-index:-1; }
-    .btn-nav { background:var(--bg); border:var(--stroke); border-radius:4px 20px 10px 30px / 30px 10px 20px 4px; padding:8px 24px; color:var(--fg); font-family:'Kalam',cursive; font-size:18px; font-weight:700; text-decoration:none; box-shadow:3px 3px 0 var(--border); transition:transform .1s, box-shadow .1s; }
-    .btn-nav:hover { transform:translate(2px,2px); box-shadow:1px 1px 0 var(--border); }
+    /* TYPOGRAPHY */
+    h1, h2, h3, h4, h5 { font-family: 'Kalam', cursive; font-weight: 700; line-height: 1.2; color: var(--fg); }
+    
+    a:focus-visible, button:focus-visible { outline: 2px dashed var(--accent-blue); outline-offset: 4px; }
+
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 10; }
+
+    /* BUTTONS */
+    .btn {
+      font-family: 'Kalam', cursive; font-weight: 700; font-size: 18px;
+      padding: 10px 24px; border: 2px solid var(--border); border-radius: var(--wobbly-1);
+      box-shadow: var(--shadow-hard); cursor: pointer; text-decoration: none; display: inline-block;
+      transition: all var(--transition);
+    }
+    .btn:active { box-shadow: 0 0 0 var(--border); transform: translate(4px, 4px); }
+    
+    .btn-primary { background: var(--accent-blue); color: #fff; }
+    .btn-primary:hover { background: #224a82; transform: translateY(-2px) rotate(-1deg); box-shadow: var(--shadow-hard-lg); }
+    .btn-primary:active { transform: translate(8px, 8px) rotate(0); box-shadow: 0 0 0 var(--border); }
+    
+    .btn-outline { background: var(--bg); color: var(--fg); border-radius: var(--wobbly-2); }
+    .btn-outline:hover { background: #fff; transform: translateY(-2px) rotate(1deg); box-shadow: var(--shadow-hard-lg); }
+    .btn-outline:active { transform: translate(8px, 8px) rotate(0); box-shadow: 0 0 0 var(--border); }
+
+    /* HEADER */
+    header {
+      padding: 24px 40px; display: flex; justify-content: space-between; align-items: center;
+      position: relative; z-index: 50;
+    }
+    .logo {
+      font-family: 'Kalam', cursive; font-size: 28px; font-weight: 700; color: var(--fg);
+      text-decoration: none; transform: rotate(-2deg); display: inline-block;
+    }
+    
+    nav { display: flex; align-items: center; gap: 32px; }
+    nav ul { list-style: none; display: flex; gap: 24px; margin: 0; padding: 0; }
+    nav a {
+      font-size: 20px; color: var(--fg); text-decoration: none; position: relative;
+    }
+    nav a::after {
+      content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 2px;
+      background: var(--fg); border-radius: var(--wobbly-3);
+      transform: scaleX(0) rotate(-2deg); transform-origin: center; transition: transform var(--transition);
+    }
+    nav a:hover::after { transform: scaleX(1) rotate(-1deg); }
+
+    /* MOBILE MENU TOGGLE */
+    .menu-toggle { display: none; flex-direction: column; gap: 6px; cursor: pointer; background: transparent; border: none; padding: 8px; }
+    .menu-toggle span { width: 28px; height: 3px; background: var(--fg); border-radius: var(--wobbly-1); transition: 0.3s; }
+    #mobile-menu-checkbox { display: none; }
+    
+    @media (max-width: 900px) {
+      .menu-toggle { display: flex; }
+      nav { 
+        position: absolute; top: 100%; left: 0; right: 0; 
+        background: var(--bg); flex-direction: column; 
+        padding: 40px; border-bottom: 2px dashed var(--border);
+        transform: translateY(-10px); opacity: 0; pointer-events: none; transition: all 0.3s ease;
+      }
+      nav ul { flex-direction: column; text-align: center; gap: 32px; width: 100%; }
+      nav a { font-size: 22px; }
+      .btn { width: 100%; text-align: center; margin-top: 24px; }
+      #mobile-menu-checkbox:checked ~ nav { transform: translateY(0); opacity: 1; pointer-events: auto; }
+      #mobile-menu-checkbox:checked ~ .menu-toggle span:nth-child(1) { transform: rotate(45deg) translate(6px, 6px); }
+      #mobile-menu-checkbox:checked ~ .menu-toggle span:nth-child(2) { opacity: 0; }
+      #mobile-menu-checkbox:checked ~ .menu-toggle span:nth-child(3) { transform: rotate(-45deg) translate(7px, -7px); }
+    }
 
     /* HERO */
-    .hero { padding:80px 0; text-align:center; position:relative; }
-    .sticky-note { position:absolute; top:40px; right:10%; background:var(--yellow); width:180px; padding:20px; transform:rotate(8deg); box-shadow:4px 4px 10px rgba(0,0,0,0.1); border:1px solid rgba(0,0,0,0.1); font-family:'Kalam',cursive; font-size:16px; text-align:left; }
-    .sticky-note::before { content:''; position:absolute; top:-10px; left:50%; transform:translateX(-50%); width:40px; height:20px; background:rgba(255,255,255,0.5); border:1px solid rgba(0,0,0,0.1); }
+    .hero { padding: 100px 0 140px; text-align: center; position: relative; }
     
-    h1.hero-headline { font-family:'Kalam',cursive; font-size:clamp(3.5rem,6vw,5.5rem); font-weight:700; line-height:1; margin-bottom:24px; color:var(--fg); position:relative; display:inline-block; }
-    h1.hero-headline .highlight { position:relative; z-index:1; }
-    h1.hero-headline .highlight::before { content:''; position:absolute; inset:-4px -12px; background:var(--yellow); z-index:-1; transform:rotate(-1deg); border-radius:4px 20px 10px 30px; }
+    .sticky-note-hero {
+      position: absolute; top: 40px; right: 10%; background: var(--post-it);
+      padding: 16px 20px; border-radius: var(--wobbly-2); box-shadow: var(--shadow-hard);
+      border: 2px solid var(--border); transform: rotate(8deg); max-width: 200px;
+      font-size: 16px; line-height: 1.4; z-index: 5;
+    }
     
-    .hero-sub { font-size:24px; max-width:600px; margin:0 auto 48px; }
-    .btn-primary { display:inline-block; background:var(--blue); border:var(--stroke); border-radius:20px 4px 30px 10px / 10px 30px 4px 20px; color:#fff; font-family:'Kalam',cursive; font-size:22px; font-weight:700; padding:12px 40px; text-decoration:none; box-shadow:4px 4px 0 var(--border); transition:transform .1s, box-shadow .1s; }
-    .btn-primary:hover { transform:translate(3px,3px); box-shadow:1px 1px 0 var(--border); }
+    .hero-headline { font-size: clamp(3rem, 6vw, 4.5rem); margin-bottom: 24px; max-width: 800px; margin-inline: auto; }
+    
+    .highlight {
+      position: relative; display: inline-block; white-space: nowrap; z-index: 1;
+    }
+    .highlight::before {
+      content: ''; position: absolute; inset: -4px -10px; background: rgba(255, 235, 59, 0.6);
+      border-radius: var(--wobbly-1); transform: rotate(-2deg); z-index: -1;
+    }
+    
+    .hero-body { font-size: 22px; max-width: 500px; margin: 0 auto 40px; }
+    .hero-ctas { display: flex; gap: 20px; justify-content: center; position: relative; }
 
-    /* CARDS */
-    .cards { display:grid; grid-template-columns:repeat(3,1fr); gap:40px; padding:0 32px 100px; }
-    .card { background:#fff; border:var(--stroke); border-radius:10px 30px 15px 5px / 20px 5px 30px 10px; padding:32px; box-shadow:4px 4px 0 var(--border); transition:transform .2s; }
-    .card:hover { transform:translateY(-4px) rotate(-1deg); }
-    .card h3 { font-family:'Kalam',cursive; font-size:28px; font-weight:700; margin-bottom:12px; }
-    .card p { font-size:18px; line-height:1.6; }
-    
-    /* Scribble line */
-    .scribble { width:100px; height:10px; border-bottom:4px dashed var(--red); margin:20px auto; border-radius:50%; }
+    /* HAND DRAWN ARROW */
+    .arrow-container {
+      position: absolute; top: -60px; left: -140px; width: 120px; height: 100px;
+      pointer-events: none; z-index: 0;
+    }
+    .arrow-container svg { width: 100%; height: 100%; overflow: visible; }
+    .arrow-path { fill: none; stroke: var(--fg); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 6 6; }
 
+    /* FEATURES */
+    .features-section { padding: 0 0 120px; }
+    .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; }
+    
+    .feature-card {
+      background: #fff; border: 2px solid var(--border); border-radius: var(--wobbly-1);
+      padding: 40px 32px; box-shadow: var(--shadow-hard); position: relative;
+      transition: all var(--transition);
+    }
+    .fc-1 { transform: rotate(-1deg); border-radius: var(--wobbly-2); }
+    .fc-2 { transform: rotate(0.5deg); }
+    .fc-3 { transform: rotate(2deg); border-radius: var(--wobbly-3); }
+    
+    .feature-card:hover { transform: translateY(-4px) rotate(0deg); box-shadow: var(--shadow-hard-lg); }
+    
+    .fc-tape {
+      position: absolute; top: -12px; left: 50%; transform: translateX(-50%) rotate(-3deg);
+      width: 80px; height: 24px; background: rgba(255,255,255,0.7);
+      border: 1px solid rgba(0,0,0,0.1); box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      backdrop-filter: blur(2px); z-index: 2;
+    }
+    .fc-tack {
+      position: absolute; top: 12px; left: 50%; transform: translateX(-50%);
+      width: 16px; height: 16px; background: var(--accent-red); border-radius: 50%;
+      border: 2px solid var(--border); box-shadow: 2px 2px 0 var(--border); z-index: 2;
+    }
+    .fc-tag {
+      position: absolute; top: -16px; right: -16px; background: var(--post-it);
+      padding: 4px 12px; border: 2px solid var(--border); border-radius: var(--wobbly-3);
+      font-size: 14px; font-weight: bold; transform: rotate(12deg); box-shadow: 2px 2px 0 var(--border);
+    }
+    
+    .feature-card h3 { font-size: 26px; margin-bottom: 16px; }
+    .feature-card p { font-size: 18px; }
+
+    /* STATS */
+    .stats-section { padding: 80px 0; border-top: 2px dashed var(--border); border-bottom: 2px dashed var(--border); }
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; text-align: center; }
+    .stat-item { display: flex; flex-direction: column; align-items: center; }
+    
+    .stat-blob {
+      width: 120px; height: 120px; border: 2px solid var(--border); border-radius: var(--wobbly-circle);
+      display: flex; align-items: center; justify-content: center; margin-bottom: 16px;
+      box-shadow: var(--shadow-hard); background: #fff;
+    }
+    .st-2 .stat-blob { border-radius: var(--wobbly-circle-2); background: var(--post-it); transform: rotate(-5deg); }
+    .st-3 .stat-blob { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; transform: rotate(5deg); }
+    .st-4 .stat-blob { border-radius: var(--wobbly-circle); background: #e0f2fe; transform: rotate(2deg); }
+    
+    .stat-val { font-family: 'Kalam', cursive; font-size: 36px; font-weight: 700; color: var(--fg); line-height: 1; }
+    .stat-label { font-size: 18px; font-weight: bold; }
+
+    /* PROCESS */
+    .process-section { padding: 120px 0; position: relative; }
+    .process-header { text-align: center; margin-bottom: 80px; }
+    .process-header h2 { font-size: 40px; }
+    
+    .process-line {
+      position: absolute; top: 220px; left: 10%; width: 80%; height: 100px; z-index: 1; pointer-events: none;
+    }
+    .process-line svg { width: 100%; height: 100%; overflow: visible; }
+    .process-line path { fill: none; stroke: var(--border); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 8 8; }
+    
+    .process-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; position: relative; z-index: 2; }
+    .step-item { background: #fff; border: 2px solid var(--border); padding: 32px; border-radius: var(--wobbly-2); box-shadow: var(--shadow-hard); transform: rotate(-1deg); }
+    .step-item:nth-child(2) { transform: rotate(1.5deg); border-radius: var(--wobbly-3); }
+    .step-item:nth-child(3) { transform: rotate(-0.5deg); border-radius: var(--wobbly-1); }
+    
+    .step-num {
+      width: 40px; height: 40px; border: 2px solid var(--border); border-radius: var(--wobbly-circle);
+      display: flex; align-items: center; justify-content: center; font-family: 'Kalam', cursive; font-weight: bold; font-size: 20px; margin-bottom: 16px; background: #fff; box-shadow: 2px 2px 0 var(--border);
+    }
+    .step-item:nth-child(1) .step-num { color: var(--accent-red); border-color: var(--accent-red); }
+    .step-item:nth-child(2) .step-num { color: var(--accent-blue); border-color: var(--accent-blue); }
+    .step-item:nth-child(3) .step-num { color: var(--accent-red); border-color: var(--accent-red); }
+    
+    .step-item h3 { font-size: 24px; margin-bottom: 8px; }
+
+    /* FINAL CTA */
+    .cta-section { padding: 0 0 140px; }
+    .cta-panel {
+      background: var(--post-it); border: 2px solid var(--border); border-radius: var(--wobbly-1);
+      padding: 80px 40px; text-align: center; box-shadow: var(--shadow-hard-lg); transform: rotate(1deg);
+      position: relative;
+    }
+    .cta-tape {
+      position: absolute; top: -15px; left: 50%; transform: translateX(-50%) rotate(-1deg);
+      width: 120px; height: 30px; background: rgba(255,255,255,0.7);
+      border: 1px solid rgba(0,0,0,0.1); box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      backdrop-filter: blur(2px);
+    }
+    .cta-panel h2 { font-size: 48px; margin-bottom: 32px; }
+
+    /* FOOTER */
+    footer { border-top: 2px dashed var(--border); padding: 32px 40px; display: flex; justify-content: space-between; align-items: center; }
+    footer span { font-weight: bold; font-size: 16px; }
+
+    /* RESPONSIVE */
+    @media (max-width: 1000px) {
+      .hero-headline { font-size: 3.5rem; }
+      .sticky-note-hero { top: 10px; right: 0; transform: rotate(12deg) scale(0.8); }
+      .arrow-container { display: none; }
+      .features-grid { grid-template-columns: 1fr; gap: 32px; }
+      .stats-grid { grid-template-columns: 1fr 1fr; gap: 40px 24px; }
+      .process-line { display: none; }
+      .process-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 600px) {
+      .hero { padding: 60px 0 100px; }
+      .sticky-note-hero { position: relative; top: 0; right: 0; transform: rotate(-5deg); margin: 0 auto 32px; }
+      .hero-ctas { flex-direction: column; }
+      .btn { width: 100%; text-align: center; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .cta-panel { padding: 60px 24px; }
+      .cta-panel h2 { font-size: 36px; }
+      footer { flex-direction: column; gap: 16px; text-align: center; }
+    }
   </style>
 </head>
 <body>
+  
+  <div class="dot-pattern" aria-hidden="true"></div>
+
   <header>
     <a href="#" class="logo">scaffold</a>
-    <nav><ul>
-      <li><a href="#">Gallery</a></li>
-      <li><a href="#">About</a></li>
-    </ul></nav>
-    <a href="#" class="btn-nav">Copy Code</a>
+    
+    <input type="checkbox" id="mobile-menu-checkbox">
+    <label for="mobile-menu-checkbox" class="menu-toggle" aria-label="Toggle Navigation">
+      <span></span><span></span><span></span>
+    </label>
+
+    <nav>
+      <ul>
+        <li><a href="#">Patterns</a></li>
+        <li><a href="#">Doodles</a></li>
+        <li><a href="#">Notes</a></li>
+      </ul>
+      <a href="#" class="btn btn-primary">Get the system</a>
+    </nav>
   </header>
 
-  <main class="container">
-    <section class="hero">
-      <div class="sticky-note">Make it feel like a whiteboard sketch! ✏️</div>
-      <h1 class="hero-headline">Digital design with a <span class="highlight">human touch.</span></h1>
-      <p class="hero-sub">Reject clinical precision. Embrace scribbles, sticky notes, dashed lines, and organic imperfection.</p>
-      <a href="#" class="btn-primary">Generate Prompt</a>
-      <div class="scribble"></div>
+  <main>
+    <section class="container hero">
+      <div class="sticky-note-hero">Make it feel like a whiteboard sketch! ✏️</div>
+      
+      <h1 class="hero-headline">
+        Digital design with a <br>
+        <span class="highlight">human touch.</span>
+      </h1>
+      <p class="hero-body">
+        Break free from rigid grids. Add wobbly borders, hard offset shadows, and hand-drawn typography to make your interface feel approachable and alive.
+      </p>
+      
+      <div class="hero-ctas">
+        <a href="#" class="btn btn-primary">Copy Design System</a>
+        <a href="#" class="btn btn-outline">View Components</a>
+        
+        <div class="arrow-container" aria-hidden="true">
+          <svg viewBox="0 0 120 100">
+            <path class="arrow-path" d="M10,90 Q30,10 90,40" />
+            <path class="arrow-path" d="M70,20 L95,45 L65,60" />
+          </svg>
+        </div>
+      </div>
     </section>
 
-    <div class="cards">
-      <div class="card">
-        <h3>Pencil Blacks</h3>
-        <p>No perfect lines here. Borders are drawn with variable radii to simulate hand-drawn boxes and circles.</p>
+    <section class="container features-section">
+      <div class="features-grid">
+        <div class="feature-card fc-1">
+          <div class="fc-tape" aria-hidden="true"></div>
+          <h3>Pencil Blacks</h3>
+          <p>Instead of pure black, we use #2d2d2d to simulate the graphite of a pencil, creating softer, more organic contrast against the warm paper background.</p>
+        </div>
+        <div class="feature-card fc-2">
+          <div class="fc-tack" aria-hidden="true"></div>
+          <h3>Marker Colors</h3>
+          <p>Primary actions and highlights use vibrant, translucent marker colors. These are meant to look like they were hastily drawn over the interface.</p>
+        </div>
+        <div class="feature-card fc-3">
+          <div class="fc-tag" aria-hidden="true">NEW!</div>
+          <h3>Organic Fonts</h3>
+          <p>Kalam provides energetic, cursive headlines, while Patrick Hand ensures body copy remains highly legible without losing the handwritten aesthetic.</p>
+        </div>
       </div>
-      <div class="card">
-        <h3>Marker Colors</h3>
-        <p>Correction marker red and post-it yellow used for highlights. High contrast, high energy, highly human.</p>
-      </div>
-      <div class="card">
-        <h3>Kalam & Patrick Hand</h3>
-        <p>Exclusively handwritten fonts. The UI reads like a friendly note passed in class rather than a corporate dashboard.</p>
+    </section>
+
+    <div class="stats-section">
+      <div class="container stats-grid">
+        <div class="stat-item st-1">
+          <div class="stat-blob"><span class="stat-val">100%</span></div>
+          <span class="stat-label">Human</span>
+        </div>
+        <div class="stat-item st-2">
+          <div class="stat-blob"><span class="stat-val">0px</span></div>
+          <span class="stat-label">Perfection</span>
+        </div>
+        <div class="stat-item st-3">
+          <div class="stat-blob"><span class="stat-val">4px</span></div>
+          <span class="stat-label">Hard Shadows</span>
+        </div>
+        <div class="stat-item st-4">
+          <div class="stat-blob"><span class="stat-val">2</span></div>
+          <span class="stat-label">Google Fonts</span>
+        </div>
       </div>
     </div>
+
+    <section class="container process-section">
+      <div class="process-header">
+        <h2>How it works</h2>
+      </div>
+      
+      <div class="process-line" aria-hidden="true">
+        <svg viewBox="0 0 1000 100">
+          <path d="M50,50 Q250,-20 500,50 T950,50" />
+        </svg>
+      </div>
+      
+      <div class="process-grid">
+        <div class="step-item">
+          <div class="step-num">1</div>
+          <h3>Sketch it out</h3>
+          <p>Inject the design tokens into your context to establish the wobbly borders, paper textures, and hard shadows.</p>
+        </div>
+        <div class="step-item">
+          <div class="step-num">2</div>
+          <h3>Add the sticky notes</h3>
+          <p>Use the provided CSS variables to create post-it note elements, tape strips, and thumbtack accents.</p>
+        </div>
+        <div class="step-item">
+          <div class="step-num">3</div>
+          <h3>Have fun with it</h3>
+          <p>Rotate elements slightly (between -2deg and 2deg) to break the grid and finalize the hand-drawn illusion.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="container cta-section">
+      <div class="cta-panel">
+        <div class="cta-tape" aria-hidden="true"></div>
+        <h2>Ready to break the grid?</h2>
+        <a href="#" class="btn btn-primary" style="font-size:22px; padding:16px 40px;">Grab a pencil & start</a>
+      </div>
+    </section>
   </main>
+
+  <footer>
+    <span>scaffold — prompt directory</span>
+    <span>Hand-Drawn System</span>
+  </footer>
+
 </body>
 </html>

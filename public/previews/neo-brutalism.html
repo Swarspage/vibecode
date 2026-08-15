@@ -4,148 +4,334 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Neo-brutalism — Design System Preview</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700;900&display=block');
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700;900&display=block" rel="stylesheet">
 
+  <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:     #FFFDF5;
-      --fg:     #000000;
-      --red:    #FF3B3B;
-      --yellow: #FFE135;
-      --violet: #7B2FBE;
-      --green:  #00C853;
-      --border: 2px solid #000;
+      --bg:       #FFFDF5; /* Cream */
+      --fg:       #000000;
+      --red:      #FF6B6B;
+      --yellow:   #FFD93D;
+      --violet:   #C4B5FD;
+      --white:    #FFFFFF;
+      
+      --border-hard: 3px solid #000000;
+      
+      --shadow-sm:  4px 4px 0 #000;
+      --shadow-md:  8px 8px 0 #000;
+      --shadow-lg:  12px 12px 0 #000;
+      --shadow-xl:  16px 16px 0 #000;
+      
+      --transition: 150ms cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    html, body { min-height:100%; background:var(--bg); color:var(--fg); font-family:'Space Grotesk',sans-serif; font-size:16px; line-height:1.5; -webkit-font-smoothing:antialiased; }
+    @media (prefers-reduced-motion: reduce) {
+      * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
 
-    .container { max-width:1152px; margin:0 auto; padding:0 32px; }
+    html, body { 
+      min-height: 100%; background: var(--bg); color: var(--fg); 
+      font-family: 'Space Grotesk', sans-serif; font-size: 16px; line-height: 1.5; overflow-x: hidden;
+    }
 
-    /* NAV */
-    header { background:var(--bg); border-bottom:var(--border); padding:0 32px; }
-    .nav-inner { display:flex; align-items:center; justify-content:space-between; min-height:64px; }
-    .logo { font-size:22px; font-weight:900; color:var(--fg); text-decoration:none; letter-spacing:-.04em; text-transform:uppercase; }
-    .logo-dot { display:inline-block; width:10px; height:10px; background:var(--red); border:2px solid var(--fg); border-radius:50%; vertical-align:middle; margin-left:4px; }
-    nav ul { list-style:none; display:flex; gap:0; }
-    nav a { display:block; padding:10px 16px; font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--fg); text-decoration:none; border-left:1px solid var(--fg); }
-    nav a:last-child { border-right:1px solid var(--fg); }
-    nav a:hover { background:var(--yellow); }
-    .btn-nav { background:var(--fg); color:var(--bg); font-size:13px; font-weight:900; text-transform:uppercase; letter-spacing:.06em; padding:10px 24px; border:var(--border); text-decoration:none; box-shadow:3px 3px 0 var(--red); transition:box-shadow .1s, transform .1s; }
-    .btn-nav:hover { box-shadow:0 0 0; transform:translate(3px,3px); }
+    /* TEXTURES */
+    .halftone-bg {
+      position: fixed; inset: 0; z-index: -1; pointer-events: none;
+      background-image: radial-gradient(#000 1px, transparent 1px);
+      background-size: 20px 20px; opacity: 0.04;
+    }
+
+    /* TYPOGRAPHY */
+    h1, h2, h3, h4 { font-weight: 900; color: var(--fg); text-transform: uppercase; line-height: 1.1; letter-spacing: -0.02em; }
+    
+    .text-stroke { color: transparent; -webkit-text-stroke: 2px #000; text-stroke: 2px #000; }
+    .text-highlight { background: var(--yellow); padding: 0 8px; border: var(--border-hard); box-shadow: var(--shadow-sm); display: inline-block; transform: rotate(-2deg); }
+    
+    a:focus-visible, button:focus-visible { outline: 3px solid var(--fg); outline-offset: 4px; }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 32px; position: relative; z-index: 10; }
+
+    /* BUTTONS & BADGES */
+    .btn {
+      font-family: 'Space Grotesk', sans-serif; font-size: 16px; font-weight: 900; text-transform: uppercase;
+      padding: 14px 28px; border: var(--border-hard); cursor: pointer;
+      text-decoration: none; display: inline-flex; align-items: center; justify-content: center;
+      transition: all var(--transition); box-shadow: var(--shadow-md);
+    }
+    .btn:hover { transform: translate(-2px, -2px); box-shadow: 10px 10px 0 #000; }
+    .btn:active { transform: translate(8px, 8px); box-shadow: 0 0 0 #000; }
+    
+    .btn-black { background: var(--fg); color: var(--bg); box-shadow: 8px 8px 0 var(--red); }
+    .btn-black:hover { box-shadow: 10px 10px 0 var(--red); }
+    .btn-black:active { box-shadow: 0 0 0 var(--red); transform: translate(8px, 8px); }
+    
+    .btn-red { background: var(--red); color: var(--white); }
+    .btn-yellow { background: var(--yellow); color: var(--fg); }
+    
+    .badge-sticker {
+      display: inline-block; background: var(--yellow); border: var(--border-hard); box-shadow: var(--shadow-sm);
+      padding: 8px 16px; font-weight: 900; text-transform: uppercase; font-size: 14px;
+    }
+
+    /* HEADER */
+    header {
+      background: var(--bg); border-bottom: 4px solid var(--fg); padding: 16px 32px;
+      display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 50;
+    }
+    .logo { font-size: 24px; font-weight: 900; color: var(--fg); text-decoration: none; text-transform: uppercase; display: flex; align-items: center; gap: 8px; }
+    .logo-dot { width: 16px; height: 16px; background: var(--red); border: 2px solid var(--fg); border-radius: 50%; }
+    
+    nav { display: flex; align-items: center; gap: 24px; }
+    nav ul { list-style: none; display: flex; gap: 16px; margin: 0; padding: 0; }
+    nav a { font-size: 14px; font-weight: 700; text-transform: uppercase; color: var(--fg); text-decoration: none; padding: 8px 16px; border: 2px solid transparent; transition: all var(--transition); }
+    nav a:hover { border-color: var(--fg); background: var(--yellow); box-shadow: var(--shadow-sm); transform: translate(-2px, -2px); }
+
+    /* MOBILE MENU TOGGLE */
+    .menu-toggle { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: var(--violet); border: var(--border-hard); padding: 8px; box-shadow: var(--shadow-sm); }
+    .menu-toggle span { width: 24px; height: 3px; background: var(--fg); transition: 0.3s; }
+    #mobile-menu-checkbox { display: none; }
+    
+    @media (max-width: 900px) {
+      .menu-toggle { display: flex; }
+      nav { 
+        position: absolute; top: 100%; left: 0; right: 0; 
+        background: var(--white); border-bottom: 4px solid var(--fg);
+        flex-direction: column; padding: 32px; display: none;
+      }
+      nav ul { flex-direction: column; width: 100%; text-align: center; }
+      nav a { display: block; border-color: var(--fg); }
+      .btn { width: 100%; margin-top: 24px; }
+      #mobile-menu-checkbox:checked ~ nav { display: flex; }
+    }
 
     /* HERO */
-    .hero { padding:72px 32px 64px; border-bottom:var(--border); display:grid; grid-template-columns:1fr auto; gap:48px; align-items:center; }
-    h1.hero-headline {
-      font-size:clamp(3.5rem,8vw,8rem); font-weight:900; line-height:.88;
-      text-transform:uppercase; letter-spacing:-.04em; color:var(--fg);
+    .hero { padding: 80px 0 120px; display: grid; grid-template-columns: 6fr 4fr; gap: 40px; align-items: center; }
+    
+    .hero-headline { font-size: clamp(3.5rem, 8vw, 6rem); margin-bottom: 24px; line-height: 1; }
+    .hero-sticker { transform: rotate(-10deg); position: relative; top: -10px; margin-bottom: 24px; }
+    .hero-body { font-size: 20px; font-weight: 700; max-width: 500px; margin-bottom: 40px; border: var(--border-hard); padding: 16px; background: var(--white); box-shadow: var(--shadow-md); }
+    
+    .hero-visual { position: relative; width: 100%; aspect-ratio: 1; }
+    .shape-1 { position: absolute; top: 10%; left: 10%; width: 60%; height: 60%; background: var(--violet); border: var(--border-hard); box-shadow: var(--shadow-lg); transform: rotate(-5deg); z-index: 1; }
+    .shape-2 { position: absolute; bottom: 10%; right: 10%; width: 70%; height: 50%; background: var(--yellow); border: var(--border-hard); box-shadow: var(--shadow-lg); transform: rotate(8deg); z-index: 2; display: flex; align-items: center; justify-content: center; font-size: 100px; font-weight: 900; }
+    .shape-3 { position: absolute; top: 40%; left: 40%; width: 80px; height: 80px; background: var(--red); border: var(--border-hard); border-radius: 50%; box-shadow: var(--shadow-md); z-index: 3; }
+    .shape-star { position: absolute; font-size: 48px; z-index: 4; }
+    .star-1 { top: 0; right: 20%; transform: rotate(15deg); }
+    .star-2 { bottom: 0; left: 20%; transform: rotate(-15deg); }
+
+    /* MARQUEE */
+    .marquee-container { background: var(--red); border-top: 4px solid var(--fg); border-bottom: 4px solid var(--fg); padding: 16px 0; overflow: hidden; display: flex; white-space: nowrap; }
+    .marquee-inner { display: flex; animation: marquee 15s linear infinite; }
+    .marquee-content { display: flex; gap: 32px; padding-right: 32px; font-size: 24px; font-weight: 900; text-transform: uppercase; color: var(--fg); align-items: center; }
+    @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+    /* FEATURE CARDS */
+    .features-section { padding: 120px 0; }
+    .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; }
+    .f-card {
+      background: var(--white); border: var(--border-hard); box-shadow: var(--shadow-lg);
+      transition: all var(--transition); display: flex; flex-direction: column;
     }
-    h1.hero-headline .stroke {
-      -webkit-text-stroke:3px var(--fg); color:transparent;
+    .f-card:hover { transform: translate(-4px, -4px); box-shadow: var(--shadow-xl); }
+    
+    .fc-top { height: 48px; border-bottom: var(--border-hard); display: flex; align-items: center; padding: 0 16px; gap: 8px; }
+    .fc-1 .fc-top { background: var(--red); }
+    .fc-2 .fc-top { background: var(--violet); }
+    .fc-3 .fc-top { background: var(--yellow); }
+    
+    .fc-dot { width: 12px; height: 12px; background: var(--white); border: 2px solid var(--fg); border-radius: 50%; }
+    
+    .fc-body { padding: 32px; }
+    .f-card h3 { font-size: 28px; margin-bottom: 16px; }
+    .f-card p { font-size: 16px; font-weight: 500; }
+
+    /* STATS */
+    .stats-section { padding: 0 0 120px; }
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+    .stat-box { border: var(--border-hard); box-shadow: var(--shadow-md); padding: 32px 24px; text-align: center; }
+    .sb-1 { background: var(--white); }
+    .sb-2 { background: var(--red); color: var(--white); }
+    .sb-3 { background: var(--yellow); }
+    .sb-4 { background: var(--violet); }
+    
+    .stat-val { font-size: 48px; font-weight: 900; margin-bottom: 8px; line-height: 1; }
+    .stat-label { font-size: 14px; font-weight: 700; text-transform: uppercase; }
+
+    /* INVERTED SECTION */
+    .inverted-section { background: var(--fg); color: var(--white); padding: 120px 0; position: relative; border-top: 4px solid var(--fg); border-bottom: 4px solid var(--fg); }
+    .inv-halftone { position: absolute; inset: 0; background-image: radial-gradient(var(--white) 1px, transparent 1px); background-size: 24px 24px; opacity: 0.1; pointer-events: none; }
+    .inv-content { position: relative; z-index: 2; text-align: center; }
+    .inverted-section h2 { color: var(--white); font-size: clamp(3rem, 6vw, 4.5rem); margin-bottom: 40px; }
+    .inverted-section .btn-yellow { box-shadow: 8px 8px 0 var(--white); }
+    .inverted-section .btn-yellow:hover { box-shadow: 10px 10px 0 var(--white); }
+    .inverted-section .btn-yellow:active { box-shadow: 0 0 0 var(--white); }
+
+    /* FINAL CTA */
+    .final-cta { padding: 120px 32px; text-align: center; }
+    .cta-box {
+      background: var(--violet); border: var(--border-hard); box-shadow: 24px 24px 0 #000;
+      padding: 100px 40px; max-width: 1000px; margin: 0 auto;
     }
-    h1.hero-headline .highlight { background:var(--yellow); padding:0 8px; display:inline-block; }
-    .hero-right { min-width:260px; }
-    .hero-card { background:var(--yellow); border:var(--border); padding:28px; box-shadow:5px 5px 0 var(--fg); transform:rotate(2deg); }
-    .hero-card p { font-size:15px; font-weight:700; color:var(--fg); line-height:1.5; margin-bottom:20px; }
-    .btn-primary { display:inline-block; background:var(--red); color:#fff; font-size:13px; font-weight:900; text-transform:uppercase; letter-spacing:.06em; padding:12px 28px; border:var(--border); box-shadow:4px 4px 0 var(--fg); text-decoration:none; transition:box-shadow .1s, transform .1s; }
-    .btn-primary:hover { box-shadow:0 0 0; transform:translate(4px,4px); }
+    .cta-box h2 { font-size: clamp(3rem, 6vw, 5rem); margin-bottom: 40px; background: var(--white); padding: 16px; border: var(--border-hard); display: inline-block; transform: rotate(1deg); box-shadow: var(--shadow-sm); }
+    .cta-box .btn { font-size: 24px; padding: 20px 40px; transform: rotate(-1deg); }
 
-    /* MARQUEE STRIP */
-    .strip { background:var(--red); border-top:var(--border); border-bottom:var(--border); padding:12px 0; overflow:hidden; }
-    .strip-track { display:flex; gap:48px; white-space:nowrap; animation:marquee 10s linear infinite; }
-    .strip-item { font-size:14px; font-weight:900; text-transform:uppercase; letter-spacing:.08em; color:#fff; flex-shrink:0; }
-    @keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+    /* FOOTER */
+    footer { border-top: 4px solid var(--fg); padding: 32px 40px; display: flex; justify-content: space-between; align-items: center; background: var(--white); }
+    footer span { font-size: 14px; font-weight: 900; text-transform: uppercase; }
 
-    /* CARDS GRID */
-    .cards-section { margin:64px 0; }
-    h2.sect-h { font-size:clamp(2rem,4vw,3.5rem); font-weight:900; text-transform:uppercase; letter-spacing:-.03em; color:var(--fg); margin-bottom:40px; line-height:.9; }
-    .cards-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
-    .card-nb { background:#fff; border:var(--border); padding:28px; box-shadow:5px 5px 0 var(--fg); transition:box-shadow .1s, transform .1s; cursor:pointer; }
-    .card-nb:hover { box-shadow:0 0 0; transform:translate(5px,5px); }
-    .card-nb:nth-child(1) .card-accent { background:var(--red); }
-    .card-nb:nth-child(2) .card-accent { background:var(--violet); }
-    .card-nb:nth-child(3) .card-accent { background:var(--green); }
-    .card-accent { height:6px; margin-bottom:20px; }
-    .card-nb h3 { font-size:18px; font-weight:900; text-transform:uppercase; letter-spacing:-.02em; color:var(--fg); margin-bottom:10px; }
-    .card-nb p { font-size:14px; color:#333; line-height:1.6; }
-
-    /* CTA */
-    .cta { background:var(--violet); border:var(--border); padding:64px; box-shadow:8px 8px 0 var(--fg); margin:0 0 64px; }
-    .cta h2 { font-size:clamp(2.5rem,5vw,4rem); font-weight:900; text-transform:uppercase; letter-spacing:-.04em; color:#fff; line-height:.9; margin-bottom:16px; }
-    .cta p { color:rgba(255,255,255,.8); font-size:15px; margin-bottom:32px; font-weight:500; max-width:440px; }
-    .btn-cta { display:inline-block; background:var(--yellow); color:var(--fg); font-size:13px; font-weight:900; text-transform:uppercase; letter-spacing:.06em; padding:16px 40px; border:2px solid #fff; box-shadow:4px 4px 0 #fff; text-decoration:none; transition:box-shadow .1s, transform .1s; }
-    .btn-cta:hover { box-shadow:0 0 0; transform:translate(4px,4px); }
-
-    footer { border-top:var(--border); padding:24px 0; display:flex; justify-content:space-between; }
-    footer span { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--fg); }
+    /* RESPONSIVE */
+    @media (max-width: 1000px) {
+      .hero { grid-template-columns: 1fr; text-align: center; }
+      .hero-body { margin-inline: auto; }
+      .hero-visual { display: none; }
+      .features-grid { grid-template-columns: 1fr; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 600px) {
+      .stats-grid { grid-template-columns: 1fr; }
+      .cta-box { box-shadow: 12px 12px 0 #000; padding: 60px 24px; }
+      .btn { width: 100%; justify-content: center; }
+      footer { flex-direction: column; gap: 16px; text-align: center; }
+    }
   </style>
 </head>
 <body>
+  
+  <div class="halftone-bg" aria-hidden="true"></div>
 
-<header>
-  <div class="nav-inner">
-    <a href="#" class="logo">scaffold<span class="logo-dot"></span></a>
-    <nav><ul>
-      <li><a href="#">Design</a></li>
-      <li><a href="#">Workflow</a></li>
-    </ul></nav>
-    <a href="#" class="btn-nav">Copy Prompt</a>
-  </div>
-</header>
+  <header>
+    <a href="#" class="logo">Scaffold <div class="logo-dot"></div></a>
+    
+    <input type="checkbox" id="mobile-menu-checkbox">
+    <label for="mobile-menu-checkbox" class="menu-toggle" aria-label="Toggle Navigation">
+      <span></span><span></span><span></span>
+    </label>
 
-<section class="hero">
-  <div>
-    <h1 class="hero-headline">
-      <span class="stroke">Neo</span><br>
-      <span class="highlight">Brutal</span><br>
-      Design
-    </h1>
-  </div>
-  <div class="hero-right">
-    <div class="hero-card">
-      <p>Cream canvas. Highlighter colors. Hard shadows. No compromises. Digital punk rebellion against Corporate Memphis.</p>
-      <a href="#" class="btn-primary">Copy System →</a>
+    <nav>
+      <ul>
+        <li><a href="#">Elements</a></li>
+        <li><a href="#">Shadows</a></li>
+        <li><a href="#">Borders</a></li>
+      </ul>
+      <a href="#" class="btn btn-black">Get Code</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="container hero">
+      <div class="hero-left">
+        <div class="badge-sticker hero-sticker">REBEL AGAINST ROUNDED CORNERS!</div>
+        <h1 class="hero-headline">
+          <span class="text-stroke">NEO</span><br>
+          BRUTAL<br>
+          <span class="text-highlight">DESIGN</span>
+        </h1>
+        <p class="hero-body">
+          Bring the rawness of print design to the web. Hard shadows, thick borders, and unabashed color blocking create a distinctly rebellious digital aesthetic.
+        </p>
+        <a href="#" class="btn btn-red" style="font-size: 20px; padding: 16px 40px;">Initialize System</a>
+      </div>
+      <div class="hero-visual" aria-hidden="true">
+        <div class="shape-1"></div>
+        <div class="shape-2">!</div>
+        <div class="shape-3"></div>
+        <div class="shape-star star-1">✧</div>
+        <div class="shape-star star-2">✦</div>
+      </div>
+    </section>
+
+    <div class="marquee-container" aria-hidden="true">
+      <div class="marquee-inner">
+        <div class="marquee-content">
+          <span>NO BLUR</span><span>✦</span><span>HARD SHADOWS</span><span>✦</span><span>THICK BORDERS</span><span>✦</span><span>LOUD TYPOGRAPHY</span><span>✦</span>
+          <span>NO BLUR</span><span>✦</span><span>HARD SHADOWS</span><span>✦</span><span>THICK BORDERS</span><span>✦</span><span>LOUD TYPOGRAPHY</span><span>✦</span>
+        </div>
+        <div class="marquee-content">
+          <span>NO BLUR</span><span>✦</span><span>HARD SHADOWS</span><span>✦</span><span>THICK BORDERS</span><span>✦</span><span>LOUD TYPOGRAPHY</span><span>✦</span>
+          <span>NO BLUR</span><span>✦</span><span>HARD SHADOWS</span><span>✦</span><span>THICK BORDERS</span><span>✦</span><span>LOUD TYPOGRAPHY</span><span>✦</span>
+        </div>
+      </div>
     </div>
-  </div>
-</section>
 
-<div class="strip" aria-hidden="true">
-  <div class="strip-track">
-    <span class="strip-item">Neo-brutalism ✦</span>
-    <span class="strip-item">Hard Shadows ✦</span>
-    <span class="strip-item">0px Fakes ✦</span>
-    <span class="strip-item">Bold Borders ✦</span>
-    <span class="strip-item">Cream Canvas ✦</span>
-    <span class="strip-item">Neo-brutalism ✦</span>
-    <span class="strip-item">Hard Shadows ✦</span>
-    <span class="strip-item">0px Fakes ✦</span>
-    <span class="strip-item">Bold Borders ✦</span>
-    <span class="strip-item">Cream Canvas ✦</span>
-  </div>
-</div>
+    <section class="container features-section">
+      <div class="features-grid">
+        <div class="f-card fc-1">
+          <div class="fc-top">
+            <div class="fc-dot"></div><div class="fc-dot"></div><div class="fc-dot"></div>
+          </div>
+          <div class="fc-body">
+            <h3>Hard Shadows</h3>
+            <p>Forget soft, diffuse drop shadows. Neo-brutalism relies on solid black offset shadows with exactly 0px of blur to create stark, graphic depth.</p>
+          </div>
+        </div>
+        <div class="f-card fc-2">
+          <div class="fc-top">
+            <div class="fc-dot"></div><div class="fc-dot"></div><div class="fc-dot"></div>
+          </div>
+          <div class="fc-body">
+            <h3>Highlighter Colors</h3>
+            <p>Use highly saturated, almost abrasive colors like highlighter yellow, bright violet, and flat red alongside pure black and white.</p>
+          </div>
+        </div>
+        <div class="f-card fc-3">
+          <div class="fc-top">
+            <div class="fc-dot"></div><div class="fc-dot"></div><div class="fc-dot"></div>
+          </div>
+          <div class="fc-body">
+            <h3>Physical Feedback</h3>
+            <p>When you click a button, it translates exactly the distance of its shadow, giving the illusion of a physical, mechanical button press.</p>
+          </div>
+        </div>
+      </div>
+    </section>
 
-<div class="container">
-  <div class="cards-section">
-    <h2 class="sect-h">Raw.<br>Unfiltered.<br>Real.</h2>
-    <div class="cards-grid">
-      <div class="card-nb"><div class="card-accent"></div><h3>Hard Shadows</h3><p>offset box-shadows using solid black. No blur, no spread. Elements cast real weight onto the page.</p></div>
-      <div class="card-nb"><div class="card-accent"></div><h3>Highlighter Colors</h3><p>Intense bursts of red, yellow, and violet on cream. Strategic, never scattered. Always with 2px black borders.</p></div>
-      <div class="card-nb"><div class="card-accent"></div><h3>Hover = Collapse</h3><p>Shadow collapses to zero as element translates to offset position. Tactile, physical, honest feedback.</p></div>
-    </div>
-  </div>
+    <section class="stats-section container">
+      <div class="stats-grid">
+        <div class="stat-box sb-1">
+          <div class="stat-val">3px</div>
+          <div class="stat-label">Border Width</div>
+        </div>
+        <div class="stat-box sb-2">
+          <div class="stat-val">0px</div>
+          <div class="stat-label">Shadow Blur</div>
+        </div>
+        <div class="stat-box sb-3">
+          <div class="stat-val">100%</div>
+          <div class="stat-label">Graphic Impact</div>
+        </div>
+        <div class="stat-box sb-4">
+          <div class="stat-val">4</div>
+          <div class="stat-label">Accent Colors</div>
+        </div>
+      </div>
+    </section>
 
-  <div class="cta">
-    <h2>Copy it.<br>Ship it.<br>Mean it.</h2>
-    <p>One prompt. Complete Neo-brutalism implementation. Every hard shadow, every colored border, every rotated sticker card.</p>
-    <a href="#" class="btn-cta">[ Copy This Prompt ]</a>
-  </div>
-</div>
+    <section class="inverted-section">
+      <div class="inv-halftone"></div>
+      <div class="container inv-content">
+        <h2>Break the clean corporate mold.</h2>
+        <a href="#" class="btn btn-yellow" style="font-size: 20px; padding: 16px 40px;">Explore Dark Mode</a>
+      </div>
+    </section>
 
-<footer class="container">
-  <span>scaffold — prompt directory</span>
-  <span>Neo-brutalism System</span>
-</footer>
+    <section class="final-cta">
+      <div class="cta-box">
+        <h2>BE BOLD.</h2>
+        <br>
+        <a href="#" class="btn btn-yellow">COPY PROMPT NOW</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>scaffold — prompt directory</span>
+    <span>Neo-brutalism System</span>
+  </footer>
 
 </body>
 </html>

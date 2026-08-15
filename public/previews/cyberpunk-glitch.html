@@ -4,9 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Cyberpunk / Glitch — Design System Preview</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=JetBrains+Mono:wght@400;700&family=Share+Tech+Mono&display=block');
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Orbitron:wght@400;500;700;900&family=Share+Tech+Mono&display=block" rel="stylesheet">
 
+  <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
@@ -14,97 +17,374 @@
       --fg:      #e0e0e0;
       --card:    #12121a;
       --muted:   #1c1c2e;
-      --muted-fg:#6b7280;
-      --accent:  #00ff88;
-      --error:   #ff003c;
+      --muted-fg: #6b7280;
+      --accent:  #00ff88; /* Electric Green */
+      --secondary: #ff00ff; /* Magenta */
+      --tertiary: #00d4ff; /* Cyan */
+      --border:  #2a2a3a;
+      --destructive: #ff3366;
+      
+      --glow-accent: 0 0 10px rgba(0,255,136,0.5), 0 0 20px rgba(0,255,136,0.3);
+      --glow-magenta: 0 0 10px rgba(255,0,255,0.5), 0 0 20px rgba(255,0,255,0.3);
+      --glow-cyan: 0 0 10px rgba(0,212,255,0.5), 0 0 20px rgba(0,212,255,0.3);
+      
+      --clip-chamfer: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
     }
 
-    html, body { min-height:100%; background:var(--bg); color:var(--fg); font-family:'JetBrains Mono',monospace; font-size:14px; line-height:1.6; }
+    @media (prefers-reduced-motion: reduce) {
+      * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+      .glitch-text::before, .glitch-text::after { display: none !important; }
+    }
 
-    .container { max-width:1152px; margin:0 auto; padding:0 32px; }
+    html, body { 
+      min-height: 100%; 
+      background: var(--bg); 
+      color: var(--fg); 
+      font-family: 'JetBrains Mono', monospace; 
+      font-size: 14px; 
+      line-height: 1.6; 
+      overflow-x: hidden;
+    }
 
-    /* Scanlines */
-    body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:99; background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.15) 2px,rgba(0,0,0,.15) 4px); }
+    /* ATMOSPHERE: Scanlines & Grid */
+    .scanlines {
+      position: fixed; inset: 0; z-index: 100; pointer-events: none;
+      background: repeating-linear-gradient(to bottom, transparent 0, transparent 2px, rgba(0,0,0,0.2) 3px);
+    }
+    .grid-bg {
+      position: fixed; inset: 0; z-index: -1; pointer-events: none;
+      background-size: 50px 50px;
+      background-image: 
+        linear-gradient(to right, rgba(0,255,136,0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0,255,136,0.03) 1px, transparent 1px);
+      mask-image: radial-gradient(circle at center, black 20%, transparent 80%);
+      -webkit-mask-image: radial-gradient(circle at center, black 20%, transparent 80%);
+    }
 
-    /* NAV */
-    header { border-bottom:1px solid var(--accent); padding:16px 32px; display:flex; justify-content:space-between; align-items:center; background:rgba(10,10,15,.9); position:sticky; top:0; z-index:50; }
-    .logo { font-family:'Orbitron',sans-serif; font-size:24px; font-weight:900; color:var(--fg); text-decoration:none; letter-spacing:2px; text-transform:uppercase; text-shadow:0 0 10px rgba(0,255,136,.5); }
-    .logo span { color:var(--accent); }
-    nav ul { list-style:none; display:flex; gap:32px; }
-    nav a { font-family:'Share Tech Mono',monospace; font-size:14px; text-transform:uppercase; color:var(--muted-fg); text-decoration:none; transition:color .2s; }
-    nav a:hover { color:var(--accent); text-shadow:0 0 5px var(--accent); }
-    .btn-cyber { background:transparent; border:1px solid var(--accent); color:var(--accent); font-family:'Share Tech Mono',monospace; font-size:14px; text-transform:uppercase; padding:8px 24px; text-decoration:none; box-shadow:0 0 10px rgba(0,255,136,.2); transition:all .2s; position:relative; overflow:hidden; }
-    .btn-cyber::before { content:''; position:absolute; top:0; left:-100%; width:100%; height:100%; background:linear-gradient(90deg,transparent,rgba(0,255,136,.4),transparent); transition:left .4s; }
-    .btn-cyber:hover::before { left:100%; }
-    .btn-cyber:hover { background:rgba(0,255,136,.1); box-shadow:0 0 15px rgba(0,255,136,.5); }
+    /* TYPOGRAPHY */
+    h1, h2, h3, h4 { font-family: 'Orbitron', sans-serif; text-transform: uppercase; letter-spacing: 0.05em; color: var(--fg); }
+    .font-ui { font-family: 'Share Tech Mono', monospace; }
+    .text-accent { color: var(--accent); text-shadow: var(--glow-accent); }
+    
+    a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
 
-    /* HERO */
-    .hero { padding:80px 32px; border-bottom:1px solid var(--muted); position:relative; }
-    .glitch-text { font-family:'Orbitron',sans-serif; font-size:clamp(3rem,6vw,5rem); font-weight:900; text-transform:uppercase; color:var(--fg); margin-bottom:24px; line-height:1; position:relative; }
-    .glitch-text::before, .glitch-text::after { content:attr(data-text); position:absolute; top:0; left:0; width:100%; height:100%; background:var(--bg); }
-    .glitch-text::before { left:2px; text-shadow:-1px 0 var(--error); clip:rect(24px,550px,90px,0); animation:glitch-anim-2 3s infinite linear alternate-reverse; }
-    .glitch-text::after { left:-2px; text-shadow:-1px 0 var(--accent); clip:rect(85px,550px,140px,0); animation:glitch-anim 2.5s infinite linear alternate-reverse; }
-    @keyframes glitch-anim { 0%{clip:rect(22px,9999px,11px,0)} 20%{clip:rect(64px,9999px,97px,0)} 40%{clip:rect(14px,9999px,55px,0)} 60%{clip:rect(95px,9999px,23px,0)} 80%{clip:rect(45px,9999px,67px,0)} 100%{clip:rect(76px,9999px,82px,0)} }
-    @keyframes glitch-anim-2 { 0%{clip:rect(85px,9999px,12px,0)} 20%{clip:rect(24px,9999px,67px,0)} 40%{clip:rect(75px,9999px,43px,0)} 60%{clip:rect(13px,9999px,95px,0)} 80%{clip:rect(55px,9999px,27px,0)} 100%{clip:rect(96px,9999px,34px,0)} }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 10; }
 
-    .hero-sub { color:var(--muted-fg); font-size:16px; max-width:600px; margin-bottom:40px; }
-    .hero-ctas { display:flex; gap:20px; }
-    .btn-solid { background:var(--accent); color:#000; font-family:'Share Tech Mono',monospace; font-weight:700; font-size:16px; text-transform:uppercase; padding:12px 32px; text-decoration:none; box-shadow:0 0 15px rgba(0,255,136,.4); transition:all .2s; }
-    .btn-solid:hover { background:#fff; box-shadow:0 0 25px rgba(255,255,255,.6); }
+    /* HEADER */
+    header {
+      background: rgba(10, 10, 15, 0.9);
+      border-bottom: 1px solid var(--accent);
+      box-shadow: 0 1px 10px rgba(0,255,136,0.2);
+      padding: 16px 40px; display: flex; justify-content: space-between; align-items: center;
+      position: sticky; top: 0; z-index: 50;
+    }
+    .logo {
+      font-family: 'Orbitron', sans-serif; font-size: 24px; font-weight: 900;
+      color: var(--fg); text-decoration: none; text-shadow: 2px 0 var(--secondary), -2px 0 var(--tertiary);
+    }
+    
+    nav { display: flex; align-items: center; gap: 32px; }
+    nav ul { list-style: none; display: flex; gap: 24px; margin: 0; padding: 0; }
+    nav a {
+      font-family: 'Share Tech Mono', monospace; font-size: 16px; color: var(--muted-fg);
+      text-transform: uppercase; text-decoration: none; transition: 0.2s;
+    }
+    nav a:hover { color: var(--accent); text-shadow: var(--glow-accent); }
+    
+    .btn-outline {
+      background: rgba(0,255,136,0.05); color: var(--accent); border: 1px solid var(--accent);
+      font-family: 'Orbitron', sans-serif; font-size: 12px; font-weight: 700; text-transform: uppercase;
+      padding: 10px 24px; text-decoration: none; clip-path: var(--clip-chamfer);
+      box-shadow: inset 0 0 10px rgba(0,255,136,0.1); transition: 0.2s;
+      position: relative; overflow: hidden; display: inline-block;
+    }
+    .btn-outline::before {
+      content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(0,255,136,0.4), transparent);
+      transform: skewX(-20deg); transition: 0s;
+    }
+    .btn-outline:hover { background: rgba(0,255,136,0.2); box-shadow: inset 0 0 15px rgba(0,255,136,0.3), var(--glow-accent); }
+    .btn-outline:hover::before { left: 150%; transition: 0.5s ease-in-out; }
 
-    /* GRID */
-    .system-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:24px; padding:64px 0; }
-    .card { background:var(--card); border:1px solid var(--muted); padding:32px; position:relative; transition:border-color .3s, box-shadow .3s; }
-    .card::before { content:''; position:absolute; top:-1px; left:-1px; width:10px; height:10px; border-top:2px solid var(--accent); border-left:2px solid var(--accent); opacity:0; transition:opacity .3s; }
-    .card:hover { border-color:var(--accent); box-shadow:0 0 20px rgba(0,255,136,.1); }
-    .card:hover::before { opacity:1; }
-    .card-title { font-family:'Orbitron',sans-serif; font-size:20px; color:var(--fg); margin-bottom:16px; text-transform:uppercase; }
-    .card-text { color:var(--muted-fg); font-size:14px; line-height:1.6; }
+    .btn-solid {
+      background: var(--accent); color: var(--bg); border: 1px solid var(--accent);
+      font-family: 'Orbitron', sans-serif; font-size: 12px; font-weight: 700; text-transform: uppercase;
+      padding: 10px 24px; text-decoration: none; clip-path: var(--clip-chamfer);
+      box-shadow: var(--glow-accent); transition: 0.2s; display: inline-block;
+    }
+    .btn-solid:hover { background: #fff; border-color: #fff; box-shadow: 0 0 15px #fff; }
 
-    footer { border-top:1px solid var(--muted); padding:24px 32px; display:flex; justify-content:space-between; }
-    footer span { font-family:'Share Tech Mono',monospace; color:var(--muted-fg); font-size:12px; text-transform:uppercase; }
+    /* MOBILE MENU TOGGLE */
+    .menu-toggle { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: transparent; border: none; padding: 8px; }
+    .menu-toggle span { width: 24px; height: 2px; background: var(--accent); transition: 0.3s; }
+    #mobile-menu-checkbox { display: none; }
+    
+    @media (max-width: 900px) {
+      .menu-toggle { display: flex; }
+      nav { 
+        position: absolute; top: 100%; left: 0; right: 0; 
+        background: var(--card); flex-direction: column; 
+        padding: 32px; border-bottom: 1px solid var(--accent);
+        transform: translateY(-10px); opacity: 0; pointer-events: none; transition: all 0.3s ease;
+      }
+      nav ul { flex-direction: column; text-align: center; gap: 24px; width: 100%; }
+      .btn-outline { width: 100%; text-align: center; margin-top: 16px; }
+      #mobile-menu-checkbox:checked ~ nav { transform: translateY(0); opacity: 1; pointer-events: auto; }
+      #mobile-menu-checkbox:checked ~ .menu-toggle span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+      #mobile-menu-checkbox:checked ~ .menu-toggle span:nth-child(2) { opacity: 0; }
+      #mobile-menu-checkbox:checked ~ .menu-toggle span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+    }
+
+    /* HERO: Glitch Text */
+    .hero { padding: 100px 0; display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+    
+    .glitch-text {
+      font-size: clamp(3rem, 6vw, 5rem); font-weight: 900; line-height: 1; margin-bottom: 24px;
+      position: relative; display: inline-block; color: var(--fg);
+    }
+    .glitch-text::before, .glitch-text::after {
+      content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      background: var(--bg);
+    }
+    .glitch-text::before {
+      left: 2px; text-shadow: -2px 0 var(--destructive); clip-path: inset(20% 0 80% 0);
+      animation: glitch-anim-1 2.5s infinite linear alternate-reverse;
+    }
+    .glitch-text::after {
+      left: -2px; text-shadow: -2px 0 var(--tertiary); clip-path: inset(80% 0 20% 0);
+      animation: glitch-anim-2 3s infinite linear alternate-reverse;
+    }
+    @keyframes glitch-anim-1 {
+      0% { clip-path: inset(20% 0 80% 0); }
+      20% { clip-path: inset(60% 0 10% 0); }
+      40% { clip-path: inset(40% 0 50% 0); }
+      60% { clip-path: inset(80% 0 5% 0); }
+      80% { clip-path: inset(10% 0 70% 0); }
+      100% { clip-path: inset(30% 0 40% 0); }
+    }
+    @keyframes glitch-anim-2 {
+      0% { clip-path: inset(10% 0 60% 0); }
+      20% { clip-path: inset(80% 0 5% 0); }
+      40% { clip-path: inset(30% 0 20% 0); }
+      60% { clip-path: inset(70% 0 10% 0); }
+      80% { clip-path: inset(20% 0 50% 0); }
+      100% { clip-path: inset(50% 0 30% 0); }
+    }
+
+    .hero-sub { color: var(--muted-fg); font-size: 16px; margin-bottom: 40px; max-width: 450px; }
+    .hero-ctas { display: flex; gap: 16px; flex-wrap: wrap; }
+
+    /* TERMINAL CARD */
+    .terminal-card {
+      background: var(--card); border: 1px solid var(--border); clip-path: var(--clip-chamfer);
+      display: flex; flex-direction: column; width: 100%; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    .terminal-header {
+      background: rgba(255,255,255,0.05); padding: 8px 16px; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 12px;
+    }
+    .dots { display: flex; gap: 6px; }
+    .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .dot:nth-child(1) { background: var(--destructive); box-shadow: 0 0 5px var(--destructive); }
+    .dot:nth-child(2) { background: #ffcc00; box-shadow: 0 0 5px #ffcc00; }
+    .dot:nth-child(3) { background: var(--accent); box-shadow: 0 0 5px var(--accent); }
+    .terminal-title { font-family: 'Share Tech Mono', monospace; font-size: 12px; color: var(--muted-fg); }
+    
+    .terminal-body { padding: 24px; color: var(--accent); }
+    .term-line { display: block; margin-bottom: 8px; }
+    .term-line::before { content: '> '; opacity: 0.5; }
+    .cursor { display: inline-block; width: 8px; height: 15px; background: var(--accent); animation: blink 1s step-end infinite; vertical-align: middle; margin-left: 4px; }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+    /* STATS */
+    .stats-section { padding: 40px 0; border-top: 1px dashed var(--border); border-bottom: 1px dashed var(--border); }
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+    .stat-item { border-left: 2px solid var(--border); padding-left: 16px; }
+    .stat-val { font-family: 'Orbitron', sans-serif; font-size: 24px; font-weight: 700; margin-bottom: 4px; }
+    .c-cyan { color: var(--tertiary); text-shadow: var(--glow-cyan); border-left-color: var(--tertiary); }
+    .c-magenta { color: var(--secondary); text-shadow: var(--glow-magenta); border-left-color: var(--secondary); }
+    .c-green { color: var(--accent); text-shadow: var(--glow-accent); border-left-color: var(--accent); }
+    .stat-label { font-size: 11px; color: var(--muted-fg); text-transform: uppercase; }
+
+    /* FEATURES */
+    .features-section { padding: 120px 0; }
+    .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+    .feature-card {
+      background: var(--card); border: 1px solid var(--border); padding: 32px;
+      clip-path: var(--clip-chamfer); position: relative; transition: 0.2s;
+    }
+    .feature-card:hover { border-color: var(--accent); box-shadow: inset 0 0 20px rgba(0,255,136,0.05); }
+    .fc-corner { position: absolute; width: 10px; height: 10px; border: 2px solid var(--accent); opacity: 0.3; transition: 0.2s; }
+    .fc-tl { top: 16px; left: 16px; border-right: none; border-bottom: none; }
+    .fc-br { bottom: 16px; right: 16px; border-left: none; border-top: none; }
+    .feature-card:hover .fc-corner { opacity: 1; box-shadow: var(--glow-accent); }
+    
+    .fc-label { font-family: 'Share Tech Mono', monospace; font-size: 10px; color: var(--accent); margin-bottom: 16px; display: block; }
+    .feature-card h3 { font-size: 18px; margin-bottom: 12px; }
+    .feature-card p { color: var(--muted-fg); font-size: 13px; }
+
+    /* HOLOGRAPHIC PANEL */
+    .holo-section { padding: 0 0 120px; }
+    .holo-panel {
+      background: rgba(28, 28, 46, 0.3); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(0,255,136,0.3); padding: 64px 40px; text-align: center;
+      position: relative; box-shadow: inset 0 0 50px rgba(0,255,136,0.05), var(--glow-accent);
+    }
+    .holo-panel::before, .holo-panel::after { content: '///'; position: absolute; font-family: monospace; color: var(--accent); opacity: 0.5; }
+    .holo-panel::before { top: 16px; left: 16px; }
+    .holo-panel::after { bottom: 16px; right: 16px; }
+    
+    .holo-panel h2 { font-size: 28px; margin-bottom: 16px; color: var(--fg); }
+    .holo-panel p { color: var(--tertiary); max-width: 600px; margin: 0 auto; text-shadow: var(--glow-cyan); }
+
+    /* FINAL CTA */
+    .cta-section { padding: 0 0 120px; display: flex; justify-content: center; }
+    .cta-card {
+      background: var(--card); border: 2px solid var(--secondary); clip-path: var(--clip-chamfer);
+      padding: 64px; text-align: center; box-shadow: var(--glow-magenta); width: 100%; max-width: 800px;
+    }
+    .cta-card h2 { font-size: 32px; margin-bottom: 32px; text-shadow: 2px 0 var(--tertiary); }
+
+    /* FOOTER */
+    footer { border-top: 1px solid var(--border); padding: 32px 40px; display: flex; justify-content: space-between; align-items: center; }
+    footer span { font-family: 'Share Tech Mono', monospace; font-size: 12px; color: var(--muted-fg); }
+    footer .status { color: var(--accent); text-shadow: var(--glow-accent); }
+
+    /* RESPONSIVE */
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; }
+      .stats-grid { grid-template-columns: 1fr 1fr; gap: 32px 0; }
+      .stat-item:nth-child(3), .stat-item:nth-child(4) { border-top: 1px dashed var(--border); padding-top: 24px; }
+      .features-grid { grid-template-columns: 1fr; }
+      .cta-card { padding: 40px 24px; }
+    }
+    @media (max-width: 600px) {
+      .hero-ctas { flex-direction: column; }
+      .btn-solid, .btn-outline { width: 100%; text-align: center; }
+      footer { flex-direction: column; gap: 16px; text-align: center; }
+    }
   </style>
 </head>
 <body>
+  
+  <div class="grid-bg" aria-hidden="true"></div>
+  <div class="scanlines" aria-hidden="true"></div>
+
   <header>
-    <a href="#" class="logo">SYS<span>.</span>OP</a>
-    <nav><ul>
-      <li><a href="#">// Databanks</a></li>
-      <li><a href="#">// Network</a></li>
-      <li><a href="#">// Protocols</a></li>
-    </ul></nav>
-    <a href="#" class="btn-cyber">INITIALIZE</a>
+    <a href="#" class="logo">SCAFFOLD</a>
+    
+    <input type="checkbox" id="mobile-menu-checkbox">
+    <label for="mobile-menu-checkbox" class="menu-toggle" aria-label="Toggle Navigation">
+      <span></span><span></span><span></span>
+    </label>
+
+    <nav>
+      <ul>
+        <li><a href="#">// Docs</a></li>
+        <li><a href="#">// Terminal</a></li>
+        <li><a href="#">// Database</a></li>
+      </ul>
+      <a href="#" class="btn-outline">Initialize</a>
+    </nav>
   </header>
 
-  <main class="container">
-    <section class="hero">
-      <h1 class="glitch-text" data-text="HIGH TECH. LOW LIFE.">HIGH TECH. LOW LIFE.</h1>
-      <p class="hero-sub">Enter the neon-drenched dystopia. Orbitron typography, electric green accents, and CRT scanlines over a void of absolute black.</p>
-      <div class="hero-ctas">
-        <a href="#" class="btn-solid">OVERRIDE_SYSTEM</a>
-        <a href="#" class="btn-cyber">VIEW_SOURCE</a>
+  <main>
+    <section class="container hero">
+      <div class="hero-left">
+        <h1 class="glitch-text" data-text="HIGH TECH. LOW LIFE.">HIGH TECH. LOW LIFE.</h1>
+        <p class="hero-sub">
+          Inject cyberpunk aesthetics into your interface. Neon glows, holographic panels, chamfered geometries, and terminal typography.
+        </p>
+        <div class="hero-ctas">
+          <a href="#" class="btn-solid">Deploy System</a>
+          <a href="#" class="btn-outline">View Source</a>
+        </div>
+      </div>
+      <div class="hero-right">
+        <div class="terminal-card">
+          <div class="terminal-header">
+            <div class="dots">
+              <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+            </div>
+            <span class="terminal-title">root@scaffold:~/design-system</span>
+          </div>
+          <div class="terminal-body">
+            <span class="term-line">cat design-tokens.json</span>
+            <span class="term-line">STATUS: <span style="color:#e0e0e0">OPERATIONAL</span></span>
+            <span class="term-line">Accent: <span style="color:#fff;text-shadow:var(--glow-accent)">#00ff88</span></span>
+            <span class="term-line" style="color:var(--destructive)">Corruption: 3.7%</span>
+            <span class="term-line">Awaiting input<span class="cursor"></span></span>
+          </div>
+        </div>
       </div>
     </section>
 
-    <div class="system-grid">
-      <div class="card">
-        <h3 class="card-title">NEON_PULSE</h3>
-        <p class="card-text">Primary accent #00ff88 cuts through the darkness. Used strictly for interactive states and critical data.</p>
-      </div>
-      <div class="card">
-        <h3 class="card-title">GLITCH_VFX</h3>
-        <p class="card-text">CSS clip-path animations simulate corrupted data streams on hero elements. Imperfection is design.</p>
-      </div>
-      <div class="card">
-        <h3 class="card-title">MONO_GRID</h3>
-        <p class="card-text">JetBrains Mono body text evokes terminal outputs. Rigid alignment. Zero border-radius anywhere.</p>
+    <div class="stats-section">
+      <div class="container stats-grid">
+        <div class="stat-item c-cyan">
+          <div class="stat-val">01001010</div>
+          <div class="stat-label">Data Integrity</div>
+        </div>
+        <div class="stat-item c-magenta">
+          <div class="stat-val">60fps</div>
+          <div class="stat-label">Render Rate</div>
+        </div>
+        <div class="stat-item c-green">
+          <div class="stat-val">3</div>
+          <div class="stat-label">Neon Accents</div>
+        </div>
+        <div class="stat-item c-cyan">
+          <div class="stat-val">100%</div>
+          <div class="stat-label">Uptime</div>
+        </div>
       </div>
     </div>
+
+    <section class="container features-section">
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="fc-corner fc-tl" aria-hidden="true"></div>
+          <div class="fc-corner fc-br" aria-hidden="true"></div>
+          <span class="fc-label">VFX_01</span>
+          <h3>Neon Pulse</h3>
+          <p>Stacked box-shadows and text-shadows create convincing emissive glows that cut through the dark void background.</p>
+        </div>
+        <div class="feature-card">
+          <div class="fc-corner fc-tl" aria-hidden="true"></div>
+          <div class="fc-corner fc-br" aria-hidden="true"></div>
+          <span class="fc-label">VFX_02</span>
+          <h3>Glitch Tech</h3>
+          <p>Chromatic aberration and CSS clip-path animations simulate failing hardware and corrupted data streams.</p>
+        </div>
+        <div class="feature-card">
+          <div class="fc-corner fc-tl" aria-hidden="true"></div>
+          <div class="fc-corner fc-br" aria-hidden="true"></div>
+          <span class="fc-label">VFX_03</span>
+          <h3>Mono Grid</h3>
+          <p>JetBrains Mono and Share Tech Mono enforce rigid structural alignment across all UI components and labels.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="container holo-section">
+      <div class="holo-panel">
+        <h2>HOLOGRAPHIC PROJECTION ACTIVE</h2>
+        <p>This design system merges the grittiness of 80s sci-fi terminals with modern glassmorphism. Use it when building developer tools, gaming dashboards, or Web3 interfaces that demand a rebellious edge.</p>
+      </div>
+    </section>
+
+    <section class="container cta-section">
+      <div class="cta-card">
+        <h2>JACK INTO THE MAINFRAME</h2>
+        <a href="#" class="btn-solid" style="background:var(--secondary);border-color:var(--secondary);box-shadow:var(--glow-magenta);">COPY PROMPT</a>
+      </div>
+    </section>
   </main>
 
   <footer>
     <span>scaffold // prompt_directory</span>
-    <span>STATUS: OPERATIONAL</span>
+    <span class="status">STATUS: OPERATIONAL</span>
   </footer>
+
 </body>
 </html>

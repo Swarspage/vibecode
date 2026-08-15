@@ -4,91 +4,307 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Minimalist Dark — Design System Preview</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;500;600&display=block');
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;700&display=block" rel="stylesheet">
 
+  <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:      #050505;
-      --surface: #0a0a0a;
-      --fg:      #FAFAFA;
-      --muted:   #888888;
-      --border:  #1A1A1A;
-      --accent:  #FFFFFF;
+      --bg:           #0A0A0F;
+      --bg-alt:       #12121A;
+      --fg:           #FAFAFA;
+      --muted:        #1A1A24;
+      --muted-fg:     #71717A;
+      --accent:       #F59E0B; /* Warm Amber */
+      
+      --border:       rgba(255,255,255,0.08);
+      --border-hover: rgba(255,255,255,0.15);
+      --card-glass:   rgba(26,26,36,0.6);
+      
+      --transition: 300ms cubic-bezier(0.2, 0.8, 0.2, 1);
     }
 
-    html, body { min-height:100%; background:var(--bg); color:var(--fg); font-family:'Inter',sans-serif; font-size:15px; line-height:1.6; -webkit-font-smoothing:antialiased; }
+    @media (prefers-reduced-motion: reduce) {
+      * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
 
-    .container { max-width:1080px; margin:0 auto; padding:0 40px; }
+    html, body { 
+      min-height: 100%; background: var(--bg); color: var(--fg); 
+      font-family: 'Inter', sans-serif; font-size: 16px; line-height: 1.6; overflow-x: hidden;
+    }
 
-    /* Noise overlay */
-    body::before { content:''; position:fixed; inset:0; z-index:99; pointer-events:none; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E"); opacity:0.04; mix-blend-mode:overlay; }
+    /* AMBIENT EFFECTS */
+    .ambient-orbs { position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
+    .orb { position: absolute; border-radius: 50%; filter: blur(120px); opacity: 0.05; }
+    .orb-1 { width: 50vw; height: 50vw; background: var(--accent); top: -20%; left: -10%; }
+    .orb-2 { width: 60vw; height: 60vw; background: #6366f1; bottom: -30%; right: -20%; opacity: 0.03; }
+    .orb-3 { width: 40vw; height: 40vw; background: var(--accent); top: 30%; left: 40%; opacity: 0.04; }
+    
+    .noise-bg {
+      position: fixed; inset: 0; z-index: 100; pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.02; mix-blend-mode: screen;
+    }
 
-    /* NAV */
-    header { padding:24px 40px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); }
-    .logo { font-family:'Space Grotesk',sans-serif; font-size:20px; font-weight:700; letter-spacing:-.04em; color:var(--fg); text-decoration:none; }
-    nav ul { list-style:none; display:flex; gap:32px; }
-    nav a { font-size:14px; color:var(--muted); text-decoration:none; transition:color .3s; }
-    nav a:hover { color:var(--fg); }
-    .btn-outline { border:1px solid var(--border); color:var(--fg); font-size:13px; font-weight:500; padding:10px 20px; border-radius:6px; text-decoration:none; transition:border-color .3s, background .3s; }
-    .btn-outline:hover { border-color:rgba(255,255,255,.2); background:rgba(255,255,255,.05); }
+    /* TYPOGRAPHY */
+    h1, h2, h3, h4 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; color: var(--fg); letter-spacing: -0.02em; line-height: 1.1; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+    .text-accent { color: var(--accent); }
+    
+    a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 10; }
+
+    /* BUTTONS */
+    .btn {
+      font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 500;
+      padding: 12px 24px; border-radius: 8px; border: 1px solid transparent; cursor: pointer;
+      text-decoration: none; display: inline-flex; align-items: center; justify-content: center;
+      transition: all var(--transition);
+    }
+    .btn-primary {
+      background: var(--accent); color: #000; font-weight: 600;
+      box-shadow: 0 0 20px rgba(245, 158, 11, 0.2);
+    }
+    .btn-primary:hover { box-shadow: 0 0 30px rgba(245, 158, 11, 0.4); transform: translateY(-1px); }
+    
+    .btn-ghost { background: transparent; color: var(--fg); border-color: var(--border); }
+    .btn-ghost:hover { background: rgba(255,255,255,0.05); border-color: var(--border-hover); }
+
+    /* HEADER */
+    header {
+      background: rgba(10, 10, 15, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border); padding: 16px 40px;
+      display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 50;
+    }
+    .logo { font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 700; color: var(--fg); text-decoration: none; }
+    
+    nav { display: flex; align-items: center; gap: 32px; }
+    nav ul { list-style: none; display: flex; gap: 24px; margin: 0; padding: 0; }
+    nav a { font-size: 14px; font-weight: 500; color: var(--muted-fg); text-decoration: none; transition: color 0.2s; }
+    nav a:hover { color: var(--fg); }
+
+    /* MOBILE MENU TOGGLE */
+    .menu-toggle { display: none; flex-direction: column; gap: 4px; cursor: pointer; background: transparent; border: none; padding: 8px; }
+    .menu-toggle span { width: 20px; height: 2px; background: var(--fg); transition: 0.3s; }
+    #mobile-menu-checkbox { display: none; }
+    
+    @media (max-width: 900px) {
+      .menu-toggle { display: flex; }
+      nav { 
+        position: absolute; top: 100%; left: 0; right: 0; 
+        background: var(--bg); flex-direction: column; 
+        padding: 40px; border-bottom: 1px solid var(--border);
+        transform: translateY(-10px); opacity: 0; pointer-events: none; transition: all 0.3s ease;
+      }
+      nav ul { flex-direction: column; text-align: center; gap: 24px; width: 100%; }
+      .btn { width: 100%; margin-top: 24px; }
+      #mobile-menu-checkbox:checked ~ nav { transform: translateY(0); opacity: 1; pointer-events: auto; }
+    }
 
     /* HERO */
-    .hero { padding:120px 0 100px; text-align:center; }
-    .hero-badge { display:inline-block; border:1px solid var(--border); background:var(--surface); color:var(--muted); font-size:12px; padding:6px 16px; border-radius:999px; margin-bottom:32px; letter-spacing:.05em; }
-    h1.hero-headline { font-family:'Space Grotesk',sans-serif; font-size:clamp(3rem,6vw,5.5rem); font-weight:700; line-height:1; letter-spacing:-.04em; margin-bottom:24px; color:var(--fg); }
-    .hero-sub { color:var(--muted); font-size:18px; max-width:540px; margin:0 auto 48px; line-height:1.6; }
-    .btn-primary { display:inline-block; background:var(--fg); color:#000; font-size:14px; font-weight:600; padding:16px 36px; border-radius:8px; text-decoration:none; transition:transform .3s; }
-    .btn-primary:hover { transform:translateY(-2px); box-shadow:0 10px 30px rgba(255,255,255,.1); }
+    .hero { padding: 140px 0; text-align: center; position: relative; }
+    .hero-glow {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      width: 400px; height: 400px; background: radial-gradient(circle, rgba(245, 158, 11, 0.15) 0%, transparent 70%);
+      pointer-events: none; z-index: -1;
+    }
+    
+    .hero-headline { font-size: clamp(3rem, 6vw, 5rem); margin-bottom: 24px; max-width: 900px; margin-inline: auto; letter-spacing: -0.04em; }
+    .hero-body { font-size: 18px; color: var(--muted-fg); max-width: 560px; margin: 0 auto 40px; }
+    .hero-ctas { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
 
-    /* CARDS */
-    .cards { display:grid; grid-template-columns:repeat(2,1fr); gap:24px; padding:0 0 100px; }
-    .card { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:48px 40px; position:relative; overflow:hidden; transition:border-color .4s; }
-    .card::before { content:''; position:absolute; inset:0; background:radial-gradient(circle at top right, rgba(255,255,255,.05), transparent 60%); opacity:0; transition:opacity .4s; }
-    .card:hover { border-color:rgba(255,255,255,.2); }
-    .card:hover::before { opacity:1; }
-    .card h3 { font-family:'Space Grotesk',sans-serif; font-size:22px; font-weight:500; margin-bottom:12px; color:var(--fg); letter-spacing:-.02em; }
-    .card p { color:var(--muted); font-size:15px; line-height:1.6; }
+    /* GLASS CARDS */
+    .features-section { padding: 60px 0 120px; }
+    .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .glass-card {
+      background: var(--card-glass); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      border: 1px solid var(--border); border-radius: 12px; padding: 40px 32px;
+      transition: all var(--transition); display: flex; flex-direction: column; align-items: flex-start;
+    }
+    .glass-card:hover {
+      border-color: var(--border-hover); background: rgba(26,26,36,0.8);
+      transform: scale(1.02); box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    }
+    
+    .gc-icon { width: 40px; height: 40px; border-radius: 8px; background: rgba(245, 158, 11, 0.1); color: var(--accent); display: flex; align-items: center; justify-content: center; margin-bottom: 24px; font-size: 20px; }
+    .glass-card h3 { font-size: 20px; margin-bottom: 12px; font-weight: 500; }
+    .glass-card p { font-size: 15px; color: var(--muted-fg); line-height: 1.6; }
 
-    footer { border-top:1px solid var(--border); padding:32px; display:flex; justify-content:space-between; }
-    footer span { color:var(--muted); font-size:13px; }
+    /* STATS */
+    .stats-section { padding: 40px 0 120px; }
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+    .stat-card {
+      background: var(--card-glass); backdrop-filter: blur(8px);
+      border: 1px solid var(--border); border-radius: 12px; padding: 32px 24px;
+      text-align: center;
+    }
+    .stat-val { font-family: 'Space Grotesk', sans-serif; font-size: 36px; font-weight: 700; color: var(--accent); margin-bottom: 8px; line-height: 1; }
+    .stat-label { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--muted-fg); text-transform: uppercase; letter-spacing: 0.05em; }
+
+    /* SPLIT ATMOSPHERIC SECTION */
+    .split-section { padding: 140px 0; position: relative; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .split-bg { position: absolute; inset: 0; background: radial-gradient(circle at center, rgba(245,158,11,0.03) 0%, transparent 60%); pointer-events: none; }
+    .split-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+    
+    .split-text h2 { font-size: 40px; margin-bottom: 24px; }
+    .split-text p { font-size: 16px; color: var(--muted-fg); margin-bottom: 32px; max-width: 480px; }
+    
+    .glass-panel-demo {
+      background: var(--card-glass); backdrop-filter: blur(12px); border: 1px solid var(--border);
+      border-radius: 16px; padding: 40px; box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+      position: relative; overflow: hidden;
+    }
+    .glass-panel-demo::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle at center, rgba(255,255,255,0.05) 0%, transparent 50%); pointer-events: none; }
+    .demo-line { height: 12px; background: rgba(255,255,255,0.05); border-radius: 6px; margin-bottom: 16px; }
+
+    /* FINAL CTA */
+    .final-cta { padding: 160px 0; text-align: center; position: relative; background: var(--bg-alt); }
+    .cta-glow { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 600px; height: 600px; background: radial-gradient(circle, rgba(245, 158, 11, 0.1) 0%, transparent 60%); pointer-events: none; z-index: 1; }
+    .cta-content { position: relative; z-index: 2; }
+    .final-cta h2 { font-size: 48px; margin-bottom: 24px; }
+    .final-cta p { font-size: 18px; color: var(--muted-fg); margin-bottom: 40px; }
+
+    /* FOOTER */
+    footer { border-top: 1px solid var(--border); padding: 40px; display: flex; justify-content: space-between; align-items: center; }
+    footer span { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--muted-fg); }
+
+    /* RESPONSIVE */
+    @media (max-width: 1000px) {
+      .features-grid { grid-template-columns: 1fr; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .split-grid { grid-template-columns: 1fr; gap: 40px; text-align: center; }
+      .split-text p { margin-inline: auto; }
+    }
+    @media (max-width: 600px) {
+      .hero { padding: 100px 0; }
+      .hero-headline { font-size: 2.5rem; }
+      .stats-grid { grid-template-columns: 1fr; }
+      .hero-ctas { flex-direction: column; }
+      .btn { width: 100%; justify-content: center; }
+      footer { flex-direction: column; gap: 16px; text-align: center; }
+    }
   </style>
 </head>
 <body>
+  
+  <div class="ambient-orbs" aria-hidden="true">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+  <div class="noise-bg" aria-hidden="true"></div>
+
   <header>
     <a href="#" class="logo">scaffold</a>
-    <nav><ul>
-      <li><a href="#">Design</a></li>
-      <li><a href="#">Workflow</a></li>
-      <li><a href="#">Docs</a></li>
-    </ul></nav>
-    <a href="#" class="btn-outline">Copy Prompt</a>
+    
+    <input type="checkbox" id="mobile-menu-checkbox">
+    <label for="mobile-menu-checkbox" class="menu-toggle" aria-label="Toggle Navigation">
+      <span></span><span></span><span></span>
+    </label>
+
+    <nav>
+      <ul>
+        <li><a href="#">Foundations</a></li>
+        <li><a href="#">Components</a></li>
+        <li><a href="#">Patterns</a></li>
+      </ul>
+      <a href="#" class="btn btn-primary" style="padding: 8px 20px; font-size: 13px;">Copy System</a>
+    </nav>
   </header>
 
-  <main class="container">
-    <section class="hero">
-      <div class="hero-badge">Minimalist Dark</div>
-      <h1 class="hero-headline">Atmospheric depth.<br>Absolute restraint.</h1>
-      <p class="hero-sub">A dark mode that doesn't rely on neon colors or harsh gradients. Just true black, off-white, and subtle radial light sources.</p>
-      <a href="#" class="btn-primary">Get the System</a>
+  <main>
+    <section class="container hero">
+      <div class="hero-glow"></div>
+      <h1 class="hero-headline">Deep layers. <br><span class="text-accent">Warm accents.</span></h1>
+      <p class="hero-body">
+        A premium dark mode experience designed for developer tools and sophisticated SaaS. Utilizing subtle slate tones, glass-morphism, and atmospheric ambient light.
+      </p>
+      <div class="hero-ctas">
+        <a href="#" class="btn btn-primary">Deploy Minimalist Dark</a>
+        <a href="#" class="btn btn-ghost">View Documentation</a>
+      </div>
     </section>
 
-    <div class="cards">
-      <div class="card">
-        <h3>Space Grotesk + Inter</h3>
-        <p>A technical, geometric display face paired with a highly legible humanist body sans. The perfect balance for complex interfaces.</p>
+    <section class="container features-section">
+      <div class="features-grid">
+        <div class="glass-card">
+          <div class="gc-icon">✦</div>
+          <h3>Layered Slate</h3>
+          <p>Avoids harsh #000 backgrounds in favor of rich, layered slate grays that reduce eye strain and feel innately premium.</p>
+        </div>
+        <div class="glass-card">
+          <div class="gc-icon">🔥</div>
+          <h3>Warm Amber</h3>
+          <p>A single, highly constrained accent color (#F59E0B) is used to draw attention without overwhelming the calm aesthetic.</p>
+        </div>
+        <div class="glass-card">
+          <div class="gc-icon">✨</div>
+          <h3>Ambient Glow</h3>
+          <p>Large, heavily blurred background orbs cast a subtle light across the interface, giving glass cards a beautiful backdrop to refract.</p>
+        </div>
       </div>
-      <div class="card">
-        <h3>Subtle Illumination</h3>
-        <p>Visual interest is created through extremely subtle radial gradients that act like a soft desk lamp over dark surfaces.</p>
+    </section>
+
+    <div class="stats-section">
+      <div class="container stats-grid">
+        <div class="stat-card">
+          <div class="stat-val">4</div>
+          <div class="stat-label">Slate Layers</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val">1</div>
+          <div class="stat-label">Warm Accent</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val">8%</div>
+          <div class="stat-label">Border Opacity</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val">12px</div>
+          <div class="stat-label">Card Radius</div>
+        </div>
       </div>
     </div>
+
+    <section class="split-section">
+      <div class="split-bg"></div>
+      <div class="container split-grid">
+        <div class="split-text">
+          <h2>Clarity through contrast.</h2>
+          <p>Minimalist Dark relies on extremely subtle borders (8% white opacity) and backdrop-blur to establish visual hierarchy without clutter. It is spacious, breathable, and highly legible.</p>
+          <a href="#" class="btn btn-ghost">Explore UI Kit</a>
+        </div>
+        <div class="glass-panel-demo">
+          <div class="demo-line" style="width: 40%;"></div>
+          <div class="demo-line" style="width: 80%; background:rgba(255,255,255,0.1);"></div>
+          <div class="demo-line" style="width: 60%; background:rgba(255,255,255,0.1);"></div>
+          <div class="demo-line" style="width: 70%; background:rgba(255,255,255,0.1);"></div>
+          <div style="margin-top: 32px; display: flex; gap: 12px;">
+            <div style="width: 100px; height: 32px; border-radius: 6px; background: rgba(245, 158, 11, 0.2);"></div>
+            <div style="width: 100px; height: 32px; border-radius: 6px; background: rgba(255,255,255,0.05);"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="final-cta">
+      <div class="cta-glow"></div>
+      <div class="container cta-content">
+        <h2>Ready to go dark?</h2>
+        <p>Get the complete CSS framework and design tokens.</p>
+        <a href="#" class="btn btn-primary" style="padding: 16px 32px; font-size: 16px;">Initialize System</a>
+      </div>
+    </section>
   </main>
 
-  <footer class="container">
+  <footer>
     <span>scaffold — prompt directory</span>
     <span>Minimalist Dark System</span>
   </footer>
+
 </body>
 </html>

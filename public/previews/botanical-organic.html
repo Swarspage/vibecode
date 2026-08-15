@@ -3,85 +3,364 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Botanical / Organic Serif — Design System Preview</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Lora:ital,wght@0,400;0,500;1,400&display=block');
+  <title>Botanical / Organic — Design System Preview</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Source+Sans+3:wght@400;500;600&display=block" rel="stylesheet">
 
+  <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:      #F4F1EA;
-      --fg:      #2C362F;
-      --accent:  #7C9070;
-      --muted:   #DCD3C6;
-      --border:  #E8E3D9;
-      --terracotta: #C07C66;
+      --bg:      #F9F8F4; /* Warm Alabaster */
+      --fg:      #2D3A31; /* Deep Forest Green */
+      --accent:  #8C9A84; /* Sage Green */
+      --muted:   #DCCFC2; /* Soft Clay */
+      --border:  #E6E2DA; /* Stone */
+      --inter:   #C27B66; /* Terracotta */
+      
+      --shadow-soft: 0 10px 30px rgba(45, 58, 49, 0.05);
+      --shadow-hover: 0 15px 40px rgba(45, 58, 49, 0.08);
+      
+      --transition-slow: 700ms cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    html, body { min-height:100%; background:var(--bg); color:var(--fg); font-family:'Lora',serif; font-size:16px; line-height:1.75; }
+    @media (prefers-reduced-motion: reduce) {
+      * { transition-duration: 0.01ms !important; }
+    }
 
-    /* Paper texture */
-    body::before { content:''; position:fixed; inset:0; z-index:100; pointer-events:none; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E"); opacity:0.04; mix-blend-mode:multiply; }
+    html, body { 
+      min-height: 100%; 
+      background: var(--bg); 
+      color: var(--fg); 
+      font-family: 'Source Sans 3', sans-serif; 
+      font-size: 16px; 
+      line-height: 1.7; 
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
 
-    .container { max-width:1000px; margin:0 auto; padding:0 32px; }
+    /* PAPER GRAIN OVERLAY */
+    .grain-overlay {
+      position: fixed; inset: 0; z-index: 100; pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.035; mix-blend-mode: multiply;
+    }
 
-    /* NAV */
-    header { padding:32px; display:flex; justify-content:space-between; align-items:center; }
-    .logo { font-family:'Playfair Display',serif; font-size:24px; font-style:italic; font-weight:500; color:var(--fg); text-decoration:none; }
-    nav ul { list-style:none; display:flex; gap:40px; }
-    nav a { font-size:14px; color:var(--fg); opacity:.7; text-decoration:none; transition:opacity .3s; }
-    nav a:hover { opacity:1; color:var(--accent); }
-    .btn-nav { font-family:'Playfair Display',serif; font-style:italic; font-size:16px; color:var(--accent); border-bottom:1px solid var(--accent); text-decoration:none; padding-bottom:2px; transition:color .3s, border-color .3s; }
-    .btn-nav:hover { color:var(--terracotta); border-color:var(--terracotta); }
+    /* TYPOGRAPHY */
+    h1, h2, h3, h4, h5 { font-family: 'Playfair Display', serif; color: var(--fg); font-weight: 500; }
+    .text-sage { color: var(--accent); }
+    .text-terra { color: var(--inter); }
+    .italic { font-style: italic; }
+    
+    a:focus-visible, button:focus-visible, input:focus-visible {
+      outline: 2px solid var(--accent); outline-offset: 4px;
+    }
+
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 10; }
+
+    /* HEADER */
+    header {
+      padding: 32px 40px;
+      display: flex; justify-content: space-between; align-items: center;
+      position: relative; z-index: 50;
+    }
+    .logo {
+      font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 600; font-style: italic;
+      color: var(--fg); text-decoration: none;
+    }
+    
+    nav { display: flex; align-items: center; gap: 40px; }
+    nav ul { list-style: none; display: flex; gap: 32px; margin: 0; padding: 0; }
+    nav a {
+      font-family: 'Source Sans 3', sans-serif; font-size: 15px; font-weight: 500;
+      color: var(--accent); text-decoration: none;
+      position: relative; transition: color var(--transition-slow);
+    }
+    nav a:hover { color: var(--inter); }
+    nav a::after {
+      content: ''; position: absolute; bottom: -4px; left: 0; width: 100%; height: 1px;
+      background: var(--inter); transform: scaleX(0); transform-origin: right;
+      transition: transform var(--transition-slow);
+    }
+    nav a:hover::after { transform: scaleX(1); transform-origin: left; }
+    
+    .btn-pill {
+      background: var(--fg); color: #fff; font-size: 15px; font-weight: 500;
+      padding: 12px 32px; border-radius: 100px; text-decoration: none;
+      transition: all var(--transition-slow); border: 1px solid transparent;
+      display: inline-block;
+    }
+    .btn-pill:hover { background: var(--inter); transform: translateY(-2px); box-shadow: var(--shadow-soft); }
+
+    /* MOBILE MENU TOGGLE */
+    .menu-toggle { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: transparent; border: none; padding: 8px; }
+    .menu-toggle span { width: 24px; height: 1px; background: var(--fg); transition: 0.3s; }
+    #mobile-menu-checkbox { display: none; }
+    
+    @media (max-width: 900px) {
+      .menu-toggle { display: flex; }
+      nav { 
+        position: absolute; top: 100%; left: 0; right: 0; 
+        background: var(--bg); flex-direction: column; 
+        padding: 40px; border-bottom: 1px solid var(--border);
+        transform: translateY(-10px); opacity: 0; pointer-events: none;
+        transition: all 0.3s ease;
+      }
+      nav ul { flex-direction: column; text-align: center; gap: 24px; width: 100%; }
+      nav a { font-size: 16px; }
+      .btn-pill { width: 100%; text-align: center; margin-top: 16px; }
+      #mobile-menu-checkbox:checked ~ nav { transform: translateY(0); opacity: 1; pointer-events: auto; }
+      #mobile-menu-checkbox:checked ~ .menu-toggle span:nth-child(1) { transform: rotate(45deg) translate(4px, 4px); }
+      #mobile-menu-checkbox:checked ~ .menu-toggle span:nth-child(2) { opacity: 0; }
+      #mobile-menu-checkbox:checked ~ .menu-toggle span:nth-child(3) { transform: rotate(-45deg) translate(4px, -4px); }
+    }
 
     /* HERO */
-    .hero { padding:100px 0 80px; text-align:center; }
-    .hero-label { font-size:12px; letter-spacing:.15em; text-transform:uppercase; color:var(--terracotta); margin-bottom:24px; font-weight:500; }
-    h1.hero-headline { font-family:'Playfair Display',serif; font-size:clamp(3.5rem,7vw,6rem); font-weight:400; line-height:1.1; color:var(--fg); margin-bottom:32px; }
-    h1.hero-headline em { font-style:italic; color:var(--accent); }
-    .hero-sub { font-size:18px; color:var(--fg); opacity:.8; max-width:540px; margin:0 auto 48px; line-height:1.8; }
-    .btn-primary { display:inline-block; background:var(--accent); color:#fff; font-size:14px; font-weight:500; letter-spacing:.05em; text-transform:uppercase; padding:16px 40px; border-radius:100px; text-decoration:none; transition:background .3s, transform .3s; }
-    .btn-primary:hover { background:var(--fg); transform:translateY(-2px); }
+    .hero {
+      padding: 80px 0 120px;
+      text-align: center;
+      display: flex; flex-direction: column; align-items: center;
+    }
+    .hero-label {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.15em; color: var(--accent);
+      text-transform: uppercase; margin-bottom: 24px;
+    }
+    .hero-headline {
+      font-size: clamp(3rem, 6vw, 5rem); line-height: 1.1; margin-bottom: 24px; max-width: 800px;
+    }
+    .hero-body {
+      font-size: 18px; color: var(--fg); opacity: 0.8; max-width: 540px; margin-bottom: 40px;
+    }
+    
+    .hero-image {
+      margin-top: 64px; width: 100%; max-width: 320px; aspect-ratio: 2/3;
+      border-radius: 50% 50% 0 0 / 20% 20% 0 0;
+      background: linear-gradient(to bottom, #dccfc2, #e6e2da);
+      position: relative; overflow: hidden;
+      box-shadow: var(--shadow-soft);
+      transition: transform var(--transition-slow);
+    }
+    .hero-image::after {
+      content: ''; position: absolute; inset: 0;
+      background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.3'/%3E%3C/svg%3E");
+      mix-blend-mode: overlay;
+    }
+    .hero-image:hover { transform: scale(1.05); box-shadow: var(--shadow-hover); }
 
-    /* CARDS */
-    .cards { display:grid; grid-template-columns:repeat(2,1fr); gap:48px; padding:0 32px 100px; }
-    .card { background:#FAF8F5; border-radius:16px; padding:48px 40px; text-align:center; transition:transform .4s; box-shadow:0 10px 40px rgba(44,54,47,0.03); }
-    .card:hover { transform:translateY(-8px); }
-    .card-icon { width:60px; height:60px; border-radius:50%; background:var(--bg); border:1px solid var(--muted); margin:0 auto 24px; display:flex; align-items:center; justify-content:center; color:var(--accent); font-size:24px; }
-    .card h3 { font-family:'Playfair Display',serif; font-size:24px; font-weight:500; margin-bottom:16px; color:var(--fg); }
-    .card p { color:var(--fg); opacity:.7; font-size:15px; }
+    /* QUOTE */
+    .quote-section { padding: 40px 0 100px; text-align: center; max-width: 700px; margin: 0 auto; }
+    .quote-line { width: 1px; height: 60px; background: var(--accent); margin: 0 auto 40px; opacity: 0.5; }
+    .quote-text { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 4vw, 2.5rem); font-style: italic; color: var(--fg); line-height: 1.3; margin-bottom: 32px; }
+    .quote-attr { font-size: 11px; text-transform: uppercase; letter-spacing: 0.15em; color: var(--accent); font-weight: 600; }
 
-    footer { border-top:1px solid var(--border); padding:40px 32px; text-align:center; }
-    footer span { font-size:13px; color:var(--fg); opacity:.6; letter-spacing:.05em; }
+    /* FEATURES (STAGGERED) */
+    .features-section { padding: 0 0 120px; }
+    .features-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px;
+      align-items: start;
+    }
+    /* Desktop stagger */
+    @media (min-width: 901px) {
+      .feature-card:nth-child(2) { transform: translateY(48px); }
+      .feature-card:nth-child(2):hover { transform: translateY(40px); }
+    }
+    
+    .feature-card {
+      background: #FFFFFF; border: 1px solid var(--border); border-radius: 24px;
+      padding: 40px; box-shadow: var(--shadow-soft);
+      transition: all var(--transition-slow);
+    }
+    .feature-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-hover); }
+    
+    .fc-icon {
+      width: 60px; height: 60px; border-radius: 50%;
+      background: var(--bg); border: 1px solid var(--accent);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 24px; color: var(--accent); font-size: 24px;
+    }
+    .feature-card h3 { font-size: 24px; margin-bottom: 16px; }
+    .feature-card p { color: var(--fg); opacity: 0.7; font-size: 15px; line-height: 1.6; }
+
+    /* STATS STRIP */
+    .stats-section { padding: 60px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); margin-bottom: 120px; }
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); }
+    .stat-item { text-align: center; border-right: 1px solid var(--border); padding: 0 24px; }
+    .stat-item:last-child { border-right: none; }
+    .stat-val { font-family: 'Playfair Display', serif; font-size: 2.5rem; color: var(--accent); margin-bottom: 8px; line-height: 1; }
+    .stat-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.15em; font-weight: 600; color: var(--fg); opacity: 0.7; }
+
+    /* PROCESS STEPS */
+    .process-section { padding: 0 0 120px; position: relative; }
+    /* SVG meandering line background placeholder */
+    .process-section::before {
+      content: ''; position: absolute; top: 100px; left: 10%; right: 10%; height: 100px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 100'%3E%3Cpath d='M0 50 Q 250 100 500 50 T 1000 50' fill='none' stroke='%238C9A84' stroke-width='1' stroke-dasharray='4 4' opacity='0.5'/%3E%3C/svg%3E");
+      background-size: 100% 100%; z-index: -1;
+    }
+    .process-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; }
+    .step-item { text-align: center; }
+    .step-num {
+      width: 48px; height: 48px; border-radius: 50%; background: var(--bg); border: 1px solid var(--inter);
+      color: var(--inter); font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 600;
+      display: flex; align-items: center; justify-content: center; margin: 0 auto 24px;
+    }
+    .step-item h3 { font-size: 22px; margin-bottom: 12px; }
+    .step-item p { color: var(--fg); opacity: 0.7; font-size: 15px; }
+
+    /* FINAL CTA */
+    .final-cta {
+      background: var(--muted); border-radius: 24px; padding: 100px 40px; text-align: center;
+      margin-bottom: 100px; position: relative; overflow: hidden;
+    }
+    .final-cta::after {
+      content: ''; position: absolute; inset: 0;
+      background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.3'/%3E%3C/svg%3E");
+      mix-blend-mode: multiply; opacity: 0.05; pointer-events: none;
+    }
+    .final-cta h2 { font-size: clamp(2.5rem, 5vw, 4rem); margin-bottom: 24px; position: relative; z-index: 2; }
+    .final-cta p { font-size: 18px; opacity: 0.8; max-width: 500px; margin: 0 auto 40px; position: relative; z-index: 2; }
+
+    /* FOOTER */
+    footer { border-top: 1px solid var(--border); padding: 40px; display: flex; justify-content: space-between; align-items: center; }
+    footer span { font-size: 13px; color: var(--fg); opacity: 0.6; }
+
+    /* RESPONSIVE */
+    @media (max-width: 900px) {
+      .hero-image { max-width: 260px; }
+      .features-grid { grid-template-columns: 1fr; gap: 24px; }
+      .stats-grid { grid-template-columns: 1fr 1fr; gap: 32px 0; }
+      .stat-item:nth-child(2) { border-right: none; }
+      .process-section::before { display: none; }
+      .process-grid { grid-template-columns: 1fr; gap: 48px; }
+      .final-cta { padding: 60px 24px; }
+      footer { flex-direction: column; gap: 16px; text-align: center; }
+    }
+    @media (max-width: 600px) {
+      .stats-grid { grid-template-columns: 1fr; }
+      .stat-item { border-right: none !important; border-bottom: 1px solid var(--border); padding: 24px 0; }
+      .stat-item:last-child { border-bottom: none; }
+    }
   </style>
 </head>
 <body>
+  
+  <div class="grain-overlay" aria-hidden="true"></div>
+
   <header>
     <a href="#" class="logo">Scaffold</a>
-    <nav><ul>
-      <li><a href="#">Journal</a></li>
-      <li><a href="#">Elements</a></li>
-      <li><a href="#">About</a></li>
-    </ul></nav>
-    <a href="#" class="btn-nav">Acquire Prompt</a>
+    
+    <input type="checkbox" id="mobile-menu-checkbox">
+    <label for="mobile-menu-checkbox" class="menu-toggle" aria-label="Toggle Navigation">
+      <span></span><span></span><span></span>
+    </label>
+
+    <nav>
+      <ul>
+        <li><a href="#">Foundations</a></li>
+        <li><a href="#">Gallery</a></li>
+        <li><a href="#">About</a></li>
+      </ul>
+      <a href="#" class="btn-pill">Acquire System</a>
+    </nav>
   </header>
 
-  <main class="container">
-    <section class="hero">
-      <div class="hero-label">Botanical Organic</div>
-      <h1 class="hero-headline">A digital ode<br>to <em>nature.</em></h1>
-      <p class="hero-sub">Muted colors derived from forest floors and clay pottery. Subtle paper grain. A design system that breathes, flows, and grounds itself.</p>
-      <a href="#" class="btn-primary">Copy This System</a>
+  <main>
+    <section class="container hero">
+      <span class="hero-label">Botanical Organic Serif</span>
+      <h1 class="hero-headline">A digital ode to <span class="text-sage italic">nature.</span></h1>
+      <p class="hero-body">
+        Slow transitions, paper grain overlays, earthy terracotta, and the sweeping elegance of Playfair Display. Designed for wellness, editorial, and tactile luxury.
+      </p>
+      <a href="#" class="btn-pill">Copy This System</a>
+      
+      <div class="hero-image" aria-hidden="true"></div>
     </section>
 
-    <div class="cards">
-      <div class="card"><div class="card-icon">🌿</div><h3>Earthy Palette</h3><p>Sage green, terracotta, and warm clay backgrounds. No artificial brights. Everything is grounded and natural.</p></div>
-      <div class="card"><div class="card-icon">✒️</div><h3>Playfair Italics</h3><p>High-contrast serif headings with beautiful italic flourishes that add a handwritten, human touch to the interface.</p></div>
+    <section class="container quote-section">
+      <div class="quote-line" aria-hidden="true"></div>
+      <blockquote class="quote-text">
+        "Digital spaces should not feel sterile. They should breathe, cast soft shadows, and feel like warm paper beneath the fingers."
+      </blockquote>
+      <div class="quote-attr">Design Philosophy</div>
+      <div class="quote-line" style="margin-bottom:0; margin-top:40px;" aria-hidden="true"></div>
+    </section>
+
+    <section class="container features-section">
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="fc-icon">🌿</div>
+          <h3>Earthy Palette</h3>
+          <p>Rooted in nature. Warm alabaster backgrounds prevent eye strain, while forest green and terracotta provide grounded contrast.</p>
+        </div>
+        <div class="feature-card">
+          <div class="fc-icon">🏛️</div>
+          <h3>Arch-topped Imagery</h3>
+          <p>Move away from harsh rectangular grids. Images are softened with arch-topped borders, echoing classical architecture.</p>
+        </div>
+        <div class="feature-card">
+          <div class="fc-icon">🖋️</div>
+          <h3>Organic Typography</h3>
+          <p>The timeless structure of Playfair Display paired with the humble legibility of Source Sans 3 creates a perfect harmony.</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="stats-section">
+      <div class="container stats-grid">
+        <div class="stat-item">
+          <div class="stat-val">200px</div>
+          <div class="stat-label">Arch Radius</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-val">03</div>
+          <div class="stat-label">Natural Fonts</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-val">0.035</div>
+          <div class="stat-label">Grain Opacity</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-val">500ms</div>
+          <div class="stat-label">Transition Speed</div>
+        </div>
+      </div>
     </div>
+
+    <section class="container process-section">
+      <div class="process-grid">
+        <div class="step-item">
+          <div class="step-num">1</div>
+          <h3>Import Tokens</h3>
+          <p>Copy the provided prompt string containing all typography, spacing, and color data into your IDE.</p>
+        </div>
+        <div class="step-item">
+          <div class="step-num">2</div>
+          <h3>Generate Layout</h3>
+          <p>Command the AI to build staggered grids, arch-topped frames, and soft shadow containers.</p>
+        </div>
+        <div class="step-item">
+          <div class="step-num">3</div>
+          <h3>Breathe</h3>
+          <p>Launch an interface that feels inherently human, calm, and exquisitely crafted.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="final-cta">
+        <h2>Bring warmth to the web.</h2>
+        <p>Reject the coldness of standard software. Build something that feels tactile and alive.</p>
+        <a href="#" class="btn-pill" style="position:relative; z-index:2;">Acquire the System</a>
+      </div>
+    </section>
   </main>
 
   <footer>
-    <span>scaffold — botanical/organic design system</span>
+    <span>scaffold — prompt directory</span>
+    <span>Botanical Organic System</span>
   </footer>
+
 </body>
 </html>

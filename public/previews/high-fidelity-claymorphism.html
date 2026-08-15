@@ -4,83 +4,427 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>High-Fidelity Claymorphism — Design System Preview</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=block');
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Nunito:wght@400;600;700;800;900&display=block" rel="stylesheet">
 
+  <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:      #F4F1FA;
-      --fg:      #332F3A;
-      --muted:   #635F69;
-      --accent:  #FF7B93;
-      --blue:    #7BA8FF;
-      --clay-shadow: 12px 12px 24px rgba(184,177,204,0.6), -12px -12px 24px rgba(255,255,255,0.8);
-      --clay-inset: inset 6px 6px 12px rgba(184,177,204,0.4), inset -6px -6px 12px rgba(255,255,255,0.9);
+      --bg:        #F4F1FA;
+      --fg:        #332F3A;
+      --muted:     #635F69;
+      --primary:   #7C3AED; /* Violet */
+      --secondary: #DB2777; /* Pink */
+      --tertiary:  #0EA5E9; /* Sky Blue */
+      --success:   #10B981; /* Emerald */
+      --warning:   #F59E0B; /* Amber */
+      
+      --gradient-brand: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      --gradient-icon: linear-gradient(135deg, #A78BFA 0%, #F472B6 100%);
+      
+      /* Multi-layer clay shadows */
+      --clay-shadow-light: 
+        inset 4px 4px 10px rgba(255, 255, 255, 0.9), 
+        inset -4px -4px 10px rgba(0, 0, 0, 0.04),
+        8px 8px 24px rgba(124, 58, 237, 0.08),
+        -4px -4px 16px rgba(255, 255, 255, 0.8);
+      
+      --clay-shadow-hover: 
+        inset 6px 6px 12px rgba(255, 255, 255, 1), 
+        inset -6px -6px 15px rgba(0, 0, 0, 0.03),
+        15px 15px 40px rgba(124, 58, 237, 0.12),
+        -8px -8px 20px rgba(255, 255, 255, 0.9);
+      
+      --clay-shadow-primary: 
+        inset 4px 4px 10px rgba(255, 255, 255, 0.4), 
+        inset -4px -4px 15px rgba(0, 0, 0, 0.2),
+        10px 10px 30px rgba(124, 58, 237, 0.3);
+      
+      --clay-shadow-active: 
+        inset 6px 6px 15px rgba(0, 0, 0, 0.1), 
+        inset -6px -6px 15px rgba(255, 255, 255, 0.8),
+        2px 2px 5px rgba(124, 58, 237, 0.1);
+
+      --radius-sm: 20px;
+      --radius-md: 32px;
+      --radius-lg: 40px;
+      --radius-xl: 60px;
+      --radius-full: 9999px;
+      
+      --transition: 300ms cubic-bezier(0.34, 1.56, 0.64, 1); /* Bouncy */
+      --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    html, body { min-height:100%; background:var(--bg); color:var(--fg); font-family:'Nunito',sans-serif; font-size:16px; line-height:1.6; }
+    @media (prefers-reduced-motion: reduce) {
+      * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
 
-    .container { max-width:1100px; margin:0 auto; padding:0 32px; }
+    html, body { 
+      min-height: 100%; 
+      background: var(--bg); 
+      color: var(--fg); 
+      font-family: 'DM Sans', sans-serif; 
+      font-size: 16px; 
+      line-height: 1.6; 
+      overflow-x: hidden;
+    }
 
-    /* NAV */
-    header { padding:32px; display:flex; justify-content:space-between; align-items:center; }
-    .logo { font-size:24px; font-weight:900; color:var(--fg); text-decoration:none; letter-spacing:-.02em; }
-    nav ul { list-style:none; display:flex; gap:32px; }
-    nav a { font-size:16px; font-weight:700; color:var(--muted); text-decoration:none; transition:color .3s; }
-    nav a:hover { color:var(--accent); }
-    .btn-nav { background:var(--bg); color:var(--accent); font-weight:800; padding:12px 28px; border-radius:24px; text-decoration:none; box-shadow:var(--clay-shadow); transition:all .3s; border:2px solid transparent; }
-    .btn-nav:hover { box-shadow:inset 4px 4px 8px rgba(184,177,204,0.4), inset -4px -4px 8px rgba(255,255,255,0.9); }
+    /* BACKGROUND BLOBS */
+    .blobs { position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
+    .blob { position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0.12; animation: float 15s ease-in-out infinite alternate; }
+    .blob-1 { top: -10%; right: -10%; width: 60vw; height: 60vw; background: var(--primary); }
+    .blob-2 { bottom: -20%; left: -10%; width: 70vw; height: 70vw; background: var(--secondary); animation-delay: -5s; }
+    .blob-3 { top: 30%; left: 30%; width: 40vw; height: 40vw; background: var(--tertiary); animation-delay: -10s; }
+    @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(-30px, 50px) scale(1.1); } }
+
+    /* TYPOGRAPHY */
+    h1, h2, h3, h4, h5 { font-family: 'Nunito', sans-serif; font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; color: var(--fg); }
+    .font-900 { font-weight: 900; letter-spacing: -0.04em; }
+    
+    .text-gradient {
+      background: var(--gradient-brand);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    
+    a:focus-visible, button:focus-visible { outline: 3px solid var(--primary); outline-offset: 4px; }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 10; }
+
+    /* BUTTONS */
+    .btn {
+      font-family: 'Nunito', sans-serif; font-size: 16px; font-weight: 800;
+      padding: 16px 36px; border-radius: var(--radius-full); border: none; cursor: pointer;
+      text-decoration: none; display: inline-flex; align-items: center; justify-content: center;
+      transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    .btn-primary { background: var(--gradient-brand); color: #fff; box-shadow: var(--clay-shadow-primary); }
+    .btn-primary:hover { transform: translateY(-2px) scale(1.02); }
+    .btn-primary:active { transform: translateY(2px) scale(0.92); box-shadow: var(--clay-shadow-active); }
+    
+    .btn-secondary { background: rgba(255,255,255,0.8); color: var(--fg); box-shadow: var(--clay-shadow-light); }
+    .btn-secondary:hover { transform: translateY(-2px) scale(1.02); box-shadow: var(--clay-shadow-hover); }
+    .btn-secondary:active { transform: translateY(2px) scale(0.92); box-shadow: var(--clay-shadow-active); }
+
+    /* HEADER */
+    header {
+      background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      padding: 20px 40px; display: flex; justify-content: space-between; align-items: center;
+      position: sticky; top: 0; z-index: 50; border-bottom: 1px solid rgba(255,255,255,0.8);
+    }
+    .logo {
+      font-family: 'Nunito', sans-serif; font-size: 24px; font-weight: 900; color: var(--fg);
+      text-decoration: none; display: flex; align-items: center; gap: 12px;
+    }
+    .logo-icon {
+      width: 32px; height: 32px; border-radius: 50%; background: var(--gradient-brand);
+      box-shadow: inset 2px 2px 6px rgba(255,255,255,0.5), inset -2px -2px 6px rgba(0,0,0,0.2), 2px 4px 8px rgba(124,58,237,0.3);
+    }
+    
+    nav { display: flex; align-items: center; gap: 32px; }
+    nav ul { list-style: none; display: flex; gap: 24px; margin: 0; padding: 0; }
+    nav a { font-size: 15px; font-weight: 600; color: var(--muted); text-decoration: none; transition: 0.2s; }
+    nav a:hover { color: var(--primary); }
+
+    /* MOBILE MENU TOGGLE */
+    .menu-toggle { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: transparent; border: none; padding: 8px; }
+    .menu-toggle span { width: 24px; height: 3px; background: var(--fg); border-radius: 2px; transition: 0.3s; }
+    #mobile-menu-checkbox { display: none; }
+    
+    @media (max-width: 900px) {
+      .menu-toggle { display: flex; }
+      nav { 
+        position: absolute; top: 100%; left: 0; right: 0; 
+        background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px);
+        flex-direction: column; padding: 40px; border-bottom: 1px solid rgba(255,255,255,0.8);
+        transform: translateY(-10px); opacity: 0; pointer-events: none; transition: all 0.3s ease;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+      }
+      nav ul { flex-direction: column; text-align: center; gap: 24px; width: 100%; }
+      nav a { font-size: 18px; }
+      .btn { width: 100%; margin-top: 24px; }
+      #mobile-menu-checkbox:checked ~ nav { transform: translateY(0); opacity: 1; pointer-events: auto; }
+      #mobile-menu-checkbox:checked ~ .menu-toggle span:nth-child(1) { transform: rotate(45deg) translate(5px, 6px); }
+      #mobile-menu-checkbox:checked ~ .menu-toggle span:nth-child(2) { opacity: 0; }
+      #mobile-menu-checkbox:checked ~ .menu-toggle span:nth-child(3) { transform: rotate(-45deg) translate(5px, -6px); }
+    }
 
     /* HERO */
-    .hero { padding:80px 0 100px; text-align:center; }
-    .hero-pill { display:inline-block; background:var(--bg); color:var(--blue); font-size:14px; font-weight:800; padding:8px 24px; border-radius:999px; margin-bottom:32px; box-shadow:var(--clay-shadow); }
-    h1.hero-headline { font-size:clamp(3.5rem,7vw,5.5rem); font-weight:900; line-height:1.1; letter-spacing:-.03em; margin-bottom:24px; color:var(--fg); }
-    .hero-sub { color:var(--muted); font-size:18px; font-weight:600; max-width:600px; margin:0 auto 48px; line-height:1.6; }
-    .btn-primary { display:inline-block; background:var(--accent); color:#fff; font-size:18px; font-weight:800; padding:20px 48px; border-radius:32px; text-decoration:none; box-shadow:8px 8px 16px rgba(255,123,147,0.3), -8px -8px 16px rgba(255,255,255,0.8), inset 2px 2px 4px rgba(255,255,255,0.5); transition:all .3s; }
-    .btn-primary:active { box-shadow:inset 6px 6px 12px rgba(200,80,100,0.4), inset -6px -6px 12px rgba(255,160,180,0.4); transform:scale(0.98); }
+    .hero { padding: 120px 0 140px; text-align: center; display: flex; flex-direction: column; align-items: center; }
+    
+    .badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(255,255,255,0.6); padding: 8px 20px; border-radius: var(--radius-full);
+      font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 14px; color: var(--primary);
+      box-shadow: var(--clay-shadow-light); margin-bottom: 32px;
+      backdrop-filter: blur(10px);
+    }
+    
+    .hero-headline { font-size: clamp(3rem, 7vw, 6rem); max-width: 900px; margin-bottom: 32px; }
+    .hero-body { font-size: 20px; color: var(--muted); max-width: 600px; margin-bottom: 48px; }
+    
+    .hero-ctas { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
 
-    /* CARDS */
-    .cards { display:grid; grid-template-columns:repeat(3,1fr); gap:40px; padding:0 32px 100px; }
-    .card { background:var(--bg); border-radius:40px; padding:48px 32px; text-align:center; box-shadow:var(--clay-shadow); transition:transform .3s; }
-    .card:hover { transform:translateY(-8px); }
-    .card-icon { width:80px; height:80px; background:var(--bg); border-radius:50%; margin:0 auto 24px; display:flex; align-items:center; justify-content:center; font-size:32px; box-shadow:var(--clay-inset); }
-    .card h3 { font-size:24px; font-weight:800; margin-bottom:16px; color:var(--fg); }
-    .card p { color:var(--muted); font-size:16px; font-weight:600; }
+    /* BENTO GRID */
+    .bento-section { padding: 0 0 140px; }
+    .bento-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px;
+      grid-auto-rows: 240px;
+    }
+    
+    .bento-card {
+      background: rgba(255, 255, 255, 0.65); backdrop-filter: blur(20px);
+      border-radius: var(--radius-md); padding: 40px;
+      box-shadow: var(--clay-shadow-light); border: 1px solid rgba(255,255,255,0.6);
+      transition: all var(--transition); display: flex; flex-direction: column;
+    }
+    .bento-card:hover { transform: translateY(-8px); box-shadow: var(--clay-shadow-hover); }
+    
+    .bc-large { grid-column: span 2; grid-row: span 2; border-radius: var(--radius-lg); }
+    
+    .orb-icon {
+      width: 56px; height: 56px; border-radius: 50%;
+      background: var(--gradient-icon); margin-bottom: 24px;
+      box-shadow: inset 4px 4px 10px rgba(255,255,255,0.5), inset -4px -4px 10px rgba(0,0,0,0.1), 4px 8px 16px rgba(0,0,0,0.05);
+      display: flex; align-items: center; justify-content: center; color: #fff; font-size: 24px;
+    }
+    .orb-tertiary { background: linear-gradient(135deg, #38BDF8 0%, #3B82F6 100%); }
+    .orb-success { background: linear-gradient(135deg, #34D399 0%, #10B981 100%); }
+    .orb-warning { background: linear-gradient(135deg, #FBBF24 0%, #F59E0B 100%); }
+    
+    .bento-card h3 { font-size: 28px; margin-bottom: 16px; }
+    .bento-card p { font-size: 16px; color: var(--muted); line-height: 1.6; }
+    .bc-large h3 { font-size: 40px; margin-bottom: 24px; max-width: 400px; }
+    .bc-large p { font-size: 20px; max-width: 400px; }
 
-    footer { padding:40px 32px; display:flex; justify-content:space-between; align-items:center; box-shadow:inset 0 4px 8px rgba(184,177,204,0.2); }
-    footer span { color:var(--muted); font-weight:700; font-size:14px; }
+    /* STATS */
+    .stats-section { padding: 40px 0 140px; }
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; }
+    .stat-orb {
+      background: rgba(255,255,255,0.6); backdrop-filter: blur(10px);
+      border-radius: var(--radius-full); aspect-ratio: 1;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      box-shadow: var(--clay-shadow-light); border: 1px solid rgba(255,255,255,0.8);
+      transition: transform var(--transition);
+    }
+    .stat-orb:hover { transform: scale(1.05); box-shadow: var(--clay-shadow-hover); }
+    .stat-val { font-family: 'Nunito', sans-serif; font-size: 48px; font-weight: 900; margin-bottom: 8px; line-height: 1; }
+    .stat-label { font-size: 14px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; text-align: center; }
+
+    /* PRODUCT SPLIT */
+    .split-section { padding: 0 0 140px; }
+    .split-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+    .split-text h2 { font-size: clamp(2.5rem, 5vw, 4rem); margin-bottom: 24px; }
+    .split-text p { font-size: 18px; color: var(--muted); margin-bottom: 40px; }
+    
+    /* Abstract 3D Composition */
+    .abstract-comp { position: relative; width: 100%; aspect-ratio: 1; perspective: 1000px; }
+    .ac-item { position: absolute; background: rgba(255,255,255,0.8); box-shadow: var(--clay-shadow-light); animation: float-item 6s ease-in-out infinite alternate; }
+    .ac-1 { top: 10%; left: 10%; width: 60%; height: 60%; border-radius: var(--radius-lg); animation-delay: 0s; }
+    .ac-2 { bottom: 10%; right: 10%; width: 50%; height: 30%; border-radius: var(--radius-full); background: var(--gradient-brand); box-shadow: var(--clay-shadow-primary); animation-delay: -2s; z-index: 2; }
+    .ac-3 { top: 20%; right: 0%; width: 30%; aspect-ratio: 1; border-radius: 50%; background: linear-gradient(135deg, #FBBF24, #F59E0B); box-shadow: var(--clay-shadow-light); animation-delay: -4s; z-index: 3; }
+    @keyframes float-item { 0% { transform: translateY(0) rotateX(0) rotateY(0); } 100% { transform: translateY(-20px) rotateX(5deg) rotateY(5deg); } }
+
+    /* PRICING */
+    .pricing-section { padding: 0 0 140px; }
+    .section-header { text-align: center; margin-bottom: 80px; }
+    .section-header h2 { font-size: clamp(2.5rem, 5vw, 4rem); }
+    
+    .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; align-items: center; }
+    .price-card {
+      background: rgba(255,255,255,0.6); backdrop-filter: blur(20px);
+      border-radius: var(--radius-lg); padding: 48px 32px; text-align: center;
+      box-shadow: var(--clay-shadow-light); border: 1px solid rgba(255,255,255,0.5);
+      transition: all var(--transition);
+    }
+    .pc-pro { transform: scale(1.05); box-shadow: var(--clay-shadow-hover); border: 4px solid #fff; position: relative; z-index: 2; }
+    .pc-pro::before { content: ''; position: absolute; inset: -4px; border-radius: calc(var(--radius-lg) + 2px); background: var(--gradient-brand); z-index: -1; }
+    
+    .price-name { font-family: 'Nunito', sans-serif; font-size: 20px; font-weight: 800; color: var(--muted); margin-bottom: 24px; }
+    .pc-pro .price-name { color: var(--primary); }
+    .price-val { font-family: 'Nunito', sans-serif; font-size: 56px; font-weight: 900; margin-bottom: 32px; line-height: 1; }
+    .price-val span { font-size: 18px; font-weight: 700; color: var(--muted); }
+
+    /* FINAL CTA */
+    .final-cta { padding: 0 0 140px; }
+    .cta-panel {
+      background: var(--gradient-brand); border-radius: var(--radius-xl);
+      padding: 100px 40px; text-align: center; box-shadow: var(--clay-shadow-primary);
+      position: relative; overflow: hidden;
+    }
+    .cta-panel::after {
+      content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .cta-panel h2 { color: #fff; font-size: clamp(3rem, 6vw, 5rem); margin-bottom: 40px; position: relative; z-index: 2; }
+
+    /* FOOTER */
+    footer { border-top: 2px solid rgba(255,255,255,0.5); padding: 40px; display: flex; justify-content: space-between; align-items: center; }
+    footer span { font-size: 15px; font-weight: 500; color: var(--muted); }
+
+    /* RESPONSIVE */
+    @media (max-width: 1100px) {
+      .bento-grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: auto; }
+      .bc-large { grid-column: span 2; grid-row: span 1; }
+      .split-grid { grid-template-columns: 1fr; gap: 64px; text-align: center; }
+      .pricing-grid { grid-template-columns: 1fr; gap: 32px; }
+      .pc-pro { transform: scale(1); }
+      .stats-grid { grid-template-columns: 1fr 1fr; gap: 24px; }
+      .stat-orb { border-radius: var(--radius-lg); aspect-ratio: auto; padding: 32px 16px; }
+    }
+    @media (max-width: 600px) {
+      .hero-ctas { flex-direction: column; }
+      .btn { width: 100%; }
+      .bento-grid { grid-template-columns: 1fr; }
+      .bc-large { grid-column: span 1; }
+      .stats-grid { grid-template-columns: 1fr; }
+      .cta-panel { border-radius: var(--radius-lg); padding: 60px 24px; }
+      footer { flex-direction: column; gap: 16px; text-align: center; }
+    }
   </style>
 </head>
 <body>
+  
+  <div class="blobs" aria-hidden="true">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+
   <header>
-    <a href="#" class="logo">scaffold.</a>
-    <nav><ul>
-      <li><a href="#">Components</a></li>
-      <li><a href="#">Guidelines</a></li>
-      <li><a href="#">Downloads</a></li>
-    </ul></nav>
-    <a href="#" class="btn-nav">Copy Prompt</a>
+    <a href="#" class="logo">
+      <div class="logo-icon"></div>
+      <span>Scaffold.</span>
+    </a>
+    
+    <input type="checkbox" id="mobile-menu-checkbox">
+    <label for="mobile-menu-checkbox" class="menu-toggle" aria-label="Toggle Navigation">
+      <span></span><span></span><span></span>
+    </label>
+
+    <nav>
+      <ul>
+        <li><a href="#">Components</a></li>
+        <li><a href="#">Showcase</a></li>
+        <li><a href="#">Docs</a></li>
+      </ul>
+      <a href="#" class="btn btn-secondary" style="padding: 10px 24px; font-size: 14px;">Acquire System</a>
+    </nav>
   </header>
 
-  <main class="container">
-    <section class="hero">
-      <div class="hero-pill">High-Fidelity Claymorphism</div>
-      <h1 class="hero-headline">Soft, tactile,<br>and deliciously 3D.</h1>
-      <p class="hero-sub">Digital clay that begs to be touched. Soft double-shadows, rounded geometry, and a candy shop color palette built for joy.</p>
-      <a href="#" class="btn-primary">Generate System</a>
+  <main>
+    <section class="container hero">
+      <div class="badge">High-Fidelity Claymorphism ✨</div>
+      <h1 class="hero-headline font-900">
+        Soft. Tactile. <br>
+        <span class="text-gradient">Deliciously 3D.</span>
+      </h1>
+      <p class="hero-body">
+        Break away from flat design. Build interfaces that beg to be touched with multi-layered shadows, squishy interactions, and a vibrant candy-shop palette.
+      </p>
+      <div class="hero-ctas">
+        <button class="btn btn-primary">Copy Prompt</button>
+        <button class="btn btn-secondary">Explore Components</button>
+      </div>
     </section>
 
-    <div class="cards">
-      <div class="card"><div class="card-icon">🎨</div><h3>Candy Palette</h3><p>Soft lavender-white canvas with punchy, friendly accent colors like bubblegum pink.</p></div>
-      <div class="card"><div class="card-icon">☁️</div><h3>Double Shadows</h3><p>Light top-left, dark bottom-right. The secret to extruded, fluffy digital clay.</p></div>
-      <div class="card"><div class="card-icon">🔠</div><h3>Nunito Heavy</h3><p>Extra-bold rounded typography that perfectly matches the soft radii of the components.</p></div>
+    <section class="container bento-section">
+      <div class="bento-grid">
+        <div class="bento-card bc-large">
+          <div class="orb-icon">🍭</div>
+          <h3>Candy Palette</h3>
+          <p>Pale lavender-white backgrounds set the stage for intense, highly saturated gradient accents in violet, hot pink, and sky blue. The contrast ensures the 3D geometry pops off the screen.</p>
+        </div>
+        <div class="bento-card">
+          <div class="orb-icon orb-tertiary">🧊</div>
+          <h3>Clay Shadows</h3>
+          <p>Complex 4-layer box-shadows simulate inner rim lighting and outer diffuse dropshadows.</p>
+        </div>
+        <div class="bento-card">
+          <div class="orb-icon orb-success">🟢</div>
+          <h3>Super-Rounded</h3>
+          <p>Radii are pushed to the extreme (32px - 60px). There are zero sharp corners in this system.</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="container stats-section">
+      <div class="stats-grid">
+        <div class="stat-orb">
+          <span class="stat-val text-gradient">60px</span>
+          <span class="stat-label">Max Radius</span>
+        </div>
+        <div class="stat-orb">
+          <span class="stat-val" style="color:var(--tertiary);">4</span>
+          <span class="stat-label">Shadow Layers</span>
+        </div>
+        <div class="stat-orb">
+          <span class="stat-val" style="color:var(--success);">0</span>
+          <span class="stat-label">Sharp Corners</span>
+        </div>
+        <div class="stat-orb">
+          <span class="stat-val" style="color:var(--warning);">100%</span>
+          <span class="stat-label">Tactile</span>
+        </div>
+      </div>
     </div>
+
+    <section class="container split-section">
+      <div class="split-grid">
+        <div class="split-text">
+          <h2>Interfaces that respond to the touch.</h2>
+          <p>Visual 3D depth is only half the illusion. High-Fidelity Claymorphism relies on extreme physical feedback. Buttons physically squish inwards (scale: 0.92) while their shadow inverts, giving the user a satisfying mechanical feeling.</p>
+          <button class="btn btn-secondary">Test the Interactions</button>
+        </div>
+        <div class="abstract-comp" aria-hidden="true">
+          <div class="ac-item ac-1"></div>
+          <div class="ac-item ac-2"></div>
+          <div class="ac-item ac-3"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container pricing-section">
+      <div class="section-header">
+        <h2>Squishy Pricing</h2>
+      </div>
+      <div class="pricing-grid">
+        <div class="price-card">
+          <div class="price-name">Basic</div>
+          <div class="price-val">$0<span>/mo</span></div>
+          <button class="btn btn-secondary" style="width:100%">Get Started</button>
+        </div>
+        <div class="price-card pc-pro">
+          <div class="badge" style="position:absolute; top:-16px; left:50%; transform:translateX(-50%); margin:0; box-shadow:none;">Popular</div>
+          <div class="price-name">Pro</div>
+          <div class="price-val text-gradient">$29<span>/mo</span></div>
+          <button class="btn btn-primary" style="width:100%">Upgrade to Pro</button>
+        </div>
+        <div class="price-card">
+          <div class="price-name">Team</div>
+          <div class="price-val">$99<span>/mo</span></div>
+          <button class="btn btn-secondary" style="width:100%">Contact Sales</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="container final-cta">
+      <div class="cta-panel">
+        <h2 class="font-900">Make your app delicious.</h2>
+        <button class="btn btn-secondary" style="color:var(--primary); padding:20px 48px; font-size:20px;">Deploy System</button>
+      </div>
+    </section>
   </main>
 
   <footer>
     <span>scaffold — prompt directory</span>
-    <span>Claymorphism System</span>
+    <span>High-Fidelity Claymorphism System</span>
   </footer>
+
 </body>
 </html>
