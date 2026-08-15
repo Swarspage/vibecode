@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vaporwave / Outrun — Design System Preview</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=VCR+OSD+Mono&display=block');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #0b001a;
+      --fg:      #00ffff;
+      --pink:    #ff00ff;
+      --yellow:  #ffff00;
+      --purple:  #8a2be2;
+      --border:  #ff00ff;
+    }
+
+    html, body { min-height:100%; background:var(--bg); color:var(--fg); font-family:monospace; font-size:16px; line-height:1.6; overflow-x:hidden; }
+
+    /* Sunset / Grid background */
+    body::before { content:''; position:fixed; bottom:0; left:0; right:0; height:50vh; background:linear-gradient(transparent, rgba(138,43,226,.2)); border-top:2px solid var(--pink); box-shadow:0 -10px 30px rgba(255,0,255,.3); z-index:-2; }
+    body::after { content:''; position:fixed; bottom:0; left:-50%; right:-50%; height:50vh; background-image:linear-gradient(var(--pink) 1px, transparent 1px), linear-gradient(90deg, var(--pink) 1px, transparent 1px); background-size:40px 40px; transform:perspective(500px) rotateX(60deg); transform-origin:top; opacity:0.3; z-index:-1; animation:grid-move 2s linear infinite; }
+    @keyframes grid-move { 0%{background-position:0 0} 100%{background-position:0 40px} }
+
+    .container { max-width:1000px; margin:0 auto; padding:0 32px; }
+
+    /* NAV */
+    header { padding:24px 32px; display:flex; justify-content:space-between; align-items:center; background:rgba(11,0,26,.8); backdrop-filter:blur(4px); border-bottom:1px solid var(--pink); box-shadow:0 0 15px rgba(255,0,255,.3); }
+    .logo { font-family:'Orbitron',sans-serif; font-size:24px; font-weight:900; color:var(--yellow); text-decoration:none; letter-spacing:2px; text-shadow:0 0 10px var(--yellow); }
+    nav ul { list-style:none; display:flex; gap:32px; }
+    nav a { font-family:'Orbitron',sans-serif; font-size:14px; text-transform:uppercase; color:var(--fg); text-decoration:none; text-shadow:0 0 5px var(--fg); transition:color .2s, text-shadow .2s; }
+    nav a:hover { color:var(--pink); text-shadow:0 0 10px var(--pink); }
+    .btn-retro { background:linear-gradient(45deg,var(--pink),var(--purple)); color:#fff; font-family:'Orbitron',sans-serif; font-size:14px; font-weight:700; text-transform:uppercase; padding:10px 24px; border:2px solid #fff; text-decoration:none; box-shadow:4px 4px 0 var(--fg); transition:all .2s; }
+    .btn-retro:hover { transform:translate(2px,2px); box-shadow:2px 2px 0 var(--fg); }
+
+    /* HERO */
+    .hero { padding:100px 0 80px; text-align:center; }
+    h1.hero-headline { font-family:'Orbitron',sans-serif; font-size:clamp(4rem,8vw,7rem); font-weight:900; text-transform:uppercase; color:var(--pink); text-shadow:4px 4px 0 var(--fg), 0 0 20px var(--pink); margin-bottom:24px; line-height:1; }
+    .hero-sub { color:var(--yellow); font-family:monospace; font-size:18px; max-width:600px; margin:0 auto 48px; text-shadow:0 0 5px var(--yellow); }
+    .btn-primary { display:inline-block; background:transparent; color:var(--fg); border:2px solid var(--fg); font-family:'Orbitron',sans-serif; font-size:18px; font-weight:700; text-transform:uppercase; padding:16px 48px; text-decoration:none; box-shadow:0 0 15px var(--fg), inset 0 0 15px var(--fg); transition:all .3s; }
+    .btn-primary:hover { background:var(--fg); color:var(--bg); box-shadow:0 0 30px var(--fg); }
+
+    /* CARDS */
+    .cards { display:grid; grid-template-columns:repeat(2,1fr); gap:40px; padding:0 32px 100px; }
+    .card { background:rgba(138,43,226,.2); border:2px solid var(--pink); padding:40px; box-shadow:0 0 20px rgba(255,0,255,.3); backdrop-filter:blur(8px); }
+    .card h3 { font-family:'Orbitron',sans-serif; font-size:24px; color:var(--yellow); text-transform:uppercase; margin-bottom:16px; text-shadow:0 0 8px var(--yellow); }
+    .card p { color:var(--fg); font-size:16px; text-shadow:0 0 4px var(--fg); }
+
+  </style>
+</head>
+<body>
+  <header>
+    <a href="#" class="logo">SCAFFOLD</a>
+    <nav><ul>
+      <li><a href="#">// VHS</a></li>
+      <li><a href="#">// SYNTH</a></li>
+    </ul></nav>
+    <a href="#" class="btn-retro">INSERT COIN</a>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <h1 class="hero-headline">OUTRUN<br>1984</h1>
+      <p class="hero-sub">> DIGITAL NOSTALGIA MEETS NEON FUTURE. A SYNTHETIC REALITY DRENCHED IN RETRO-FUTURISM.</p>
+      <a href="#" class="btn-primary">RUN SYSTEM.EXE</a>
+    </section>
+
+    <div class="cards">
+      <div class="card">
+        <h3>NEON PALETTE</h3>
+        <p>100% saturation. Cyan, hot pink, and electric yellow over a deep purple void. Maximum glowing contrast.</p>
+      </div>
+      <div class="card">
+        <h3>GRID HORIZON</h3>
+        <p>Animated perspective grids and synthetic sunsets. The interface isn't flat, it's a digital landscape.</p>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

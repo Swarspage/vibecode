@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Art Deco — Design System Preview</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Josefin+Sans:wght@300;400;600;700&display=block');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:     #0A0A0A;
+      --fg:     #F2F0E4;
+      --card:   #141414;
+      --gold:   #D4AF37;
+      --blue:   #1E3D59;
+      --muted:  #888888;
+    }
+
+    html, body { min-height:100%; background:var(--bg); color:var(--fg); font-family:'Josefin Sans',sans-serif; font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased; }
+
+    .container { max-width:1200px; margin:0 auto; padding:0 48px; }
+
+    /* decorative border */
+    .deco-border { border-top:1px solid var(--gold); border-bottom:1px solid var(--gold); padding:3px 0; }
+    .deco-border-inner { border-top:3px solid var(--gold); border-bottom:3px solid var(--gold); padding:2px 0; }
+    .deco-border-wrap { padding:8px 0; }
+
+    /* NAV */
+    header { border-bottom:1px solid var(--gold); }
+    .nav-top { border-bottom:1px solid rgba(212,175,55,.3); padding:6px 48px; display:flex; justify-content:center; }
+    .nav-top span { font-size:10px; letter-spacing:.3em; text-transform:uppercase; color:var(--muted); }
+    .nav-main { display:flex; align-items:center; justify-content:space-between; padding:20px 48px; }
+    .logo { font-family:'Cormorant Garamond',serif; font-size:28px; font-weight:600; color:var(--gold); text-decoration:none; letter-spacing:.1em; text-transform:uppercase; }
+    nav ul { list-style:none; display:flex; gap:32px; }
+    nav a { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.25em; color:var(--muted); text-decoration:none; transition:color .3s; }
+    nav a:hover { color:var(--gold); }
+    .btn-gold { background:transparent; border:1px solid var(--gold); color:var(--gold); font-family:'Josefin Sans',sans-serif; font-size:10px; font-weight:700; letter-spacing:.25em; text-transform:uppercase; padding:10px 28px; text-decoration:none; transition:background .3s, color .3s; }
+    .btn-gold:hover { background:var(--gold); color:var(--bg); }
+
+    /* HERO */
+    .hero { padding:80px 48px 64px; text-align:center; position:relative; border-bottom:1px solid var(--gold); }
+    .hero::before { content:''; position:absolute; top:0; left:50%; transform:translateX(-50%); width:1px; height:40px; background:var(--gold); }
+    .hero-overline { font-size:10px; letter-spacing:.35em; text-transform:uppercase; color:var(--gold); margin-bottom:16px; }
+    /* gold fan decorations */
+    .fan { display:flex; justify-content:center; gap:3px; margin-bottom:32px; }
+    .fan span { width:2px; background:var(--gold); border-radius:1px; }
+    h1.hero-headline { font-family:'Cormorant Garamond',serif; font-size:clamp(3.5rem,7vw,7rem); font-weight:600; line-height:.95; letter-spacing:.05em; text-transform:uppercase; color:var(--fg); margin-bottom:24px; }
+    h1.hero-headline em { font-style:italic; color:var(--gold); }
+    .hero-rule { display:flex; align-items:center; gap:16px; justify-content:center; margin-bottom:24px; }
+    .hero-rule .line { flex:1; max-width:120px; height:1px; background:var(--gold); }
+    .hero-rule .diamond { color:var(--gold); font-size:10px; }
+    .hero-body { font-size:15px; color:var(--muted); max-width:520px; margin:0 auto 40px; line-height:1.8; letter-spacing:.03em; }
+    .hero-ctas { display:flex; gap:20px; justify-content:center; }
+    .btn-primary-deco { background:var(--gold); color:var(--bg); font-family:'Josefin Sans',sans-serif; font-size:11px; font-weight:700; letter-spacing:.25em; text-transform:uppercase; padding:16px 40px; text-decoration:none; transition:opacity .3s; }
+    .btn-primary-deco:hover { opacity:.85; }
+    .btn-outline-deco { border:1px solid var(--gold); color:var(--gold); font-family:'Josefin Sans',sans-serif; font-size:11px; font-weight:700; letter-spacing:.25em; text-transform:uppercase; padding:16px 40px; text-decoration:none; transition:background .3s, color .3s; }
+    .btn-outline-deco:hover { background:var(--gold); color:var(--bg); }
+
+    /* FEATURES */
+    .features { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--gold); border:1px solid var(--gold); margin:64px 0; }
+    .feat { background:var(--card); padding:40px 32px; text-align:center; }
+    .feat-num { font-family:'Cormorant Garamond',serif; font-size:48px; font-weight:400; color:var(--gold); line-height:1; margin-bottom:16px; }
+    .feat h3 { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.25em; color:var(--fg); margin-bottom:12px; }
+    .feat p { font-size:13px; color:var(--muted); line-height:1.75; }
+
+    /* CTA */
+    .cta { background:var(--card); border:1px solid var(--gold); padding:64px; text-align:center; margin:0 0 64px; }
+    .cta h2 { font-family:'Cormorant Garamond',serif; font-size:clamp(2.5rem,4vw,3.5rem); font-weight:600; color:var(--fg); margin-bottom:12px; letter-spacing:.05em; }
+    .cta h2 em { font-style:italic; color:var(--gold); }
+    .cta p { color:var(--muted); font-size:14px; letter-spacing:.05em; margin-bottom:32px; }
+
+    footer { border-top:1px solid var(--gold); padding:24px 48px; display:flex; justify-content:space-between; }
+    footer span { font-size:10px; letter-spacing:.25em; text-transform:uppercase; color:var(--muted); }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="nav-top"><span>Est. MMXXV &nbsp;·&nbsp; The Scaffold Collection &nbsp;·&nbsp; Design Prompts</span></div>
+  <div class="nav-main">
+    <a href="#" class="logo">Scaffold</a>
+    <nav><ul>
+      <li><a href="#">Collection</a></li>
+      <li><a href="#">Archive</a></li>
+      <li><a href="#">About</a></li>
+    </ul></nav>
+    <a href="#" class="btn-gold">Acquire</a>
+  </div>
+</header>
+
+<section class="hero">
+  <p class="hero-overline">Art Deco — The Gatsby Aesthetic</p>
+  <div class="fan">
+    <span style="height:24px"></span><span style="height:32px"></span><span style="height:40px"></span>
+    <span style="height:48px"></span><span style="height:40px"></span><span style="height:32px"></span><span style="height:24px"></span>
+  </div>
+  <h1 class="hero-headline">The Art<br>of <em>Opulence.</em></h1>
+  <div class="hero-rule"><span class="line"></span><span class="diamond">◆</span><span class="line"></span></div>
+  <p class="hero-body">Dark luxury. Metallic gold. Geometric precision that whispers of the Roaring Twenties — translated to the modern interface with impeccable restraint.</p>
+  <div class="hero-ctas">
+    <a href="#" class="btn-primary-deco">Copy This System</a>
+    <a href="#" class="btn-outline-deco">View Archive</a>
+  </div>
+</section>
+
+<div class="container">
+  <div class="features">
+    <div class="feat"><div class="feat-num">I</div><h3>Dark Luxury Palette</h3><p>Obsidian black with champagne cream text. Gold borders celebrated, never hidden.</p></div>
+    <div class="feat"><div class="feat-num">II</div><h3>Geometric Symmetry</h3><p>Fan motifs, chevrons, sunburst patterns. Symmetry is non-negotiable.</p></div>
+    <div class="feat"><div class="feat-num">III</div><h3>Slow Gold Animation</h3><p>500-700ms transitions. Gold fills slide in. Nothing abrupt. Pure luxury pacing.</p></div>
+  </div>
+
+  <div class="cta">
+    <h2>An <em>Era</em> of Elegance.</h2>
+    <p>Copy the prompt and let your AI IDE generate a complete Art Deco implementation — tokens, geometry, and opulence — in minutes.</p>
+    <a href="#" class="btn-primary-deco">Copy Prompt</a>
+  </div>
+</div>
+
+<footer>
+  <span>scaffold — prompt directory</span>
+  <span>Art Deco System</span>
+</footer>
+
+</body>
+</html>

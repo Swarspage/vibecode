@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Minimalist Dark — Design System Preview</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;500;600&display=block');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #050505;
+      --surface: #0a0a0a;
+      --fg:      #FAFAFA;
+      --muted:   #888888;
+      --border:  #1A1A1A;
+      --accent:  #FFFFFF;
+    }
+
+    html, body { min-height:100%; background:var(--bg); color:var(--fg); font-family:'Inter',sans-serif; font-size:15px; line-height:1.6; -webkit-font-smoothing:antialiased; }
+
+    .container { max-width:1080px; margin:0 auto; padding:0 40px; }
+
+    /* Noise overlay */
+    body::before { content:''; position:fixed; inset:0; z-index:99; pointer-events:none; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E"); opacity:0.04; mix-blend-mode:overlay; }
+
+    /* NAV */
+    header { padding:24px 40px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); }
+    .logo { font-family:'Space Grotesk',sans-serif; font-size:20px; font-weight:700; letter-spacing:-.04em; color:var(--fg); text-decoration:none; }
+    nav ul { list-style:none; display:flex; gap:32px; }
+    nav a { font-size:14px; color:var(--muted); text-decoration:none; transition:color .3s; }
+    nav a:hover { color:var(--fg); }
+    .btn-outline { border:1px solid var(--border); color:var(--fg); font-size:13px; font-weight:500; padding:10px 20px; border-radius:6px; text-decoration:none; transition:border-color .3s, background .3s; }
+    .btn-outline:hover { border-color:rgba(255,255,255,.2); background:rgba(255,255,255,.05); }
+
+    /* HERO */
+    .hero { padding:120px 0 100px; text-align:center; }
+    .hero-badge { display:inline-block; border:1px solid var(--border); background:var(--surface); color:var(--muted); font-size:12px; padding:6px 16px; border-radius:999px; margin-bottom:32px; letter-spacing:.05em; }
+    h1.hero-headline { font-family:'Space Grotesk',sans-serif; font-size:clamp(3rem,6vw,5.5rem); font-weight:700; line-height:1; letter-spacing:-.04em; margin-bottom:24px; color:var(--fg); }
+    .hero-sub { color:var(--muted); font-size:18px; max-width:540px; margin:0 auto 48px; line-height:1.6; }
+    .btn-primary { display:inline-block; background:var(--fg); color:#000; font-size:14px; font-weight:600; padding:16px 36px; border-radius:8px; text-decoration:none; transition:transform .3s; }
+    .btn-primary:hover { transform:translateY(-2px); box-shadow:0 10px 30px rgba(255,255,255,.1); }
+
+    /* CARDS */
+    .cards { display:grid; grid-template-columns:repeat(2,1fr); gap:24px; padding:0 0 100px; }
+    .card { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:48px 40px; position:relative; overflow:hidden; transition:border-color .4s; }
+    .card::before { content:''; position:absolute; inset:0; background:radial-gradient(circle at top right, rgba(255,255,255,.05), transparent 60%); opacity:0; transition:opacity .4s; }
+    .card:hover { border-color:rgba(255,255,255,.2); }
+    .card:hover::before { opacity:1; }
+    .card h3 { font-family:'Space Grotesk',sans-serif; font-size:22px; font-weight:500; margin-bottom:12px; color:var(--fg); letter-spacing:-.02em; }
+    .card p { color:var(--muted); font-size:15px; line-height:1.6; }
+
+    footer { border-top:1px solid var(--border); padding:32px; display:flex; justify-content:space-between; }
+    footer span { color:var(--muted); font-size:13px; }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="#" class="logo">scaffold</a>
+    <nav><ul>
+      <li><a href="#">Design</a></li>
+      <li><a href="#">Workflow</a></li>
+      <li><a href="#">Docs</a></li>
+    </ul></nav>
+    <a href="#" class="btn-outline">Copy Prompt</a>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div class="hero-badge">Minimalist Dark</div>
+      <h1 class="hero-headline">Atmospheric depth.<br>Absolute restraint.</h1>
+      <p class="hero-sub">A dark mode that doesn't rely on neon colors or harsh gradients. Just true black, off-white, and subtle radial light sources.</p>
+      <a href="#" class="btn-primary">Get the System</a>
+    </section>
+
+    <div class="cards">
+      <div class="card">
+        <h3>Space Grotesk + Inter</h3>
+        <p>A technical, geometric display face paired with a highly legible humanist body sans. The perfect balance for complex interfaces.</p>
+      </div>
+      <div class="card">
+        <h3>Subtle Illumination</h3>
+        <p>Visual interest is created through extremely subtle radial gradients that act like a soft desk lamp over dark surfaces.</p>
+      </div>
+    </div>
+  </main>
+
+  <footer class="container">
+    <span>scaffold — prompt directory</span>
+    <span>Minimalist Dark System</span>
+  </footer>
+</body>
+</html>

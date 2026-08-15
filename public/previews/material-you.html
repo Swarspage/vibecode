@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Material You — Design System Preview</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@400;500;700&family=Roboto+Mono:wght@400;500&display=block');
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=block');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:         #FFFBFE;
+      --fg:         #1C1B1F;
+      --primary:    #6750A4;
+      --on-primary: #FFFFFF;
+      --secondary:  #625B71;
+      --tertiary:   #7D5260;
+      --surface:    #F3EDF7;
+      --muted:      #E7E0EC;
+      --muted-fg:   #49454F;
+      --border:     #CAC4D0;
+    }
+
+    html, body { min-height:100%; background:var(--bg); color:var(--fg); font-family:'Nunito','Roboto',system-ui,sans-serif; font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased; }
+
+    .container { max-width:1152px; margin:0 auto; padding:0 32px; }
+
+    /* NAV */
+    header { background:var(--bg); border-bottom:1px solid var(--muted); padding:0 32px; }
+    .nav-inner { display:flex; align-items:center; justify-content:space-between; min-height:64px; }
+    .logo { font-size:20px; font-weight:800; color:var(--primary); text-decoration:none; letter-spacing:-.02em; }
+    nav ul { list-style:none; display:flex; gap:4px; }
+    nav a { display:flex; align-items:center; gap:6px; padding:8px 16px; border-radius:999px; font-size:14px; font-weight:600; color:var(--muted-fg); text-decoration:none; transition:background .2s; }
+    nav a:hover { background:var(--surface); color:var(--primary); }
+    .btn-filled { background:var(--primary); color:var(--on-primary); font-size:14px; font-weight:700; padding:10px 24px; border-radius:999px; text-decoration:none; transition:box-shadow .2s; box-shadow:0 1px 2px rgba(103,80,164,.3); }
+    .btn-filled:hover { box-shadow:0 4px 8px rgba(103,80,164,.4); }
+
+    /* HERO */
+    .hero { padding:80px 0 64px; }
+    .hero-chip { display:inline-flex; align-items:center; gap:8px; background:var(--surface); border-radius:999px; padding:6px 16px; margin-bottom:28px; }
+    .hero-chip span { font-size:12px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--primary); }
+    .hero-chip .dot { width:8px; height:8px; border-radius:50%; background:var(--tertiary); }
+    h1.hero-headline { font-size:clamp(3rem,6vw,5.5rem); font-weight:800; line-height:1.05; letter-spacing:-.03em; color:var(--fg); max-width:680px; margin-bottom:24px; }
+    h1.hero-headline .purple { color:var(--primary); }
+    .hero-body { font-size:17px; color:var(--muted-fg); max-width:520px; line-height:1.75; margin-bottom:40px; }
+    .hero-ctas { display:flex; gap:12px; flex-wrap:wrap; }
+    .btn-primary-m3 { background:var(--primary); color:#fff; font-size:14px; font-weight:700; padding:14px 28px; border-radius:999px; text-decoration:none; box-shadow:0 1px 2px rgba(103,80,164,.3); transition:box-shadow .2s, transform .15s; }
+    .btn-primary-m3:hover { box-shadow:0 4px 12px rgba(103,80,164,.4); transform:translateY(-1px); }
+    .btn-tonal { background:var(--surface); color:var(--primary); font-size:14px; font-weight:700; padding:14px 28px; border-radius:999px; text-decoration:none; transition:background .2s; }
+    .btn-tonal:hover { background:var(--muted); }
+
+    /* CARDS */
+    .cards-section { margin:72px 0; }
+    h2.sect-h { font-size:clamp(2rem,4vw,3rem); font-weight:800; letter-spacing:-.03em; color:var(--fg); margin-bottom:12px; }
+    h2.sect-h span { color:var(--primary); }
+    .sect-sub { font-size:16px; color:var(--muted-fg); margin-bottom:40px; }
+    .cards-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+    .card-m3 { background:var(--surface); border-radius:28px; padding:28px; transition:box-shadow .2s, transform .2s; cursor:pointer; }
+    .card-m3:hover { box-shadow:0 4px 20px rgba(0,0,0,.1); transform:translateY(-3px); }
+    .card-icon { width:48px; height:48px; border-radius:16px; background:var(--primary); display:flex; align-items:center; justify-content:center; font-size:22px; margin-bottom:20px; }
+    .card-m3 h3 { font-size:17px; font-weight:700; color:var(--fg); margin-bottom:8px; }
+    .card-m3 p { font-size:14px; color:var(--muted-fg); line-height:1.6; }
+
+    /* FAB */
+    .fab-section { display:flex; align-items:center; gap:16px; margin:48px 0; }
+    .fab { width:56px; height:56px; border-radius:16px; background:var(--primary); display:flex; align-items:center; justify-content:center; font-size:24px; color:#fff; box-shadow:0 3px 8px rgba(103,80,164,.4); cursor:pointer; transition:box-shadow .2s; }
+    .fab:hover { box-shadow:0 6px 16px rgba(103,80,164,.5); }
+    .fab-sm { width:40px; height:40px; border-radius:12px; background:var(--surface); display:flex; align-items:center; justify-content:center; font-size:18px; box-shadow:0 1px 4px rgba(0,0,0,.1); cursor:pointer; }
+    .fab-label { font-size:13px; color:var(--muted-fg); font-weight:500; }
+
+    /* CTA */
+    .cta { background:linear-gradient(135deg,#6750A4,#7D5260); border-radius:28px; padding:64px; margin:0 0 72px; }
+    .cta h2 { font-size:clamp(2rem,4vw,3rem); font-weight:800; color:#fff; letter-spacing:-.03em; margin-bottom:12px; }
+    .cta p { color:rgba(255,255,255,.75); font-size:16px; margin-bottom:32px; max-width:420px; }
+    .btn-cta { background:#fff; color:var(--primary); font-size:14px; font-weight:700; padding:14px 32px; border-radius:999px; text-decoration:none; display:inline-block; transition:transform .15s; }
+    .btn-cta:hover { transform:scale(1.03); }
+
+    footer { border-top:1px solid var(--muted); padding:28px 0; display:flex; justify-content:space-between; }
+    footer span { font-size:12px; color:var(--muted-fg); font-weight:500; text-transform:uppercase; letter-spacing:.08em; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="nav-inner">
+    <a href="#" class="logo">scaffold.</a>
+    <nav><ul>
+      <li><a href="#">Design</a></li>
+      <li><a href="#">Workflow</a></li>
+      <li><a href="#">Docs</a></li>
+    </ul></nav>
+    <a href="#" class="btn-filled">Copy Prompt</a>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="container">
+      <div class="hero-chip"><span class="dot"></span><span>Material You — MD3</span></div>
+      <h1 class="hero-headline">Personal.<br>Adaptive.<br><span class="purple">Spirited.</span></h1>
+      <p class="hero-body">Material You adapts to you. Rich tonal palettes, expressive components, and generous rounded geometry — the most human design system yet.</p>
+      <div class="hero-ctas">
+        <a href="#" class="btn-primary-m3">Copy This System →</a>
+        <a href="#" class="btn-tonal">Browse All</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="container">
+    <div class="cards-section">
+      <h2 class="sect-h">Expressive <span>by design.</span></h2>
+      <p class="sect-sub">Tonal color surfaces, generous radii, and adaptive containers that feel alive.</p>
+      <div class="cards-grid">
+        <div class="card-m3"><div class="card-icon">🎨</div><h3>Dynamic Color</h3><p>Tonal palette derived from a single seed color — purple/violet for this system.</p></div>
+        <div class="card-m3"><div class="card-icon">🔵</div><h3>Rounded Geometry</h3><p>16px–28px radius across all surfaces. Containers feel soft and approachable.</p></div>
+        <div class="card-m3"><div class="card-icon">✨</div><h3>Expressive Motion</h3><p>Shared axis transitions, container transforms. Motion reinforces spatial relationships.</p></div>
+      </div>
+    </div>
+
+    <div class="fab-section">
+      <div class="fab">+</div>
+      <div class="fab-sm">✏️</div>
+      <div class="fab-sm">📤</div>
+      <span class="fab-label">FAB & Mini FAB components — key MD3 signatures</span>
+    </div>
+
+    <div class="cta">
+      <h2>Your color.<br>Your system.</h2>
+      <p>Copy the prompt and generate a complete Material You implementation — tokens, components, and motion.</p>
+      <a href="#" class="btn-cta">Copy Prompt →</a>
+    </div>
+  </div>
+</main>
+
+<footer class="container">
+  <span>scaffold — prompt directory</span>
+  <span>Material You System</span>
+</footer>
+
+</body>
+</html>

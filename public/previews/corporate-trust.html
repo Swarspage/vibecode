@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Corporate Trust — Design System Preview</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=block');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #F8FAFC;
+      --fg:      #0F172A;
+      --muted:   #64748B;
+      --primary: #4F46E5;
+      --secondary:#8B5CF6;
+      --surface: #FFFFFF;
+      --border:  #E2E8F0;
+      --shadow:  0 10px 25px -5px rgba(79,70,229,0.1);
+    }
+
+    html, body { min-height:100%; background:var(--bg); color:var(--fg); font-family:'Plus Jakarta Sans',sans-serif; font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased; overflow-x:hidden; }
+
+    /* Soft blob bg */
+    body::before { content:''; position:fixed; top:-200px; right:-200px; width:600px; height:600px; background:radial-gradient(circle, rgba(79,70,229,.15) 0%, transparent 70%); filter:blur(60px); z-index:-1; }
+    body::after { content:''; position:fixed; bottom:-200px; left:-200px; width:600px; height:600px; background:radial-gradient(circle, rgba(139,92,246,.15) 0%, transparent 70%); filter:blur(60px); z-index:-1; }
+
+    .container { max-width:1152px; margin:0 auto; padding:0 32px; }
+
+    /* NAV */
+    header { background:rgba(255,255,255,.8); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); padding:16px 32px; display:flex; justify-content:space-between; align-items:center; position:sticky; top:0; z-index:50; }
+    .logo { font-size:20px; font-weight:700; color:var(--fg); text-decoration:none; display:flex; align-items:center; gap:8px; }
+    .logo-icon { width:24px; height:24px; background:linear-gradient(135deg,var(--primary),var(--secondary)); border-radius:6px; }
+    nav ul { list-style:none; display:flex; gap:32px; }
+    nav a { font-size:14px; font-weight:500; color:var(--muted); text-decoration:none; transition:color .2s; }
+    nav a:hover { color:var(--primary); }
+    .btn-nav { background:var(--primary); color:#fff; font-size:14px; font-weight:600; padding:10px 24px; border-radius:8px; text-decoration:none; transition:background .2s; box-shadow:0 4px 6px rgba(79,70,229,.2); }
+    .btn-nav:hover { background:#4338CA; }
+
+    /* HERO */
+    .hero { padding:100px 0 80px; text-align:center; }
+    .hero-pill { display:inline-block; background:rgba(79,70,229,.1); color:var(--primary); font-size:13px; font-weight:600; padding:6px 16px; border-radius:999px; margin-bottom:24px; }
+    h1.hero-headline { font-size:clamp(3rem,6vw,4.5rem); font-weight:700; line-height:1.1; letter-spacing:-.02em; margin-bottom:24px; color:var(--fg); }
+    h1.hero-headline span { background:linear-gradient(135deg,var(--primary),var(--secondary)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+    .hero-sub { color:var(--muted); font-size:18px; max-width:640px; margin:0 auto 40px; line-height:1.6; }
+    .btn-primary { display:inline-block; background:linear-gradient(135deg,var(--primary),var(--secondary)); color:#fff; font-size:15px; font-weight:600; padding:16px 36px; border-radius:8px; text-decoration:none; transition:transform .2s, box-shadow .2s; box-shadow:0 8px 15px rgba(79,70,229,.2); }
+    .btn-primary:hover { transform:translateY(-2px); box-shadow:0 12px 20px rgba(79,70,229,.3); }
+
+    /* CARDS */
+    .cards { display:grid; grid-template-columns:repeat(3,1fr); gap:32px; padding:0 32px 100px; }
+    .card { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:32px; box-shadow:var(--shadow); transition:transform .3s, box-shadow .3s; }
+    .card:hover { transform:translateY(-5px); box-shadow:0 20px 30px -10px rgba(79,70,229,.15); border-color:rgba(79,70,229,.2); }
+    .card-icon { width:48px; height:48px; background:rgba(79,70,229,.1); border-radius:12px; margin-bottom:24px; display:flex; align-items:center; justify-content:center; color:var(--primary); font-size:24px; }
+    .card h3 { font-size:18px; font-weight:600; margin-bottom:12px; color:var(--fg); }
+    .card p { color:var(--muted); font-size:15px; }
+
+    footer { border-top:1px solid var(--border); padding:32px; display:flex; justify-content:space-between; background:var(--surface); }
+    footer span { color:var(--muted); font-size:14px; font-weight:500; }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="#" class="logo"><span class="logo-icon"></span> Scaffold</a>
+    <nav><ul>
+      <li><a href="#">Products</a></li>
+      <li><a href="#">Solutions</a></li>
+      <li><a href="#">Pricing</a></li>
+    </ul></nav>
+    <a href="#" class="btn-nav">Get Started</a>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div class="hero-pill">Enterprise Ready</div>
+      <h1 class="hero-headline">The modern standard for<br><span>SaaS interfaces.</span></h1>
+      <p class="hero-sub">Professional yet approachable. Indigo and violet gradients, soft tinted shadows, and Plus Jakarta Sans. Build trust at a glance.</p>
+      <a href="#" class="btn-primary">Implement System</a>
+    </section>
+
+    <div class="cards">
+      <div class="card">
+        <div class="card-icon">⚡</div>
+        <h3>Colored Shadows</h3>
+        <p>Soft shadows with blue/purple tints instead of harsh neutral grays create an elevated, premium feel.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🎯</div>
+        <h3>Gradient Accents</h3>
+        <p>Strategic use of Indigo to Violet gradients on key text and buttons draws the eye without overwhelming the layout.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🛡️</div>
+        <h3>Plus Jakarta Sans</h3>
+        <p>A geometric sans-serif that balances professional authority with friendly, rounded terminals.</p>
+      </div>
+    </div>
+  </main>
+
+  <footer class="container">
+    <span>scaffold — prompt directory</span>
+    <span>Corporate Trust System</span>
+  </footer>
+</body>
+</html>

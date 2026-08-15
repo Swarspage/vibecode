@@ -12,6 +12,26 @@ const categories = [
 
 const WorkflowPromptsPage = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const query = searchQuery.trim().toLowerCase();
+
+  const matchesSearch = (prompt) => {
+    if (!query) return true;
+    const category = categories.find((c) => c.id === prompt.category);
+    const haystack = [
+      prompt.title,
+      prompt.summary,
+      String(prompt.number),
+      ...(prompt.tags ?? []),
+      category?.label ?? prompt.category,
+    ]
+      .join(" ")
+      .toLowerCase();
+    return haystack.includes(query);
+  };
+
+  const totalMatches = workflowPrompts.filter(matchesSearch).length;
 
   return (
     <section style={{ paddingTop: "var(--space-page-top)", paddingBottom: "96px" }}>
@@ -85,33 +105,51 @@ const WorkflowPromptsPage = () => {
           id="workflow-sidebar-nav"
           className={`docs-sidebar${sidebarOpen ? " open" : ""}`}
         >
+          {/* Search */}
+          <div style={{ marginBottom: "16px" }}>
+            <input
+              type="search"
+              className="search-input"
+              placeholder="Search prompts"
+              aria-label="Search workflow prompts"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+
           <nav aria-label="Workflow prompt navigation">
-            {categories.map((cat) => {
-              const prompts = workflowPrompts.filter(
-                (p) => p.category === cat.id
-              );
-              if (prompts.length === 0) return null;
-              return (
-                <div key={cat.id} className="docs-sidebar-group">
-                  <div className="docs-sidebar-heading">{cat.label}</div>
-                  {prompts.map((prompt) => (
-                    <NavLink
-                      key={prompt.id}
-                      to={`/workflow-prompts/${prompt.slug}`}
-                      className={({ isActive }) =>
-                        isActive
-                          ? "docs-sidebar-link docs-sidebar-link-nested active"
-                          : "docs-sidebar-link docs-sidebar-link-nested"
-                      }
-                      onClick={() => setSidebarOpen(false)}
-                    >
-                      {prompt.number < 10 ? `0${prompt.number}` : prompt.number}{" "}
-                      {prompt.title}
-                    </NavLink>
-                  ))}
-                </div>
-              );
-            })}
+            {totalMatches === 0 ? (
+              <p className="search-empty">
+                No workflow prompts match &ldquo;{searchQuery}&rdquo;.
+              </p>
+            ) : (
+              categories.map((cat) => {
+                const prompts = workflowPrompts.filter(
+                  (p) => p.category === cat.id && matchesSearch(p)
+                );
+                if (prompts.length === 0) return null;
+                return (
+                  <div key={cat.id} className="docs-sidebar-group">
+                    <div className="docs-sidebar-heading">{cat.label}</div>
+                    {prompts.map((prompt) => (
+                      <NavLink
+                        key={prompt.id}
+                        to={`/workflow-prompts/${prompt.slug}`}
+                        className={({ isActive }) =>
+                          isActive
+                            ? "docs-sidebar-link docs-sidebar-link-nested active"
+                            : "docs-sidebar-link docs-sidebar-link-nested"
+                        }
+                        onClick={() => setSidebarOpen(false)}
+                      >
+                        {prompt.number < 10 ? `0${prompt.number}` : prompt.number}{" "}
+                        {prompt.title}
+                      </NavLink>
+                    ))}
+                  </div>
+                );
+              })
+            )}
           </nav>
         </aside>
         <div className="docs-content">

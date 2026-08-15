@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Industrial Skeuomorphism — Design System Preview</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=block');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #E4E6EB;
+      --surface: #F0F2F5;
+      --fg:      #1A1C23;
+      --muted:   #6C7280;
+      --accent:  #FF5A36; /* Safety Orange */
+      --metal:   linear-gradient(180deg, #FFFFFF 0%, #E8EAED 100%);
+      --shadow-outer: 10px 10px 20px rgba(166,171,189,0.5), -10px -10px 20px #FFFFFF;
+      --shadow-inner: inset 4px 4px 8px rgba(166,171,189,0.4), inset -4px -4px 8px #FFFFFF;
+    }
+
+    html, body { min-height:100%; background:var(--bg); color:var(--fg); font-family:'Inter',sans-serif; font-size:15px; line-height:1.6; }
+    
+    /* Aluminum texture */
+    body::before { content:''; position:fixed; inset:0; z-index:-1; background:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.2'/%3E%3C/svg%3E"); opacity:0.25; mix-blend-mode:color-burn; }
+
+    .container { max-width:1080px; margin:0 auto; padding:0 40px; }
+
+    /* NAV */
+    header { padding:24px 40px; display:flex; justify-content:space-between; align-items:center; }
+    .logo { font-family:'Space Grotesk',sans-serif; font-size:22px; font-weight:700; color:var(--fg); text-decoration:none; letter-spacing:1px; text-transform:uppercase; display:flex; align-items:center; gap:12px; }
+    .logo::before { content:''; width:12px; height:12px; border-radius:50%; background:var(--accent); box-shadow:inset 2px 2px 4px rgba(255,255,255,0.4), 0 0 8px rgba(255,90,54,0.6); }
+    nav ul { list-style:none; display:flex; gap:32px; }
+    nav a { font-size:13px; font-weight:600; text-transform:uppercase; letter-spacing:1px; color:var(--muted); text-decoration:none; }
+    nav a:hover { color:var(--fg); }
+    
+    .btn-mechanical { background:var(--metal); border:1px solid #D1D5DB; color:var(--fg); font-family:'Space Grotesk',sans-serif; font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:1px; padding:12px 24px; border-radius:6px; text-decoration:none; box-shadow:var(--shadow-outer); transition:all .1s; display:inline-flex; align-items:center; gap:8px; }
+    .btn-mechanical:active { box-shadow:var(--shadow-inner); transform:translateY(2px); }
+
+    /* HERO */
+    .hero { padding:100px 0 80px; text-align:center; }
+    .hero-badge { display:inline-flex; align-items:center; gap:8px; background:#1A1C23; color:var(--accent); font-family:'Space Grotesk',sans-serif; font-size:12px; font-weight:700; padding:6px 16px; border-radius:4px; margin-bottom:32px; letter-spacing:1px; text-transform:uppercase; box-shadow:inset 0 2px 4px rgba(0,0,0,0.5), 0 1px 0 rgba(255,255,255,0.3); }
+    h1.hero-headline { font-family:'Space Grotesk',sans-serif; font-size:clamp(3rem,6vw,5rem); font-weight:700; line-height:1.1; margin-bottom:24px; color:var(--fg); text-transform:uppercase; letter-spacing:-1px; }
+    .hero-sub { color:var(--muted); font-size:18px; max-width:600px; margin:0 auto 48px; }
+    
+    .btn-primary { background:linear-gradient(180deg, #FF7052 0%, #FF5A36 100%); border:1px solid #E0401E; color:#fff; font-family:'Space Grotesk',sans-serif; font-size:15px; font-weight:700; text-transform:uppercase; letter-spacing:1px; padding:16px 40px; border-radius:6px; text-decoration:none; box-shadow:0 8px 16px rgba(255,90,54,0.3), inset 0 2px 4px rgba(255,255,255,0.4); text-shadow:0 1px 2px rgba(0,0,0,0.3); transition:all .1s; display:inline-block; }
+    .btn-primary:active { box-shadow:inset 0 4px 8px rgba(0,0,0,0.2); transform:translateY(2px); background:#E0401E; }
+
+    /* HARDWARE MODULES */
+    .modules { display:grid; grid-template-columns:repeat(3,1fr); gap:32px; padding:0 32px 100px; }
+    .module { background:var(--surface); border:1px solid #FFFFFF; border-radius:12px; padding:32px; box-shadow:var(--shadow-outer); position:relative; }
+    /* Screw heads */
+    .module::before, .module::after { content:'+'; position:absolute; color:#A6ABBD; font-family:monospace; font-size:16px; font-weight:bold; }
+    .module::before { top:12px; left:12px; }
+    .module::after { bottom:12px; right:12px; }
+    
+    .mod-display { background:#1A1C23; border-radius:6px; padding:16px; margin-bottom:24px; box-shadow:inset 0 4px 8px rgba(0,0,0,0.4), 0 1px 0 rgba(255,255,255,0.5); }
+    .mod-display h3 { font-family:'Space Grotesk',sans-serif; font-size:16px; color:#4ADE80; text-transform:uppercase; margin:0; letter-spacing:1px; text-shadow:0 0 8px rgba(74,222,128,0.4); }
+    
+    .module p { color:var(--muted); font-size:14px; margin-bottom:24px; font-weight:500; }
+    .toggle { height:24px; width:48px; background:var(--metal); border-radius:12px; box-shadow:var(--shadow-inner); position:relative; cursor:pointer; }
+    .toggle::after { content:''; position:absolute; top:2px; left:2px; width:20px; height:20px; background:var(--accent); border-radius:50%; box-shadow:0 2px 4px rgba(0,0,0,0.2), inset 0 2px 2px rgba(255,255,255,0.4); transition:left .2s; }
+    .module:hover .toggle::after { left:26px; background:#4ADE80; }
+
+  </style>
+</head>
+<body>
+  <header>
+    <a href="#" class="logo">SCAFFOLD_OS</a>
+    <nav><ul>
+      <li><a href="#">Manual</a></li>
+      <li><a href="#">Specs</a></li>
+    </ul></nav>
+    <a href="#" class="btn-mechanical">PWR_ON</a>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div class="hero-badge">SYSTEM.READY // REV. 04</div>
+      <h1 class="hero-headline">Industrial Realism.</h1>
+      <p class="hero-sub">Teenage Engineering playfulness meets tactile hardware precision. Aluminum surfaces, safety orange toggles, and machined drop shadows.</p>
+      <a href="#" class="btn-primary">DEPLOY_PROMPT</a>
+    </section>
+
+    <div class="modules">
+      <div class="module">
+        <div class="mod-display"><h3>MOD_01</h3></div>
+        <p>Machined aluminum surfaces with subtle textures. UI elements feel like they were milled from solid blocks.</p>
+        <div class="toggle"></div>
+      </div>
+      <div class="module">
+        <div class="mod-display"><h3>MOD_02</h3></div>
+        <p>Safety Orange used exclusively for interactive triggers and alerts, mimicking real-world heavy machinery.</p>
+        <div class="toggle"></div>
+      </div>
+      <div class="module">
+        <div class="mod-display"><h3>MOD_03</h3></div>
+        <p>Active states use deep inset shadows to simulate pressing physical mechanical buttons.</p>
+        <div class="toggle"></div>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

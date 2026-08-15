@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Retro / 90s Nostalgia — Design System Preview</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=VT323&display=block');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-teal:   #008080;
+      --win-gray:  #c0c0c0;
+      --win-blue:  #000080;
+      --win-black: #000000;
+      --win-white: #ffffff;
+      --border-light: #dfdfdf;
+      --border-dark:  #808080;
+      --border-darker:#000000;
+      
+      --win-out: inset 1px 1px 0px var(--border-light), inset -1px -1px 0px var(--border-darker), inset 2px 2px 0px var(--win-white), inset -2px -2px 0px var(--border-dark);
+      --win-in:  inset 1px 1px 0px var(--border-darker), inset -1px -1px 0px var(--border-light), inset 2px 2px 0px var(--border-dark), inset -2px -2px 0px var(--win-white);
+    }
+
+    html, body { min-height:100%; background:var(--bg-teal); color:var(--win-black); font-family:"MS Sans Serif", "Segoe UI", Tahoma, sans-serif; font-size:12px; }
+
+    .desktop { padding:32px; display:flex; flex-direction:column; align-items:center; gap:32px; }
+
+    /* WINDOW */
+    .window { background:var(--win-gray); box-shadow:var(--win-out); padding:2px; min-width:600px; max-width:800px; }
+    .title-bar { background:var(--win-blue); color:var(--win-white); padding:3px 4px 4px 4px; display:flex; justify-content:space-between; align-items:center; font-weight:bold; letter-spacing:1px; margin-bottom:4px; }
+    .title-buttons { display:flex; gap:2px; }
+    .btn-sys { width:16px; height:14px; background:var(--win-gray); box-shadow:var(--win-out); display:flex; align-items:center; justify-content:center; color:var(--win-black); font-weight:bold; font-size:10px; cursor:pointer; }
+    .btn-sys:active { box-shadow:var(--win-in); }
+
+    /* MENU */
+    .menu-bar { display:flex; gap:12px; padding:2px 8px 6px; border-bottom:1px solid var(--border-dark); margin-bottom:8px; }
+    .menu-bar span { font-size:12px; }
+    .menu-bar span::first-letter { text-decoration:underline; }
+
+    /* CONTENT */
+    .window-content { padding:16px; display:flex; flex-direction:column; gap:24px; }
+    h1 { font-family:"Arial Black", Impact, sans-serif; font-size:32px; margin:0; text-transform:uppercase; color:var(--win-black); }
+    p { font-size:14px; line-height:1.5; }
+
+    .inset-box { background:var(--win-white); box-shadow:var(--win-in); padding:16px; font-family:"Courier New", monospace; }
+
+    /* BUTTONS */
+    .btn-group { display:flex; gap:16px; }
+    .btn-win { background:var(--win-gray); box-shadow:var(--win-out); border:none; padding:6px 24px; font-family:"MS Sans Serif", sans-serif; font-size:12px; color:var(--win-black); cursor:pointer; font-weight:bold; outline:none; }
+    .btn-win:active { box-shadow:var(--win-in); padding:7px 23px 5px 25px; } /* shift text */
+    .btn-win:focus::after { content:''; position:absolute; inset:3px; border:1px dotted var(--win-black); pointer-events:none; }
+    .btn-win { position:relative; }
+
+    /* ICONS */
+    .desktop-icon { display:flex; flex-direction:column; align-items:center; gap:8px; color:var(--win-white); font-family:monospace; position:absolute; cursor:pointer; }
+    .desktop-icon img { width:32px; height:32px; image-rendering:pixelated; background:var(--win-gray); box-shadow:var(--win-out); }
+    .desktop-icon span { background:var(--win-blue); padding:2px 4px; border:1px dotted transparent; }
+    .desktop-icon:active span { border:1px dotted var(--win-white); }
+    
+    .icon-1 { top:32px; left:32px; }
+    .icon-2 { top:100px; left:32px; }
+
+  </style>
+</head>
+<body>
+  
+  <div class="desktop-icon icon-1">
+    <div class="img"></div>
+    <span>My_Computer</span>
+  </div>
+  <div class="desktop-icon icon-2">
+    <div class="img"></div>
+    <span>Recycle_Bin</span>
+  </div>
+
+  <div class="desktop">
+    <div class="window">
+      <div class="title-bar">
+        <span>Scaffold_Prompt_Directory.exe</span>
+        <div class="title-buttons">
+          <div class="btn-sys">_</div>
+          <div class="btn-sys">□</div>
+          <div class="btn-sys">X</div>
+        </div>
+      </div>
+      <div class="menu-bar">
+        <span>File</span>
+        <span>Edit</span>
+        <span>View</span>
+        <span>Help</span>
+      </div>
+      
+      <div class="window-content">
+        <h1>Retro / 90s Nostalgia</h1>
+        <p>Embrace the raw, unfiltered aesthetic of the early web and Windows 95. This design system strips away modern gradients and soft shadows in favor of unapologetic brutalist pixels, high-contrast borders, and classic system fonts.</p>
+        
+        <div class="inset-box">
+          > C:\SCAFFOLD\PROMPTS\RETRO.EXE<br>
+          > Loading components... [OK]<br>
+          > Loading MS Sans Serif... [OK]<br>
+          > Applying #C0C0C0 gray... [OK]
+        </div>
+
+        <div class="btn-group">
+          <button class="btn-win">Copy Prompt</button>
+          <button class="btn-win">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

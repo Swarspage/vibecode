@@ -1,7 +1,23 @@
+import { useState } from "react";
 import { designPrompts } from "../data/designPrompts";
 import DesignPromptCard from "../components/DesignPromptCard";
 
 const DesignPromptsPage = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const query = searchQuery.trim().toLowerCase();
+  const filteredPrompts = designPrompts.filter((prompt) => {
+    if (!query) return true;
+    const haystack = [
+      prompt.name,
+      prompt.summary,
+      ...(prompt.tags ?? []),
+    ]
+      .join(" ")
+      .toLowerCase();
+    return haystack.includes(query);
+  });
+
   return (
     <section style={{ paddingTop: "var(--space-page-top)", paddingBottom: "96px" }}>
       {/* Page Header */}
@@ -55,16 +71,36 @@ const DesignPromptsPage = () => {
             textTransform: "uppercase",
           }}
         >
-          {designPrompts.length} systems
+          {searchQuery.trim()
+            ? `${filteredPrompts.length} / ${designPrompts.length} systems`
+            : `${designPrompts.length} systems`}
         </span>
       </div>
 
-      {/* Card Grid */}
-      <div className="prompt-grid">
-        {designPrompts.map((prompt) => (
-          <DesignPromptCard key={prompt.id} prompt={prompt} />
-        ))}
+      {/* Search */}
+      <div style={{ marginTop: "24px" }}>
+        <input
+          type="search"
+          className="search-input"
+          placeholder="Search by name, summary, or tag"
+          aria-label="Search design prompts"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
       </div>
+
+      {/* Card Grid */}
+      {filteredPrompts.length === 0 ? (
+        <p className="search-empty">
+          No design prompts match &ldquo;{searchQuery}&rdquo;.
+        </p>
+      ) : (
+        <div className="prompt-grid">
+          {filteredPrompts.map((prompt) => (
+            <DesignPromptCard key={prompt.id} prompt={prompt} />
+          ))}
+        </div>
+      )}
     </section>
   );
 };

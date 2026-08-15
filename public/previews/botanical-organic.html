@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Botanical / Organic Serif — Design System Preview</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Lora:ital,wght@0,400;0,500;1,400&display=block');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #F4F1EA;
+      --fg:      #2C362F;
+      --accent:  #7C9070;
+      --muted:   #DCD3C6;
+      --border:  #E8E3D9;
+      --terracotta: #C07C66;
+    }
+
+    html, body { min-height:100%; background:var(--bg); color:var(--fg); font-family:'Lora',serif; font-size:16px; line-height:1.75; }
+
+    /* Paper texture */
+    body::before { content:''; position:fixed; inset:0; z-index:100; pointer-events:none; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E"); opacity:0.04; mix-blend-mode:multiply; }
+
+    .container { max-width:1000px; margin:0 auto; padding:0 32px; }
+
+    /* NAV */
+    header { padding:32px; display:flex; justify-content:space-between; align-items:center; }
+    .logo { font-family:'Playfair Display',serif; font-size:24px; font-style:italic; font-weight:500; color:var(--fg); text-decoration:none; }
+    nav ul { list-style:none; display:flex; gap:40px; }
+    nav a { font-size:14px; color:var(--fg); opacity:.7; text-decoration:none; transition:opacity .3s; }
+    nav a:hover { opacity:1; color:var(--accent); }
+    .btn-nav { font-family:'Playfair Display',serif; font-style:italic; font-size:16px; color:var(--accent); border-bottom:1px solid var(--accent); text-decoration:none; padding-bottom:2px; transition:color .3s, border-color .3s; }
+    .btn-nav:hover { color:var(--terracotta); border-color:var(--terracotta); }
+
+    /* HERO */
+    .hero { padding:100px 0 80px; text-align:center; }
+    .hero-label { font-size:12px; letter-spacing:.15em; text-transform:uppercase; color:var(--terracotta); margin-bottom:24px; font-weight:500; }
+    h1.hero-headline { font-family:'Playfair Display',serif; font-size:clamp(3.5rem,7vw,6rem); font-weight:400; line-height:1.1; color:var(--fg); margin-bottom:32px; }
+    h1.hero-headline em { font-style:italic; color:var(--accent); }
+    .hero-sub { font-size:18px; color:var(--fg); opacity:.8; max-width:540px; margin:0 auto 48px; line-height:1.8; }
+    .btn-primary { display:inline-block; background:var(--accent); color:#fff; font-size:14px; font-weight:500; letter-spacing:.05em; text-transform:uppercase; padding:16px 40px; border-radius:100px; text-decoration:none; transition:background .3s, transform .3s; }
+    .btn-primary:hover { background:var(--fg); transform:translateY(-2px); }
+
+    /* CARDS */
+    .cards { display:grid; grid-template-columns:repeat(2,1fr); gap:48px; padding:0 32px 100px; }
+    .card { background:#FAF8F5; border-radius:16px; padding:48px 40px; text-align:center; transition:transform .4s; box-shadow:0 10px 40px rgba(44,54,47,0.03); }
+    .card:hover { transform:translateY(-8px); }
+    .card-icon { width:60px; height:60px; border-radius:50%; background:var(--bg); border:1px solid var(--muted); margin:0 auto 24px; display:flex; align-items:center; justify-content:center; color:var(--accent); font-size:24px; }
+    .card h3 { font-family:'Playfair Display',serif; font-size:24px; font-weight:500; margin-bottom:16px; color:var(--fg); }
+    .card p { color:var(--fg); opacity:.7; font-size:15px; }
+
+    footer { border-top:1px solid var(--border); padding:40px 32px; text-align:center; }
+    footer span { font-size:13px; color:var(--fg); opacity:.6; letter-spacing:.05em; }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="#" class="logo">Scaffold</a>
+    <nav><ul>
+      <li><a href="#">Journal</a></li>
+      <li><a href="#">Elements</a></li>
+      <li><a href="#">About</a></li>
+    </ul></nav>
+    <a href="#" class="btn-nav">Acquire Prompt</a>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div class="hero-label">Botanical Organic</div>
+      <h1 class="hero-headline">A digital ode<br>to <em>nature.</em></h1>
+      <p class="hero-sub">Muted colors derived from forest floors and clay pottery. Subtle paper grain. A design system that breathes, flows, and grounds itself.</p>
+      <a href="#" class="btn-primary">Copy This System</a>
+    </section>
+
+    <div class="cards">
+      <div class="card"><div class="card-icon">🌿</div><h3>Earthy Palette</h3><p>Sage green, terracotta, and warm clay backgrounds. No artificial brights. Everything is grounded and natural.</p></div>
+      <div class="card"><div class="card-icon">✒️</div><h3>Playfair Italics</h3><p>High-contrast serif headings with beautiful italic flourishes that add a handwritten, human touch to the interface.</p></div>
+    </div>
+  </main>
+
+  <footer>
+    <span>scaffold — botanical/organic design system</span>
+  </footer>
+</body>
+</html>

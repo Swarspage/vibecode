@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Terminal CLI — Design System Preview</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=VT323&display=block');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #0a0a0a;
+      --green:   #33ff00;
+      --amber:   #ffb000;
+      --muted:   #1f521f;
+      --error:   #ff3333;
+      --border:  #1f521f;
+    }
+
+    html, body {
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--green);
+      font-family: 'JetBrains Mono', 'Courier New', monospace;
+      font-size: 14px;
+      line-height: 1.6;
+      -webkit-font-smoothing: none;
+    }
+
+    /* CRT scanlines overlay */
+    body::after {
+      content: '';
+      position: fixed; inset: 0; pointer-events: none; z-index: 100;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,.08) 2px,
+        rgba(0,0,0,.08) 4px
+      );
+    }
+
+    /* Phosphor glow */
+    .glow { text-shadow: 0 0 8px rgba(51,255,0,.6); }
+    .glow-amber { text-shadow: 0 0 8px rgba(255,176,0,.6); }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 32px; }
+
+    /* HEADER / title bar */
+    header {
+      background: var(--green); color: var(--bg);
+      padding: 6px 32px;
+      font-size: 12px; font-weight: 700; letter-spacing: .1em;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .win-controls { display:flex; gap:16px; }
+    .win-btn { font-size:12px; cursor:pointer; }
+
+    /* NAV bar */
+    .terminal-nav {
+      border-bottom: 1px dashed var(--border);
+      padding: 12px 32px;
+      display: flex; align-items: center; gap: 32px;
+    }
+    .prompt-label { color: var(--amber); font-size:13px; }
+    .nav-links { display:flex; gap:24px; }
+    .nav-links a { color:var(--muted); text-decoration:none; font-size:12px; letter-spacing:.08em; transition:color .1s; }
+    .nav-links a:hover { color:var(--green); }
+    .cursor-blink { animation: blink .9s step-end infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+    /* HERO / main pane */
+    .hero { padding: 64px 0; border-bottom: 1px dashed var(--border); }
+    .pane {
+      border: 1px solid var(--border); padding: 32px;
+      position: relative; margin-bottom: 32px;
+    }
+    .pane-title {
+      position:absolute; top:-10px; left:16px;
+      background:var(--bg); padding:0 8px;
+      font-size:11px; color:var(--muted); letter-spacing:.15em;
+    }
+    .hero-headline {
+      font-size: clamp(2rem,5vw,4.5rem);
+      font-weight:700; line-height:1;
+      text-transform:uppercase; letter-spacing:-.02em;
+      color:var(--green); margin-bottom:24px;
+    }
+    .hero-headline .amber { color:var(--amber); }
+    .hero-cmd { margin-bottom:8px; }
+    .prompt { color:var(--amber); margin-right:8px; }
+    .cmd { color:var(--green); }
+    .arg { color:rgba(51,255,0,.6); }
+    .status { color:var(--green); font-size:12px; letter-spacing:.08em; margin-bottom:24px; }
+    .status .ok { color:var(--green); }
+    .status .dim { color:var(--muted); }
+    .hero-btns { display:flex; gap:16px; flex-wrap:wrap; }
+    .btn-cli {
+      border:1px solid var(--green); color:var(--green);
+      background:transparent; padding:10px 24px; font-family:inherit;
+      font-size:12px; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+      cursor:pointer; text-decoration:none; display:inline-block;
+      transition:background .1s, color .1s;
+    }
+    .btn-cli:hover { background:var(--green); color:var(--bg); }
+    .btn-cli-amber {
+      border:1px solid var(--amber); color:var(--amber);
+      background:transparent; padding:10px 24px; font-family:inherit;
+      font-size:12px; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+      cursor:pointer; text-decoration:none; display:inline-block;
+      transition:background .1s, color .1s;
+    }
+    .btn-cli-amber:hover { background:var(--amber); color:var(--bg); }
+
+    /* GRID layout */
+    .main-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:0; margin:48px 0; }
+    .grid-cell { border:1px solid var(--border); padding:24px; margin:-1px 0 0 -1px; }
+    .cell-header {
+      font-size:10px; letter-spacing:.18em; text-transform:uppercase;
+      color:var(--amber); margin-bottom:16px; border-bottom:1px dashed var(--border); padding-bottom:8px;
+    }
+    .cell-title { font-size:16px; font-weight:700; color:var(--green); margin-bottom:10px; text-transform:uppercase; }
+    .cell-body { font-size:12px; color:var(--muted); line-height:1.7; }
+
+    /* Progress bars */
+    .progress-section { margin:48px 0; }
+    .prog-row { margin-bottom:12px; }
+    .prog-label { font-size:12px; color:var(--muted-fg,#1f521f); letter-spacing:.1em; margin-bottom:4px; display:flex; justify-content:space-between; }
+    .prog-label span:last-child { color:var(--amber); }
+    .prog-bar {
+      background:var(--border); height:12px;
+      font-family:'JetBrains Mono',monospace; font-size:10px;
+      display:flex; align-items:center;
+    }
+    .prog-fill { background:var(--green); height:100%; display:flex; align-items:center; justify-content:flex-end; padding-right:4px; font-size:9px; color:var(--bg); }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px dashed var(--border);
+      padding:16px 32px;
+      display:flex; justify-content:space-between; align-items:center;
+    }
+    footer span { font-size:11px; color:var(--muted); letter-spacing:.1em; }
+    footer .status-ok { color:var(--green); }
+  </style>
+</head>
+<body>
+
+<header>
+  <span>SCAFFOLD TERMINAL — SESSION [ACTIVE]</span>
+  <div class="win-controls">
+    <span class="win-btn">[_]</span>
+    <span class="win-btn">[□]</span>
+    <span class="win-btn">[X]</span>
+  </div>
+</header>
+
+<div class="terminal-nav">
+  <span class="prompt-label glow-amber">user@scaffold:~$</span>
+  <div class="nav-links">
+    <a href="#">./design</a>
+    <a href="#">./workflow</a>
+    <a href="#">./docs</a>
+    <a href="#">--help</a>
+  </div>
+  <span class="cursor-blink glow">█</span>
+</div>
+
+<main>
+  <section class="hero">
+    <div class="container">
+      <div class="pane">
+        <span class="pane-title">+--- SYSTEM OUTPUT ---+</span>
+        <p class="hero-cmd"><span class="prompt">$</span><span class="cmd"> scaffold</span><span class="arg"> --init design-system --style terminal-cli</span></p>
+        <p class="status"><span class="ok">[OK]</span> <span class="dim">Loading design tokens... done</span></p>
+        <p class="status"><span class="ok">[OK]</span> <span class="dim">Compiling components... done</span></p>
+        <p class="status"><span class="ok">[OK]</span> <span class="dim">System ready. Awaiting input.</span></p>
+      </div>
+      <h1 class="hero-headline glow">Terminal <span class="amber">CLI</span><br>Interface System</h1>
+      <div class="hero-btns">
+        <a href="#" class="btn-cli">[ COPY PROMPT ]</a>
+        <a href="#" class="btn-cli-amber">[ VIEW SYSTEMS ]</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="container">
+    <div class="main-grid">
+      <div class="grid-cell">
+        <div class="cell-header">// TOKENS</div>
+        <div class="cell-title">Color Matrix</div>
+        <div class="cell-body">Phosphor green primary (#33ff00). Amber secondary (#ffb000). Black background. Zero gradients. Maximum contrast.</div>
+      </div>
+      <div class="grid-cell">
+        <div class="cell-header">// TYPOGRAPHY</div>
+        <div class="cell-title">Mono Supremacy</div>
+        <div class="cell-body">JetBrains Mono for all text. ALL CAPS headers. Lowercase for code context. Strict modular scale snaps to grid.</div>
+      </div>
+      <div class="grid-cell">
+        <div class="cell-header">// MOTION</div>
+        <div class="cell-title">Glitch + Blink</div>
+        <div class="cell-body">Cursor blinking, typewriter entrance, occasional text offset glitch on hover. Nothing smooth — everything snaps.</div>
+      </div>
+    </div>
+
+    <div class="progress-section">
+      <div class="prog-row">
+        <div class="prog-label"><span>DESIGN_TOKENS</span><span>100%</span></div>
+        <div class="prog-bar"><div class="prog-fill" style="width:100%">▓</div></div>
+      </div>
+      <div class="prog-row">
+        <div class="prog-label"><span>COMPONENTS</span><span>84%</span></div>
+        <div class="prog-bar"><div class="prog-fill" style="width:84%">▓</div></div>
+      </div>
+      <div class="prog-row">
+        <div class="prog-label"><span>ACCESSIBILITY</span><span>PASS</span></div>
+        <div class="prog-bar"><div class="prog-fill" style="width:95%;background:var(--amber)">▓</div></div>
+      </div>
+      <div class="prog-row">
+        <div class="prog-label"><span>SCANLINES</span><span>ACTIVE</span></div>
+        <div class="prog-bar"><div class="prog-fill" style="width:100%;background:var(--green)">▓</div></div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <span>scaffold — prompt directory</span>
+  <span class="status-ok">[STATUS: OK] Terminal CLI System</span>
+</footer>
+
+</body>
+</html>

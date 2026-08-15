@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cyberpunk / Glitch — Design System Preview</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=JetBrains+Mono:wght@400;700&family=Share+Tech+Mono&display=block');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #0a0a0f;
+      --fg:      #e0e0e0;
+      --card:    #12121a;
+      --muted:   #1c1c2e;
+      --muted-fg:#6b7280;
+      --accent:  #00ff88;
+      --error:   #ff003c;
+    }
+
+    html, body { min-height:100%; background:var(--bg); color:var(--fg); font-family:'JetBrains Mono',monospace; font-size:14px; line-height:1.6; }
+
+    .container { max-width:1152px; margin:0 auto; padding:0 32px; }
+
+    /* Scanlines */
+    body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:99; background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.15) 2px,rgba(0,0,0,.15) 4px); }
+
+    /* NAV */
+    header { border-bottom:1px solid var(--accent); padding:16px 32px; display:flex; justify-content:space-between; align-items:center; background:rgba(10,10,15,.9); position:sticky; top:0; z-index:50; }
+    .logo { font-family:'Orbitron',sans-serif; font-size:24px; font-weight:900; color:var(--fg); text-decoration:none; letter-spacing:2px; text-transform:uppercase; text-shadow:0 0 10px rgba(0,255,136,.5); }
+    .logo span { color:var(--accent); }
+    nav ul { list-style:none; display:flex; gap:32px; }
+    nav a { font-family:'Share Tech Mono',monospace; font-size:14px; text-transform:uppercase; color:var(--muted-fg); text-decoration:none; transition:color .2s; }
+    nav a:hover { color:var(--accent); text-shadow:0 0 5px var(--accent); }
+    .btn-cyber { background:transparent; border:1px solid var(--accent); color:var(--accent); font-family:'Share Tech Mono',monospace; font-size:14px; text-transform:uppercase; padding:8px 24px; text-decoration:none; box-shadow:0 0 10px rgba(0,255,136,.2); transition:all .2s; position:relative; overflow:hidden; }
+    .btn-cyber::before { content:''; position:absolute; top:0; left:-100%; width:100%; height:100%; background:linear-gradient(90deg,transparent,rgba(0,255,136,.4),transparent); transition:left .4s; }
+    .btn-cyber:hover::before { left:100%; }
+    .btn-cyber:hover { background:rgba(0,255,136,.1); box-shadow:0 0 15px rgba(0,255,136,.5); }
+
+    /* HERO */
+    .hero { padding:80px 32px; border-bottom:1px solid var(--muted); position:relative; }
+    .glitch-text { font-family:'Orbitron',sans-serif; font-size:clamp(3rem,6vw,5rem); font-weight:900; text-transform:uppercase; color:var(--fg); margin-bottom:24px; line-height:1; position:relative; }
+    .glitch-text::before, .glitch-text::after { content:attr(data-text); position:absolute; top:0; left:0; width:100%; height:100%; background:var(--bg); }
+    .glitch-text::before { left:2px; text-shadow:-1px 0 var(--error); clip:rect(24px,550px,90px,0); animation:glitch-anim-2 3s infinite linear alternate-reverse; }
+    .glitch-text::after { left:-2px; text-shadow:-1px 0 var(--accent); clip:rect(85px,550px,140px,0); animation:glitch-anim 2.5s infinite linear alternate-reverse; }
+    @keyframes glitch-anim { 0%{clip:rect(22px,9999px,11px,0)} 20%{clip:rect(64px,9999px,97px,0)} 40%{clip:rect(14px,9999px,55px,0)} 60%{clip:rect(95px,9999px,23px,0)} 80%{clip:rect(45px,9999px,67px,0)} 100%{clip:rect(76px,9999px,82px,0)} }
+    @keyframes glitch-anim-2 { 0%{clip:rect(85px,9999px,12px,0)} 20%{clip:rect(24px,9999px,67px,0)} 40%{clip:rect(75px,9999px,43px,0)} 60%{clip:rect(13px,9999px,95px,0)} 80%{clip:rect(55px,9999px,27px,0)} 100%{clip:rect(96px,9999px,34px,0)} }
+
+    .hero-sub { color:var(--muted-fg); font-size:16px; max-width:600px; margin-bottom:40px; }
+    .hero-ctas { display:flex; gap:20px; }
+    .btn-solid { background:var(--accent); color:#000; font-family:'Share Tech Mono',monospace; font-weight:700; font-size:16px; text-transform:uppercase; padding:12px 32px; text-decoration:none; box-shadow:0 0 15px rgba(0,255,136,.4); transition:all .2s; }
+    .btn-solid:hover { background:#fff; box-shadow:0 0 25px rgba(255,255,255,.6); }
+
+    /* GRID */
+    .system-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:24px; padding:64px 0; }
+    .card { background:var(--card); border:1px solid var(--muted); padding:32px; position:relative; transition:border-color .3s, box-shadow .3s; }
+    .card::before { content:''; position:absolute; top:-1px; left:-1px; width:10px; height:10px; border-top:2px solid var(--accent); border-left:2px solid var(--accent); opacity:0; transition:opacity .3s; }
+    .card:hover { border-color:var(--accent); box-shadow:0 0 20px rgba(0,255,136,.1); }
+    .card:hover::before { opacity:1; }
+    .card-title { font-family:'Orbitron',sans-serif; font-size:20px; color:var(--fg); margin-bottom:16px; text-transform:uppercase; }
+    .card-text { color:var(--muted-fg); font-size:14px; line-height:1.6; }
+
+    footer { border-top:1px solid var(--muted); padding:24px 32px; display:flex; justify-content:space-between; }
+    footer span { font-family:'Share Tech Mono',monospace; color:var(--muted-fg); font-size:12px; text-transform:uppercase; }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="#" class="logo">SYS<span>.</span>OP</a>
+    <nav><ul>
+      <li><a href="#">// Databanks</a></li>
+      <li><a href="#">// Network</a></li>
+      <li><a href="#">// Protocols</a></li>
+    </ul></nav>
+    <a href="#" class="btn-cyber">INITIALIZE</a>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <h1 class="glitch-text" data-text="HIGH TECH. LOW LIFE.">HIGH TECH. LOW LIFE.</h1>
+      <p class="hero-sub">Enter the neon-drenched dystopia. Orbitron typography, electric green accents, and CRT scanlines over a void of absolute black.</p>
+      <div class="hero-ctas">
+        <a href="#" class="btn-solid">OVERRIDE_SYSTEM</a>
+        <a href="#" class="btn-cyber">VIEW_SOURCE</a>
+      </div>
+    </section>
+
+    <div class="system-grid">
+      <div class="card">
+        <h3 class="card-title">NEON_PULSE</h3>
+        <p class="card-text">Primary accent #00ff88 cuts through the darkness. Used strictly for interactive states and critical data.</p>
+      </div>
+      <div class="card">
+        <h3 class="card-title">GLITCH_VFX</h3>
+        <p class="card-text">CSS clip-path animations simulate corrupted data streams on hero elements. Imperfection is design.</p>
+      </div>
+      <div class="card">
+        <h3 class="card-title">MONO_GRID</h3>
+        <p class="card-text">JetBrains Mono body text evokes terminal outputs. Rigid alignment. Zero border-radius anywhere.</p>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <span>scaffold // prompt_directory</span>
+    <span>STATUS: OPERATIONAL</span>
+  </footer>
+</body>
+</html>

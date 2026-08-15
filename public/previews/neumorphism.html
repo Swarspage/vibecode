@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Neumorphism (Soft UI) — Design System Preview</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&family=DM+Sans:wght@400;500;700&display=block');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:     #E0E5EC;
+      --fg:     #3D4852;
+      --muted:  #798796;
+      --accent: #4A90E2;
+      --shadow-outer: 9px 9px 16px rgba(163,177,198,0.6), -9px -9px 16px rgba(255,255,255,0.6);
+      --shadow-inner: inset 6px 6px 10px rgba(163,177,198,0.6), inset -6px -6px 10px rgba(255,255,255,0.6);
+    }
+
+    html, body { min-height:100%; background:var(--bg); color:var(--fg); font-family:'DM Sans',sans-serif; font-size:16px; line-height:1.6; }
+
+    .container { max-width:1080px; margin:0 auto; padding:0 40px; }
+
+    /* NAV */
+    header { padding:32px 40px; display:flex; justify-content:space-between; align-items:center; }
+    .logo { font-family:'Plus Jakarta Sans',sans-serif; font-size:24px; font-weight:800; color:var(--fg); text-decoration:none; letter-spacing:-.02em; }
+    nav ul { list-style:none; display:flex; gap:32px; }
+    nav a { font-size:15px; font-weight:500; color:var(--muted); text-decoration:none; transition:color .2s; }
+    nav a:hover { color:var(--accent); }
+    
+    .btn-neu { background:var(--bg); color:var(--fg); font-family:'Plus Jakarta Sans',sans-serif; font-size:14px; font-weight:700; padding:12px 32px; border-radius:30px; text-decoration:none; box-shadow:var(--shadow-outer); border:none; transition:all .2s; }
+    .btn-neu:active { box-shadow:var(--shadow-inner); color:var(--accent); }
+
+    /* HERO */
+    .hero { padding:100px 0 80px; text-align:center; }
+    .hero-icon { width:80px; height:80px; border-radius:50%; background:var(--bg); box-shadow:var(--shadow-outer); display:flex; align-items:center; justify-content:center; margin:0 auto 32px; color:var(--accent); font-size:32px; }
+    h1.hero-headline { font-family:'Plus Jakarta Sans',sans-serif; font-size:clamp(3rem,6vw,4.5rem); font-weight:800; line-height:1.1; letter-spacing:-.03em; margin-bottom:24px; color:var(--fg); }
+    .hero-sub { color:var(--muted); font-size:18px; max-width:600px; margin:0 auto 48px; }
+    
+    .btn-primary { display:inline-block; background:var(--bg); color:var(--accent); font-family:'Plus Jakarta Sans',sans-serif; font-size:16px; font-weight:700; padding:20px 48px; border-radius:40px; text-decoration:none; box-shadow:var(--shadow-outer); transition:all .2s; }
+    .btn-primary:active { box-shadow:var(--shadow-inner); transform:scale(0.98); }
+
+    /* CARDS */
+    .cards { display:grid; grid-template-columns:repeat(3,1fr); gap:40px; padding:0 32px 100px; }
+    .card { background:var(--bg); border-radius:24px; padding:40px 32px; text-align:center; box-shadow:var(--shadow-outer); }
+    .card-img { width:100%; height:120px; border-radius:16px; background:var(--bg); box-shadow:var(--shadow-inner); margin-bottom:24px; }
+    .card h3 { font-family:'Plus Jakarta Sans',sans-serif; font-size:20px; font-weight:700; margin-bottom:12px; color:var(--fg); }
+    .card p { color:var(--muted); font-size:15px; }
+
+  </style>
+</head>
+<body>
+  <header>
+    <a href="#" class="logo">scaffold</a>
+    <nav><ul>
+      <li><a href="#">Elements</a></li>
+      <li><a href="#">Typography</a></li>
+    </ul></nav>
+    <a href="#" class="btn-neu">Copy System</a>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div class="hero-icon">☁️</div>
+      <h1 class="hero-headline">Soft UI.<br>Perfected.</h1>
+      <p class="hero-sub">The illusion of physical depth through careful light and shadow. A single cool grey base where visual interest comes from shadow play, not color variety.</p>
+      <a href="#" class="btn-primary">Generate Prompt</a>
+    </section>
+
+    <div class="cards">
+      <div class="card">
+        <div class="card-img"></div>
+        <h3>Cool Clay Base</h3>
+        <p>Molded from a cool #E0E5EC grey surface that avoids looking muddy or dated.</p>
+      </div>
+      <div class="card">
+        <div class="card-img"></div>
+        <h3>Drop Shadow Play</h3>
+        <p>Light hits from the top-left (white shadow) and casts down to the bottom-right (dark shadow).</p>
+      </div>
+      <div class="card">
+        <div class="card-img"></div>
+        <h3>Inset Interactions</h3>
+        <p>Pressed states sink smoothly into the surface using CSS inset box-shadows.</p>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

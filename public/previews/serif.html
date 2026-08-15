@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Serif — Design System Preview</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Source+Sans+3:wght@400;600&display=block');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #FAFAF8;
+      --fg:      #1A1A1A;
+      --muted:   #6B6B6B;
+      --gold:    #B8860B;
+      --border:  #E8E8E0;
+    }
+
+    html, body { min-height:100%; background:var(--bg); color:var(--fg); font-family:'Source Sans 3',sans-serif; font-size:16px; line-height:1.7; -webkit-font-smoothing:antialiased; }
+
+    .container { max-width:1000px; margin:0 auto; padding:0 40px; }
+
+    /* NAV */
+    header { padding:32px 40px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); }
+    .logo { font-family:'Playfair Display',serif; font-size:24px; font-weight:600; color:var(--fg); text-decoration:none; letter-spacing:.02em; }
+    nav ul { list-style:none; display:flex; gap:40px; }
+    nav a { font-size:13px; font-weight:600; text-transform:uppercase; letter-spacing:.15em; color:var(--muted); text-decoration:none; transition:color .3s; }
+    nav a:hover { color:var(--gold); }
+    .btn-nav { border:1px solid var(--gold); color:var(--gold); font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:.15em; padding:12px 28px; text-decoration:none; transition:all .3s; }
+    .btn-nav:hover { background:var(--gold); color:#fff; }
+
+    /* HERO */
+    .hero { padding:100px 0; text-align:center; }
+    .hero-label { font-size:12px; font-weight:600; letter-spacing:.2em; text-transform:uppercase; color:var(--gold); margin-bottom:24px; }
+    h1.hero-headline { font-family:'Playfair Display',serif; font-size:clamp(3.5rem,6vw,5rem); font-weight:400; line-height:1.1; letter-spacing:-.01em; margin-bottom:32px; color:var(--fg); }
+    h1.hero-headline em { font-style:italic; }
+    .hero-body { font-size:18px; color:var(--muted); max-width:600px; margin:0 auto 48px; line-height:1.8; }
+    .btn-primary { display:inline-block; background:var(--fg); color:var(--bg); font-size:13px; font-weight:600; text-transform:uppercase; letter-spacing:.15em; padding:16px 40px; text-decoration:none; transition:background .3s; }
+    .btn-primary:hover { background:var(--gold); }
+
+    /* DIVIDER */
+    .divider { width:60px; height:2px; background:var(--gold); margin:0 auto 80px; }
+
+    /* CONTENT */
+    .content-grid { display:grid; grid-template-columns:1fr 1fr; gap:64px; margin-bottom:100px; }
+    .content-block h3 { font-family:'Playfair Display',serif; font-size:32px; font-weight:400; margin-bottom:20px; color:var(--fg); }
+    .content-block p { font-size:16px; color:var(--muted); margin-bottom:24px; text-align:justify; }
+    .content-link { color:var(--gold); font-size:13px; font-weight:600; text-transform:uppercase; letter-spacing:.1em; text-decoration:none; border-bottom:1px solid transparent; transition:border-color .3s; }
+    .content-link:hover { border-bottom-color:var(--gold); }
+
+    footer { border-top:1px solid var(--border); padding:40px; text-align:center; }
+    footer span { color:var(--muted); font-size:12px; font-weight:600; letter-spacing:.15em; text-transform:uppercase; }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="#" class="logo">Scaffold</a>
+    <nav><ul>
+      <li><a href="#">Articles</a></li>
+      <li><a href="#">Essays</a></li>
+      <li><a href="#">Archive</a></li>
+    </ul></nav>
+    <a href="#" class="btn-nav">Acquire Prompt</a>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div class="hero-label">The Serif Aesthetic</div>
+      <h1 class="hero-headline">Typographic elegance<br>through <em>classical restraint.</em></h1>
+      <p class="hero-body">Drawing heavy inspiration from luxury print editorial, this design system uses color sparingly and relies entirely on the beauty of the Playfair Display serif.</p>
+      <a href="#" class="btn-primary">Copy This System</a>
+    </section>
+
+    <div class="divider"></div>
+
+    <div class="content-grid">
+      <div class="content-block">
+        <h3>Ivory & Rich Black</h3>
+        <p>A cream-tinted white base that feels significantly warmer than pure white, paired with a deep but not harsh black for primary text. The contrast is sophisticated, not straining.</p>
+        <a href="#" class="content-link">Read the guidelines</a>
+      </div>
+      <div class="content-block">
+        <h3>Burnished Gold</h3>
+        <p>The single accent color, used exclusively for emphasis, interactive states, and thin decorative borders. Inspired by gold leaf in illuminated manuscripts.</p>
+        <a href="#" class="content-link">Explore the palette</a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <span>scaffold — prompt directory</span>
+  </footer>
+</body>
+</html>

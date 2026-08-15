@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bitcoin DeFi — Design System Preview</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=block');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #030304;
+      --surface: #0F1115;
+      --fg:      #FFFFFF;
+      --muted:   #94A3B8;
+      --border:  #1E293B;
+      --orange:  #F7931A;
+      --gold:    #FFB347;
+    }
+
+    html, body { min-height:100%; background:var(--bg); color:var(--fg); font-family:'Space Grotesk',sans-serif; font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased; }
+
+    .container { max-width:1200px; margin:0 auto; padding:0 32px; }
+
+    /* NAV */
+    header { background:rgba(3,3,4,.8); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); padding:16px 32px; position:sticky; top:0; z-index:50; display:flex; justify-content:space-between; align-items:center; }
+    .logo { font-size:22px; font-weight:700; color:var(--fg); text-decoration:none; letter-spacing:-.02em; display:flex; align-items:center; gap:8px; }
+    .logo-icon { width:24px; height:24px; background:var(--orange); border-radius:50%; display:inline-block; }
+    nav ul { list-style:none; display:flex; gap:32px; }
+    nav a { font-size:14px; font-weight:500; color:var(--muted); text-decoration:none; transition:color .2s; }
+    nav a:hover { color:var(--fg); }
+    .btn-connect { background:var(--surface); border:1px solid var(--border); color:var(--fg); font-family:inherit; font-size:14px; font-weight:600; padding:10px 24px; border-radius:8px; cursor:pointer; transition:border-color .2s; }
+    .btn-connect:hover { border-color:var(--orange); }
+
+    /* HERO */
+    .hero { padding:100px 0 80px; text-align:center; }
+    .hero-badge { display:inline-block; background:rgba(247,147,26,.1); border:1px solid rgba(247,147,26,.3); color:var(--orange); font-size:12px; font-weight:600; padding:6px 16px; border-radius:999px; margin-bottom:32px; letter-spacing:.05em; text-transform:uppercase; }
+    h1.hero-headline { font-size:clamp(3rem,6vw,5.5rem); font-weight:700; line-height:1.05; letter-spacing:-.03em; margin-bottom:24px; }
+    h1.hero-headline span { background:linear-gradient(135deg,var(--orange),var(--gold)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+    .hero-sub { color:var(--muted); font-size:18px; max-width:600px; margin:0 auto 48px; line-height:1.6; }
+    .btn-primary { display:inline-block; background:linear-gradient(135deg,var(--orange),var(--gold)); color:#000; font-size:15px; font-weight:700; padding:16px 36px; border-radius:12px; text-decoration:none; transition:transform .2s, box-shadow .2s; box-shadow:0 8px 24px rgba(247,147,26,.2); }
+    .btn-primary:hover { transform:translateY(-2px); box-shadow:0 12px 32px rgba(247,147,26,.3); }
+
+    /* DATA GRID */
+    .data-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:80px; }
+    .data-card { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:24px; }
+    .data-label { color:var(--muted); font-size:13px; margin-bottom:8px; font-weight:500; }
+    .data-value { font-size:28px; font-weight:700; color:var(--fg); letter-spacing:-.02em; }
+    .data-change { color:var(--orange); font-size:13px; font-weight:600; margin-left:8px; }
+
+    footer { border-top:1px solid var(--border); padding:32px 0; display:flex; justify-content:space-between; }
+    footer span { color:var(--muted); font-size:13px; font-weight:500; }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="#" class="logo"><span class="logo-icon"></span> Bitcoin DeFi</a>
+    <nav><ul>
+      <li><a href="#">Markets</a></li>
+      <li><a href="#">Exchange</a></li>
+      <li><a href="#">Earn</a></li>
+    </ul></nav>
+    <button class="btn-connect">Connect Wallet</button>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div class="hero-badge">L2 Network Live</div>
+      <h1 class="hero-headline">Decentralized finance on <span>true sound money.</span></h1>
+      <p class="hero-sub">The visual DNA of Bitcoin merged with modern DeFi primitives. True void backgrounds, dark matter surfaces, and digital gold accents.</p>
+      <a href="#" class="btn-primary">Copy This System</a>
+    </section>
+
+    <div class="data-grid">
+      <div class="data-card"><div class="data-label">Total Value Locked</div><div class="data-value">$1.24B <span class="data-change">+5.2%</span></div></div>
+      <div class="data-card"><div class="data-label">24h Volume</div><div class="data-value">$482M <span class="data-change">+1.8%</span></div></div>
+      <div class="data-card"><div class="data-label">Active Wallets</div><div class="data-value">142,890</div></div>
+      <div class="data-card"><div class="data-label">BTC Price</div><div class="data-value">$94,250</div></div>
+    </div>
+  </main>
+
+  <footer class="container">
+    <span>scaffold — prompt directory</span>
+    <span>Bitcoin DeFi System</span>
+  </footer>
+</body>
+</html>

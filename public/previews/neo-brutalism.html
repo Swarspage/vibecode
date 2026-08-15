@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Neo-brutalism — Design System Preview</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700;900&display=block');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:     #FFFDF5;
+      --fg:     #000000;
+      --red:    #FF3B3B;
+      --yellow: #FFE135;
+      --violet: #7B2FBE;
+      --green:  #00C853;
+      --border: 2px solid #000;
+    }
+
+    html, body { min-height:100%; background:var(--bg); color:var(--fg); font-family:'Space Grotesk',sans-serif; font-size:16px; line-height:1.5; -webkit-font-smoothing:antialiased; }
+
+    .container { max-width:1152px; margin:0 auto; padding:0 32px; }
+
+    /* NAV */
+    header { background:var(--bg); border-bottom:var(--border); padding:0 32px; }
+    .nav-inner { display:flex; align-items:center; justify-content:space-between; min-height:64px; }
+    .logo { font-size:22px; font-weight:900; color:var(--fg); text-decoration:none; letter-spacing:-.04em; text-transform:uppercase; }
+    .logo-dot { display:inline-block; width:10px; height:10px; background:var(--red); border:2px solid var(--fg); border-radius:50%; vertical-align:middle; margin-left:4px; }
+    nav ul { list-style:none; display:flex; gap:0; }
+    nav a { display:block; padding:10px 16px; font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--fg); text-decoration:none; border-left:1px solid var(--fg); }
+    nav a:last-child { border-right:1px solid var(--fg); }
+    nav a:hover { background:var(--yellow); }
+    .btn-nav { background:var(--fg); color:var(--bg); font-size:13px; font-weight:900; text-transform:uppercase; letter-spacing:.06em; padding:10px 24px; border:var(--border); text-decoration:none; box-shadow:3px 3px 0 var(--red); transition:box-shadow .1s, transform .1s; }
+    .btn-nav:hover { box-shadow:0 0 0; transform:translate(3px,3px); }
+
+    /* HERO */
+    .hero { padding:72px 32px 64px; border-bottom:var(--border); display:grid; grid-template-columns:1fr auto; gap:48px; align-items:center; }
+    h1.hero-headline {
+      font-size:clamp(3.5rem,8vw,8rem); font-weight:900; line-height:.88;
+      text-transform:uppercase; letter-spacing:-.04em; color:var(--fg);
+    }
+    h1.hero-headline .stroke {
+      -webkit-text-stroke:3px var(--fg); color:transparent;
+    }
+    h1.hero-headline .highlight { background:var(--yellow); padding:0 8px; display:inline-block; }
+    .hero-right { min-width:260px; }
+    .hero-card { background:var(--yellow); border:var(--border); padding:28px; box-shadow:5px 5px 0 var(--fg); transform:rotate(2deg); }
+    .hero-card p { font-size:15px; font-weight:700; color:var(--fg); line-height:1.5; margin-bottom:20px; }
+    .btn-primary { display:inline-block; background:var(--red); color:#fff; font-size:13px; font-weight:900; text-transform:uppercase; letter-spacing:.06em; padding:12px 28px; border:var(--border); box-shadow:4px 4px 0 var(--fg); text-decoration:none; transition:box-shadow .1s, transform .1s; }
+    .btn-primary:hover { box-shadow:0 0 0; transform:translate(4px,4px); }
+
+    /* MARQUEE STRIP */
+    .strip { background:var(--red); border-top:var(--border); border-bottom:var(--border); padding:12px 0; overflow:hidden; }
+    .strip-track { display:flex; gap:48px; white-space:nowrap; animation:marquee 10s linear infinite; }
+    .strip-item { font-size:14px; font-weight:900; text-transform:uppercase; letter-spacing:.08em; color:#fff; flex-shrink:0; }
+    @keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+    /* CARDS GRID */
+    .cards-section { margin:64px 0; }
+    h2.sect-h { font-size:clamp(2rem,4vw,3.5rem); font-weight:900; text-transform:uppercase; letter-spacing:-.03em; color:var(--fg); margin-bottom:40px; line-height:.9; }
+    .cards-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+    .card-nb { background:#fff; border:var(--border); padding:28px; box-shadow:5px 5px 0 var(--fg); transition:box-shadow .1s, transform .1s; cursor:pointer; }
+    .card-nb:hover { box-shadow:0 0 0; transform:translate(5px,5px); }
+    .card-nb:nth-child(1) .card-accent { background:var(--red); }
+    .card-nb:nth-child(2) .card-accent { background:var(--violet); }
+    .card-nb:nth-child(3) .card-accent { background:var(--green); }
+    .card-accent { height:6px; margin-bottom:20px; }
+    .card-nb h3 { font-size:18px; font-weight:900; text-transform:uppercase; letter-spacing:-.02em; color:var(--fg); margin-bottom:10px; }
+    .card-nb p { font-size:14px; color:#333; line-height:1.6; }
+
+    /* CTA */
+    .cta { background:var(--violet); border:var(--border); padding:64px; box-shadow:8px 8px 0 var(--fg); margin:0 0 64px; }
+    .cta h2 { font-size:clamp(2.5rem,5vw,4rem); font-weight:900; text-transform:uppercase; letter-spacing:-.04em; color:#fff; line-height:.9; margin-bottom:16px; }
+    .cta p { color:rgba(255,255,255,.8); font-size:15px; margin-bottom:32px; font-weight:500; max-width:440px; }
+    .btn-cta { display:inline-block; background:var(--yellow); color:var(--fg); font-size:13px; font-weight:900; text-transform:uppercase; letter-spacing:.06em; padding:16px 40px; border:2px solid #fff; box-shadow:4px 4px 0 #fff; text-decoration:none; transition:box-shadow .1s, transform .1s; }
+    .btn-cta:hover { box-shadow:0 0 0; transform:translate(4px,4px); }
+
+    footer { border-top:var(--border); padding:24px 0; display:flex; justify-content:space-between; }
+    footer span { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--fg); }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="nav-inner">
+    <a href="#" class="logo">scaffold<span class="logo-dot"></span></a>
+    <nav><ul>
+      <li><a href="#">Design</a></li>
+      <li><a href="#">Workflow</a></li>
+    </ul></nav>
+    <a href="#" class="btn-nav">Copy Prompt</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div>
+    <h1 class="hero-headline">
+      <span class="stroke">Neo</span><br>
+      <span class="highlight">Brutal</span><br>
+      Design
+    </h1>
+  </div>
+  <div class="hero-right">
+    <div class="hero-card">
+      <p>Cream canvas. Highlighter colors. Hard shadows. No compromises. Digital punk rebellion against Corporate Memphis.</p>
+      <a href="#" class="btn-primary">Copy System →</a>
+    </div>
+  </div>
+</section>
+
+<div class="strip" aria-hidden="true">
+  <div class="strip-track">
+    <span class="strip-item">Neo-brutalism ✦</span>
+    <span class="strip-item">Hard Shadows ✦</span>
+    <span class="strip-item">0px Fakes ✦</span>
+    <span class="strip-item">Bold Borders ✦</span>
+    <span class="strip-item">Cream Canvas ✦</span>
+    <span class="strip-item">Neo-brutalism ✦</span>
+    <span class="strip-item">Hard Shadows ✦</span>
+    <span class="strip-item">0px Fakes ✦</span>
+    <span class="strip-item">Bold Borders ✦</span>
+    <span class="strip-item">Cream Canvas ✦</span>
+  </div>
+</div>
+
+<div class="container">
+  <div class="cards-section">
+    <h2 class="sect-h">Raw.<br>Unfiltered.<br>Real.</h2>
+    <div class="cards-grid">
+      <div class="card-nb"><div class="card-accent"></div><h3>Hard Shadows</h3><p>offset box-shadows using solid black. No blur, no spread. Elements cast real weight onto the page.</p></div>
+      <div class="card-nb"><div class="card-accent"></div><h3>Highlighter Colors</h3><p>Intense bursts of red, yellow, and violet on cream. Strategic, never scattered. Always with 2px black borders.</p></div>
+      <div class="card-nb"><div class="card-accent"></div><h3>Hover = Collapse</h3><p>Shadow collapses to zero as element translates to offset position. Tactile, physical, honest feedback.</p></div>
+    </div>
+  </div>
+
+  <div class="cta">
+    <h2>Copy it.<br>Ship it.<br>Mean it.</h2>
+    <p>One prompt. Complete Neo-brutalism implementation. Every hard shadow, every colored border, every rotated sticker card.</p>
+    <a href="#" class="btn-cta">[ Copy This Prompt ]</a>
+  </div>
+</div>
+
+<footer class="container">
+  <span>scaffold — prompt directory</span>
+  <span>Neo-brutalism System</span>
+</footer>
+
+</body>
+</html>

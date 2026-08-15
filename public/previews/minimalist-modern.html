@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Minimalist Modern — Design System Preview</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Calistoga&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=block');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #FAFAFA;
+      --fg:        #0F172A;
+      --muted:     #F1F5F9;
+      --accent:    #0052FF;
+      --accent2:   #4D7CFF;
+      --muted-fg:  #64748B;
+      --border:    #E2E8F0;
+      --card:      #FFFFFF;
+    }
+
+    html, body {
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container { max-width: 1152px; margin: 0 auto; padding: 0 32px; }
+
+    /* NAV */
+    header {
+      position: sticky; top: 0; z-index: 40;
+      background: rgba(250,250,250,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 0;
+    }
+    .logo {
+      font-family: 'Calistoga', Georgia, serif;
+      font-size: 22px;
+      color: var(--fg);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+    .logo span { background: linear-gradient(to right,#0052FF,#4D7CFF); -webkit-background-clip:text; background-clip:text; color:transparent; }
+    nav ul { list-style:none; display:flex; gap:32px; }
+    nav a { font-size:14px; font-weight:500; color:var(--muted-fg); text-decoration:none; transition:color .2s; }
+    nav a:hover { color:var(--accent); }
+    .nav-cta {
+      display:inline-flex; align-items:center;
+      background: linear-gradient(to right,#0052FF,#4D7CFF);
+      color: #fff; font-size:13px; font-weight:600;
+      padding: 8px 20px; border-radius:12px; text-decoration:none;
+      box-shadow: 0 2px 8px rgba(0,82,255,.25);
+      transition: all .2s;
+    }
+    .nav-cta:hover { transform:translateY(-1px); box-shadow:0 4px 16px rgba(0,82,255,.35); }
+
+    /* HERO */
+    .hero { padding: 96px 0 80px; }
+    .hero-badge {
+      display:inline-flex; align-items:center; gap:10px;
+      border: 1px solid rgba(0,82,255,.3);
+      background: rgba(0,82,255,.05);
+      border-radius:999px; padding:6px 18px;
+      font-family:'JetBrains Mono',monospace; font-size:11px;
+      letter-spacing:.15em; text-transform:uppercase; color:var(--accent);
+      margin-bottom:32px;
+    }
+    .hero-badge .dot {
+      width:7px; height:7px; border-radius:50%;
+      background:var(--accent);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.7;transform:scale(1.3)} }
+    h1.hero-headline {
+      font-family:'Calistoga', Georgia, serif;
+      font-size: clamp(3rem,6vw,5.25rem);
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      color: var(--fg);
+      max-width: 720px;
+      margin-bottom: 28px;
+    }
+    h1.hero-headline .grad {
+      background: linear-gradient(to right,#0052FF,#4D7CFF);
+      -webkit-background-clip:text; background-clip:text; color:transparent;
+    }
+    .hero-sub {
+      font-size:18px; color:var(--muted-fg); max-width:540px;
+      line-height:1.7; margin-bottom:40px;
+    }
+    .hero-ctas { display:flex; gap:16px; flex-wrap:wrap; }
+    .btn-primary {
+      display:inline-flex; align-items:center; gap:8px;
+      background: linear-gradient(to right,#0052FF,#4D7CFF);
+      color:#fff; font-size:14px; font-weight:600;
+      padding:14px 28px; border-radius:12px; text-decoration:none;
+      box-shadow:0 4px 14px rgba(0,82,255,.25);
+      transition:all .2s;
+    }
+    .btn-primary:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(0,82,255,.35); }
+    .btn-outline {
+      display:inline-flex; align-items:center; gap:8px;
+      background:transparent; color:var(--fg);
+      border:1px solid var(--border); font-size:14px; font-weight:500;
+      padding:14px 28px; border-radius:12px; text-decoration:none;
+      transition:all .2s;
+    }
+    .btn-outline:hover { border-color:rgba(0,82,255,.3); box-shadow:0 2px 8px rgba(0,0,0,.06); }
+
+    /* STATS */
+    .stats-row {
+      display:grid; grid-template-columns:repeat(4,1fr);
+      gap:1px; background:var(--border);
+      border:1px solid var(--border); border-radius:16px; overflow:hidden;
+      margin:80px 0;
+    }
+    .stat { background:var(--card); padding:28px 32px; }
+    .stat-num {
+      font-family:'Calistoga',serif; font-size:40px;
+      background:linear-gradient(to right,#0052FF,#4D7CFF);
+      -webkit-background-clip:text; background-clip:text; color:transparent;
+      letter-spacing:-0.02em; line-height:1;
+      margin-bottom:6px;
+    }
+    .stat-label { font-size:13px; color:var(--muted-fg); }
+
+    /* FEATURES */
+    .section-label {
+      display:inline-flex; align-items:center; gap:8px;
+      font-family:'JetBrains Mono',monospace; font-size:11px;
+      letter-spacing:.15em; text-transform:uppercase; color:var(--accent);
+      margin-bottom:16px;
+    }
+    .section-label .dot { width:6px;height:6px;border-radius:50%;background:var(--accent); }
+    h2.section-heading {
+      font-family:'Calistoga',serif; font-size:clamp(2rem,4vw,3.25rem);
+      line-height:1.15; letter-spacing:-0.02em; color:var(--fg);
+      max-width:560px; margin-bottom:56px;
+    }
+    .features-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:24px; margin-bottom:96px; }
+    .feat-card {
+      background:var(--card); border:1px solid var(--border);
+      border-radius:16px; padding:28px; cursor:pointer;
+      transition:all .25s; box-shadow:0 2px 8px rgba(0,0,0,.04);
+    }
+    .feat-card:hover { transform:translateY(-4px); box-shadow:0 12px 32px rgba(0,0,0,.1); }
+    .feat-icon {
+      width:48px; height:48px; border-radius:12px;
+      background:linear-gradient(135deg,#0052FF,#4D7CFF);
+      display:flex; align-items:center; justify-content:center;
+      font-size:22px; margin-bottom:20px;
+    }
+    .feat-card h3 { font-size:17px; font-weight:600; color:var(--fg); margin-bottom:10px; letter-spacing:-.01em; }
+    .feat-card p { font-size:14px; color:var(--muted-fg); line-height:1.6; }
+
+    /* INVERTED CTA */
+    .cta-section {
+      background:var(--fg); border-radius:20px;
+      padding:72px 64px; margin-bottom:96px;
+      position:relative; overflow:hidden;
+    }
+    .cta-section::before {
+      content:'';position:absolute;inset:0;
+      background-image:radial-gradient(circle,rgba(255,255,255,.03) 1px,transparent 1px);
+      background-size:32px 32px;
+      pointer-events:none;
+    }
+    .cta-section h2 {
+      font-family:'Calistoga',serif; font-size:clamp(2rem,3.5vw,2.75rem);
+      color:#fff; max-width:500px; margin-bottom:16px; line-height:1.15;
+    }
+    .cta-section p { color:rgba(255,255,255,.65); font-size:16px; margin-bottom:36px; max-width:440px; line-height:1.7; }
+    .cta-section .btn-white {
+      display:inline-flex; align-items:center; gap:8px;
+      background:#fff; color:var(--accent); font-size:14px; font-weight:600;
+      padding:14px 28px; border-radius:12px; text-decoration:none;
+      transition:all .2s;
+    }
+    .cta-section .btn-white:hover { box-shadow:0 8px 24px rgba(255,255,255,.2); }
+
+    /* FOOTER */
+    footer {
+      border-top:1px solid var(--border); padding:32px 0;
+      display:flex; align-items:center; justify-content:space-between;
+    }
+    footer span { font-size:13px; color:var(--muted-fg); font-family:'JetBrains Mono',monospace; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <div class="nav-inner">
+      <a href="#" class="logo">scaffold<span>.</span></a>
+      <nav><ul>
+        <li><a href="#">Design</a></li>
+        <li><a href="#">Workflow</a></li>
+        <li><a href="#">Docs</a></li>
+      </ul></nav>
+      <a href="#" class="nav-cta">Get Started →</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="container">
+      <div class="hero-badge"><span class="dot"></span> Minimalist Modern</div>
+      <h1 class="hero-headline">Design systems built for <span class="grad">velocity.</span></h1>
+      <p class="hero-sub">A curated collection of premium design prompts — pick a visual identity, copy the prompt, and ship production-grade UI with your AI IDE.</p>
+      <div class="hero-ctas">
+        <a href="#" class="btn-primary">Copy This System →</a>
+        <a href="#" class="btn-outline">View All Prompts</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="container">
+    <div class="stats-row">
+      <div class="stat"><div class="stat-num">8+</div><div class="stat-label">Design Systems</div></div>
+      <div class="stat"><div class="stat-num">100%</div><div class="stat-label">AI-Ready Prompts</div></div>
+      <div class="stat"><div class="stat-num">4k</div><div class="stat-label">Tokens Defined</div></div>
+      <div class="stat"><div class="stat-num">1×</div><div class="stat-label">Copy to Ship</div></div>
+    </div>
+
+    <div class="section-label"><span class="dot"></span> Features</div>
+    <h2 class="section-heading">Everything your AI IDE needs to build with confidence.</h2>
+    <div class="features-grid">
+      <div class="feat-card"><div class="feat-icon">🎨</div><h3>Design Tokens</h3><p>Colors, typography, spacing, and radii — all defined with precision and intent.</p></div>
+      <div class="feat-card"><div class="feat-icon">⚡</div><h3>Motion System</h3><p>Micro-animations, entrance sequences, and hover states that feel alive.</p></div>
+      <div class="feat-card"><div class="feat-icon">🧱</div><h3>Component Patterns</h3><p>Buttons, cards, inputs, and modals with consistent interaction states.</p></div>
+    </div>
+
+    <div class="cta-section">
+      <h2>Ready to ship your next design system?</h2>
+      <p>Copy the prompt. Paste it into your AI IDE. Watch a production-ready UI materialise in minutes.</p>
+      <a href="#" class="btn-white">Copy Prompt →</a>
+    </div>
+  </div>
+</main>
+
+<footer class="container">
+  <span>scaffold — prompt directory</span>
+  <span>Minimalist Modern System</span>
+</footer>
+
+</body>
+</html>

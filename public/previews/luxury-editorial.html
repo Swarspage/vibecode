@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Luxury Editorial — Design System Preview</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500&display=block');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #F9F8F6;
+      --fg:       #1A1A1A;
+      --muted-bg: #EBE5DE;
+      --muted-fg: #6C6863;
+      --gold:     #D4AF37;
+      --border:   rgba(26,26,26,0.12);
+    }
+
+    html, body {
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 16px;
+      line-height: 1.625;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Paper noise overlay */
+    body::after {
+      content: '';
+      position: fixed; inset: 0; pointer-events: none; z-index: 99;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      opacity: .018;
+    }
+
+    /* Vertical grid lines */
+    .gridlines { position:fixed; inset:0; pointer-events:none; z-index:10; display:flex; justify-content:space-between; padding:0 8%; }
+    .gridline { width:1px; background:var(--fg); opacity:.06; height:100%; }
+
+    .container { max-width:1600px; margin:0 auto; padding:0 8%; }
+
+    /* NAV */
+    header { border-bottom:1px solid var(--border); padding:24px 0; }
+    .nav-inner { display:flex; align-items:center; justify-content:space-between; }
+    .logo {
+      font-family:'Playfair Display', Georgia, serif;
+      font-size:18px; font-weight:400; letter-spacing:.05em;
+      color:var(--fg); text-decoration:none; text-transform:uppercase;
+    }
+    nav ul { list-style:none; display:flex; gap:40px; }
+    nav a {
+      font-size:11px; font-weight:500; letter-spacing:.2em; text-transform:uppercase;
+      color:var(--muted-fg); text-decoration:none; transition:color .5s;
+    }
+    nav a:hover { color:var(--gold); }
+    .nav-cta {
+      font-size:11px; font-weight:500; letter-spacing:.2em; text-transform:uppercase;
+      color:var(--fg); background:var(--fg); color:#fff;
+      padding:10px 24px; text-decoration:none;
+      position:relative; overflow:hidden;
+    }
+    .nav-cta span.fill {
+      position:absolute; inset:0; background:var(--gold);
+      transform:translateX(-100%);
+      transition:transform .5s cubic-bezier(.25,.46,.45,.94);
+    }
+    .nav-cta span.txt { position:relative; z-index:1; }
+    .nav-cta:hover span.fill { transform:translateX(0); }
+
+    /* HERO */
+    .hero { padding: 96px 0 80px; }
+    .hero-overline {
+      display:flex; align-items:center; gap:16px;
+      font-size:11px; letter-spacing:.25em; text-transform:uppercase;
+      color:var(--muted-fg); margin-bottom:48px;
+    }
+    .hero-overline .line { width:40px; height:1px; background:var(--muted-fg); }
+    h1.hero-headline {
+      font-family:'Playfair Display', Georgia, serif;
+      font-size: clamp(3.5rem, 8vw, 7.5rem);
+      font-weight:400; line-height:.9;
+      letter-spacing:-.02em; color:var(--fg);
+      max-width:900px; margin-bottom:48px;
+    }
+    h1.hero-headline em { font-style:italic; color:var(--gold); }
+    .hero-body {
+      font-size:17px; color:var(--muted-fg); max-width:440px;
+      line-height:1.75; margin-bottom:48px;
+    }
+    .hero-ctas { display:flex; gap:24px; align-items:center; }
+    .btn-primary-lux {
+      background:var(--fg); color:#fff;
+      font-size:11px; font-weight:500; letter-spacing:.2em; text-transform:uppercase;
+      padding:16px 40px; text-decoration:none;
+      position:relative; overflow:hidden;
+      box-shadow:0 4px 16px rgba(0,0,0,.15);
+      transition:box-shadow .5s;
+    }
+    .btn-primary-lux span.fill {
+      position:absolute; inset:0; background:var(--gold);
+      transform:translateX(-100%);
+      transition:transform .5s cubic-bezier(.25,.46,.45,.94);
+    }
+    .btn-primary-lux span.txt { position:relative; z-index:1; }
+    .btn-primary-lux:hover span.fill { transform:translateX(0); }
+    .btn-primary-lux:hover { box-shadow:0 8px 24px rgba(0,0,0,.25); }
+    .btn-link-lux {
+      font-size:11px; font-weight:500; letter-spacing:.2em; text-transform:uppercase;
+      color:var(--muted-fg); text-decoration:none; transition:color .5s;
+    }
+    .btn-link-lux:hover { color:var(--gold); }
+
+    /* DIVIDER */
+    .rule { border:none; border-top:1px solid var(--border); margin:72px 0; }
+    .rule-thick { border:none; border-top:4px solid var(--fg); margin:72px 0; }
+
+    /* FEATURES GRID */
+    .features-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:0; border-top:1px solid var(--fg); }
+    .feat-item { padding:48px 32px; border-right:1px solid var(--border); }
+    .feat-item:last-child { border-right:none; }
+    .feat-num {
+      font-size:11px; letter-spacing:.25em; text-transform:uppercase;
+      color:var(--muted-fg); margin-bottom:24px; display:block;
+    }
+    .feat-item h3 {
+      font-family:'Playfair Display', Georgia, serif;
+      font-size:24px; font-weight:400; line-height:1.2;
+      color:var(--fg); margin-bottom:16px;
+    }
+    .feat-item p { font-size:15px; color:var(--muted-fg); line-height:1.7; }
+    .feat-item { transition:background .5s; }
+    .feat-item:hover { background:rgba(26,26,26,.02); }
+    .feat-item:hover h3 { color:var(--gold); transition:color .5s; }
+
+    /* INVERTED CTA */
+    .cta-inverted {
+      background:var(--fg); padding:96px 8%;
+      margin-top:72px; position:relative; overflow:hidden;
+    }
+    .cta-inverted::before {
+      content:''; position:absolute; inset:0;
+      background-image:repeating-linear-gradient(90deg,transparent,transparent 1px,#fff 1px,#fff 2px);
+      background-size:4px 100%; opacity:.025; pointer-events:none;
+    }
+    .cta-inverted h2 {
+      font-family:'Playfair Display', Georgia, serif;
+      font-size:clamp(2.5rem,5vw,4rem); font-weight:400;
+      color:var(--bg); line-height:.95; margin-bottom:32px;
+      max-width:640px;
+    }
+    .cta-inverted h2 em { font-style:italic; color:var(--gold); }
+    .cta-inverted p { font-size:15px; color:rgba(249,248,246,.6); margin-bottom:48px; max-width:400px; line-height:1.75; }
+    .btn-inverted {
+      display:inline-block; background:var(--bg); color:var(--fg);
+      font-size:11px; font-weight:500; letter-spacing:.2em; text-transform:uppercase;
+      padding:16px 40px; text-decoration:none; transition:background .5s, color .5s;
+    }
+    .btn-inverted:hover { background:var(--gold); color:#fff; }
+
+    /* FOOTER */
+    footer { border-top:1px solid var(--border); padding:32px 0; }
+    .footer-inner { display:flex; align-items:center; justify-content:space-between; }
+    footer span { font-size:11px; letter-spacing:.15em; text-transform:uppercase; color:var(--muted-fg); }
+  </style>
+</head>
+<body>
+
+<div class="gridlines" aria-hidden="true">
+  <div class="gridline"></div>
+  <div class="gridline"></div>
+  <div class="gridline"></div>
+  <div class="gridline"></div>
+</div>
+
+<header>
+  <div class="container">
+    <div class="nav-inner">
+      <a href="#" class="logo">Scaffold</a>
+      <nav><ul>
+        <li><a href="#">Collection</a></li>
+        <li><a href="#">Editorial</a></li>
+        <li><a href="#">Archive</a></li>
+      </ul></nav>
+      <a href="#" class="nav-cta"><span class="fill"></span><span class="txt">Acquire Prompt</span></a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="container">
+      <div class="hero-overline"><span class="line"></span> Luxury Editorial System</div>
+      <h1 class="hero-headline">Curated <em>Excellence</em><br>in every detail.</h1>
+      <p class="hero-body">A design system that emulates the restraint and precision of high-end editorial publishing. Every element considered. Nothing superfluous.</p>
+      <div class="hero-ctas">
+        <a href="#" class="btn-primary-lux"><span class="fill"></span><span class="txt">Copy This System</span></a>
+        <a href="#" class="btn-link-lux">View the Archive →</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="container">
+    <hr class="rule-thick">
+    <div class="features-grid">
+      <div class="feat-item"><span class="feat-num">01 — Typography</span><h3>Playfair Display<br>as the Hero</h3><p>High-contrast serif headlines that command silence in the room — not by volume, but by authority.</p></div>
+      <div class="feat-item"><span class="feat-num">02 — Color</span><h3>Warm Monochrome<br>with Gold</h3><p>Alabaster and charcoal. Gold used once, exactly where it matters. The restraint is the statement.</p></div>
+      <div class="feat-item"><span class="feat-num">03 — Motion</span><h3>Cinematic Timing,<br>Deliberate Pace</h3><p>1500ms image transitions. Gold slides in from left on buttons. Nothing snaps. Everything glides.</p></div>
+    </div>
+    <hr class="rule">
+  </div>
+
+  <div class="cta-inverted">
+    <h2>The <em>Details</em><br>define the work.</h2>
+    <p>Copy the prompt and let your AI IDE generate a complete Luxury Editorial implementation — tokens, components, and motion — in minutes.</p>
+    <a href="#" class="btn-inverted">Copy Prompt</a>
+  </div>
+</main>
+
+<footer>
+  <div class="container footer-inner">
+    <span>scaffold — prompt directory</span>
+    <span>Luxury / Editorial System</span>
+  </div>
+</footer>
+
+</body>
+</html>
