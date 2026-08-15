@@ -9,6 +9,8 @@ const DesignPromptDetailPage = () => {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [previewLoaded, setPreviewLoaded] = useState(false);
 
+  const prompt = designPrompts.find((p) => p.slug === slug);
+
   useEffect(() => {
     setPreviewLoaded(false);
   }, [prompt?.previewUrl]);
@@ -28,7 +30,7 @@ const DesignPromptDetailPage = () => {
     }
   }, [isPreviewOpen]);
 
-  const prompt = designPrompts.find((p) => p.slug === slug);
+
 
   if (!prompt) {
     return (
