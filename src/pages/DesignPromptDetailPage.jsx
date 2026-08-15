@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { designPrompts } from "../data/designPrompts";
 
@@ -6,6 +6,22 @@ const DesignPromptDetailPage = () => {
   const { slug } = useParams();
   const [copied, setCopied] = useState(false);
   const [copyError, setCopyError] = useState(false);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+
+  useEffect(() => {
+    if (isPreviewOpen) {
+      const originalOverflow = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      const handleKeyDown = (e) => {
+        if (e.key === "Escape") setIsPreviewOpen(false);
+      };
+      document.addEventListener("keydown", handleKeyDown);
+      return () => {
+        document.body.style.overflow = originalOverflow;
+        document.removeEventListener("keydown", handleKeyDown);
+      };
+    }
+  }, [isPreviewOpen]);
 
   const prompt = designPrompts.find((p) => p.slug === slug);
 
@@ -123,8 +139,10 @@ const DesignPromptDetailPage = () => {
           >
             Live Preview
           </h2>
-          <div
+          <button
+            onClick={() => setIsPreviewOpen(true)}
             style={{
+              display: "block",
               position: "relative",
               width: "100%",
               /* 16:9 aspect ratio */
@@ -133,22 +151,48 @@ const DesignPromptDetailPage = () => {
               border: "1px solid var(--color-border)",
               borderRadius: "var(--radius-sm)",
               backgroundColor: "var(--color-surface)",
+              cursor: "pointer",
+              padding: 0,
             }}
+            aria-label="Expand preview"
           >
             <iframe
               src={prompt.previewUrl}
               loading="lazy"
+              tabIndex={-1}
               title={`${prompt.name} live preview`}
               style={{
                 position: "absolute",
                 top: 0,
                 left: 0,
-                width: "100%",
-                height: "100%",
+                width: "400%",
+                height: "400%",
                 border: "none",
+                transform: "scale(0.25)",
+                transformOrigin: "top left",
+                pointerEvents: "none",
               }}
             />
-          </div>
+            <div
+              style={{
+                position: "absolute",
+                bottom: "16px",
+                right: "16px",
+                backgroundColor: "var(--color-bg)",
+                border: "1px solid var(--color-border)",
+                borderRadius: "var(--radius-sm)",
+                padding: "8px 12px",
+                fontFamily: "var(--font-mono)",
+                fontSize: "10px",
+                color: "var(--color-fg)",
+                textTransform: "uppercase",
+                letterSpacing: "0.06em",
+                boxShadow: "var(--shadow-card)",
+              }}
+            >
+              Tap to expand
+            </div>
+          </button>
         </div>
       )}
 
@@ -331,6 +375,87 @@ const DesignPromptDetailPage = () => {
           {prompt.prompt}
         </pre>
       </div>
+
+      {/* Expanded Preview Modal */}
+      {isPreviewOpen && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 100,
+            backgroundColor: "var(--color-bg)",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          {/* Header */}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              padding: "16px 24px",
+              borderBottom: "1px solid var(--color-border)",
+              flexShrink: 0,
+            }}
+          >
+            <span
+              style={{
+                fontFamily: "var(--font-sans)",
+                fontWeight: 600,
+                fontSize: "14px",
+                color: "var(--color-fg)",
+              }}
+            >
+              {prompt.name} Preview
+            </span>
+            <button
+              onClick={() => setIsPreviewOpen(false)}
+              autoFocus
+              style={{
+                width: "44px",
+                height: "44px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                backgroundColor: "transparent",
+                border: "1px solid var(--color-border)",
+                borderRadius: "var(--radius-sm)",
+                color: "var(--color-fg)",
+                cursor: "pointer",
+              }}
+              aria-label="Close preview"
+            >
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1 1L13 13M1 13L13 1" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+          </div>
+
+          {/* Scrollable Container */}
+          <div
+            style={{
+              flex: 1,
+              overflow: "auto",
+              WebkitOverflowScrolling: "touch",
+              touchAction: "auto",
+            }}
+          >
+            <iframe
+              src={prompt.previewUrl}
+              title={`${prompt.name} full preview`}
+              style={{
+                width: "100%",
+                height: "100%",
+                border: "none",
+                display: "block",
+              }}
+            />
+          </div>
+        </div>
+      )}
     </section>
   );
 };
