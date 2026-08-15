@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Daily Scaffold — Newsprint Edition</title>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400&family=Lora:ital,wght@0,400;0,600;1,400&display=block');
+
+    /* ─── Reset ─── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ─── Tokens ─── */
+    :root {
+      --bg:       #F9F9F7;
+      --fg:       #111111;
+      --muted:    #E5E5E0;
+      --accent:   #CC0000;
+      --border:   #111111;
+      --neutral-500: #737373;
+      --neutral-600: #525252;
+    }
+
+    /* ─── Base ─── */
+    html, body {
+      height: 100%;
+      background-color: var(--bg);
+      color: var(--fg);
+      font-family: 'Lora', Georgia, serif;
+      font-size: 16px;
+      line-height: 1.625;
+      -webkit-font-smoothing: antialiased;
+
+      /* Dot-grid texture from spec */
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4' viewBox='0 0 4 4'%3E%3Cpath fill='%23111111' fill-opacity='0.04' d='M1 3h1v1H1V3zm2-2h1v1H3V1z'%3E%3C/path%3E%3C/svg%3E");
+    }
+
+    /* ─── Utilities ─── */
+    .sharp       { border-radius: 0 !important; }
+    .font-serif  { font-family: 'Playfair Display', 'Times New Roman', serif; }
+    .font-body   { font-family: 'Lora', Georgia, serif; }
+    .font-sans   { font-family: 'Inter', 'Helvetica Neue', sans-serif; }
+    .font-mono   { font-family: 'JetBrains Mono', 'Courier New', monospace; }
+
+    .label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--neutral-500);
+    }
+
+    .hard-shadow-hover {
+      transition: box-shadow 0.2s ease-out, transform 0.2s ease-out;
+    }
+    .hard-shadow-hover:hover {
+      box-shadow: 4px 4px 0px 0px #111111;
+      transform: translate(-2px, -2px);
+    }
+
+    /* ─── Container ─── */
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ─── Header / Nav ─── */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background-color: var(--bg);
+      border-bottom: 4px solid var(--border);
+    }
+
+    .header-meta {
+      border-bottom: 1px solid var(--border);
+      padding: 6px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .header-meta span {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--neutral-500);
+    }
+
+    .header-meta .breaking {
+      background: var(--accent);
+      color: #fff;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 2px 8px;
+    }
+
+    .nav-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 0;
+    }
+
+    .masthead {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      color: var(--fg);
+      text-decoration: none;
+      line-height: 1;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 0;
+    }
+
+    nav ul li a {
+      display: block;
+      padding: 8px 16px;
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--fg);
+      border-left: 1px solid var(--border);
+      transition: color 0.2s ease-out, background-color 0.2s ease-out;
+    }
+
+    nav ul li:last-child a {
+      border-right: 1px solid var(--border);
+    }
+
+    nav ul li a:hover {
+      color: var(--accent);
+    }
+
+    /* ─── Ticker / Crawl ─── */
+    .ticker {
+      background: var(--fg);
+      color: var(--bg);
+      padding: 8px 0;
+      overflow: hidden;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .ticker-track {
+      display: flex;
+      gap: 64px;
+      animation: scroll-left 18s linear infinite;
+      white-space: nowrap;
+    }
+
+    .ticker-track span {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--bg);
+    }
+
+    .ticker-track .tick-accent {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    @keyframes scroll-left {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    /* ─── Hero Section ─── */
+    .hero {
+      border-bottom: 4px solid var(--border);
+      padding: 48px 0 40px;
+    }
+
+    .hero-inner {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+
+    @media (min-width: 768px) {
+      .hero-inner {
+        grid-template-columns: 8fr 4fr;
+      }
+    }
+
+    .hero-main {
+      padding-right: 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    @media (min-width: 768px) {
+      .hero-main {
+        padding-right: 40px;
+        border-bottom: none;
+        border-right: 1px solid var(--border);
+      }
+    }
+
+    .hero-kicker {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .hero-kicker .badge {
+      background: var(--accent);
+      color: #fff;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+    }
+
+    .hero-kicker .kicker-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--neutral-500);
+    }
+
+    .hero-headline {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(48px, 8vw, 96px);
+      font-weight: 900;
+      line-height: 0.92;
+      letter-spacing: -0.03em;
+      color: var(--fg);
+      margin-bottom: 24px;
+    }
+
+    .hero-body {
+      font-family: 'Lora', serif;
+      font-size: 17px;
+      line-height: 1.65;
+      color: var(--neutral-600);
+      max-width: 540px;
+      text-align: justify;
+      margin-bottom: 32px;
+    }
+
+    /* Drop cap */
+    .hero-body::first-letter {
+      font-family: 'Playfair Display', serif;
+      font-size: 4.5em;
+      font-weight: 900;
+      float: left;
+      line-height: 0.75;
+      margin-right: 8px;
+      margin-top: 6px;
+      color: var(--fg);
+    }
+
+    .hero-cta-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      display: inline-block;
+      background: var(--fg);
+      color: var(--bg);
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 12px 28px;
+      border: 1px solid transparent;
+      min-height: 44px;
+      border-radius: 0;
+      cursor: pointer;
+      transition: background-color 0.2s ease-out, color 0.2s ease-out, border-color 0.2s ease-out;
+    }
+
+    .btn-primary:hover {
+      background: var(--bg);
+      color: var(--fg);
+      border-color: var(--border);
+    }
+
+    .btn-link {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--fg);
+      text-decoration: none;
+      text-underline-offset: 4px;
+      text-decoration-color: var(--accent);
+      text-decoration-thickness: 2px;
+      transition: text-decoration 0.2s;
+    }
+    .btn-link:hover { text-decoration: underline; }
+
+    /* Hero sidebar */
+    .hero-sidebar {
+      padding: 24px 0 0;
+    }
+
+    @media (min-width: 768px) {
+      .hero-sidebar {
+        padding: 0 0 0 32px;
+      }
+    }
+
+    .sidebar-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--neutral-500);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+      margin-bottom: 16px;
+    }
+
+    .sidebar-items { list-style: none; }
+
+    .sidebar-items li {
+      border-bottom: 1px solid var(--muted);
+      padding: 12px 0;
+    }
+
+    .sidebar-items li:last-child { border-bottom: none; }
+
+    .sidebar-items .story-cat {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .sidebar-items a {
+      font-family: 'Playfair Display', serif;
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 1.3;
+      color: var(--fg);
+      text-decoration: none;
+    }
+
+    .sidebar-items a:hover { color: var(--accent); transition: color 0.2s; }
+
+    /* ─── Feature Card Strip ─── */
+    .feature-strip {
+      border-bottom: 4px solid var(--border);
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+    }
+
+    @media (min-width: 640px) {
+      .feature-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (min-width: 1024px) {
+      .feature-grid { grid-template-columns: 1fr 1fr 1fr; }
+    }
+
+    .feature-card {
+      border-top: 1px solid var(--border);
+      padding: 24px;
+      background: var(--bg);
+      text-decoration: none;
+      color: inherit;
+      display: block;
+      transition: background-color 0.2s ease-out, box-shadow 0.2s ease-out, transform 0.2s ease-out;
+    }
+
+    @media (min-width: 640px) {
+      .feature-card { border-right: 1px solid var(--border); }
+      .feature-card:nth-child(2n) { border-right: none; }
+    }
+
+    @media (min-width: 1024px) {
+      .feature-card:nth-child(2n) { border-right: 1px solid var(--border); }
+      .feature-card:nth-child(3n) { border-right: none; }
+    }
+
+    .feature-card:hover {
+      background: #F5F5F5;
+      box-shadow: 4px 4px 0px 0px #111111;
+      transform: translate(-2px, -2px);
+    }
+
+    .feature-card .card-cat {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .feature-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 1.25;
+      margin-bottom: 8px;
+      color: var(--fg);
+    }
+
+    .feature-card p {
+      font-family: 'Lora', serif;
+      font-size: 14px;
+      color: var(--neutral-600);
+      line-height: 1.55;
+    }
+
+    .feature-card .card-meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .feature-card .card-meta span {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--neutral-500);
+    }
+
+    /* ─── Ornamental Divider ─── */
+    .ornament {
+      text-align: center;
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      color: #A3A3A3;
+      letter-spacing: 1em;
+      padding: 20px 0;
+      border-bottom: 1px solid var(--muted);
+    }
+  </style>
+</head>
+<body>
+
+<!-- ─── HEADER ─── -->
+<header>
+  <div class="container">
+    <!-- Edition metadata row -->
+    <div class="header-meta">
+      <span>Vol. I &nbsp;·&nbsp; Est. 2025 &nbsp;·&nbsp; Digital Edition</span>
+      <span class="breaking">Breaking</span>
+      <span id="date-display"></span>
+    </div>
+
+    <!-- Masthead + Nav -->
+    <div class="nav-bar">
+      <a href="#" class="masthead font-serif">The Daily Scaffold</a>
+
+      <nav aria-label="Primary navigation">
+        <ul>
+          <li><a href="#">Design</a></li>
+          <li><a href="#">Engineering</a></li>
+          <li><a href="#">Systems</a></li>
+          <li><a href="#">Archives</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Ticker crawl -->
+  <div class="ticker" aria-label="Breaking news ticker">
+    <div class="ticker-track">
+      <!-- Duplicated for seamless loop -->
+      <span>&#9642; &nbsp; Design prompts shipped &nbsp;</span>
+      <span class="tick-accent">NEW RELEASE</span>
+      <span>&#9642; &nbsp; Newsprint system v1.0 live &nbsp;</span>
+      <span>&#9642; &nbsp; Four design systems available &nbsp;</span>
+      <span class="tick-accent">SCAFFOLD</span>
+      <span>&#9642; &nbsp; Copy once. Ship everywhere. &nbsp;</span>
+      <span>&#9642; &nbsp; Bauhaus · Monochrome · Modern Dark &nbsp;</span>
+      <span class="tick-accent">READ MORE</span>
+      <span>&#9642; &nbsp; Design prompts shipped &nbsp;</span>
+      <span class="tick-accent">NEW RELEASE</span>
+      <span>&#9642; &nbsp; Newsprint system v1.0 live &nbsp;</span>
+      <span>&#9642; &nbsp; Four design systems available &nbsp;</span>
+      <span class="tick-accent">SCAFFOLD</span>
+      <span>&#9642; &nbsp; Copy once. Ship everywhere. &nbsp;</span>
+      <span>&#9642; &nbsp; Bauhaus · Monochrome · Modern Dark &nbsp;</span>
+      <span class="tick-accent">READ MORE</span>
+    </div>
+  </div>
+</header>
+
+<!-- ─── HERO ─── -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-inner">
+
+      <!-- Main story -->
+      <article class="hero-main">
+        <div class="hero-kicker">
+          <span class="badge">Front Page</span>
+          <span class="kicker-label">Design Systems</span>
+        </div>
+
+        <h1 class="hero-headline font-serif">
+          Words shape<br>the world.
+        </h1>
+
+        <p class="hero-body font-body">
+          Every great publication earns trust through clarity. The Newsprint
+          design system applies a century of editorial discipline to the modern
+          interface — zero-radius geometry, ink-black typography, and the kind
+          of grid that makes a reader lean in rather than scroll past.
+        </p>
+
+        <div class="hero-cta-row">
+          <a href="#" class="btn-primary sharp">Copy This System</a>
+          <a href="#" class="btn-link">View all systems →</a>
+        </div>
+      </article>
+
+      <!-- Sidebar stories -->
+      <aside class="hero-sidebar">
+        <p class="sidebar-label">Also in this edition</p>
+        <ul class="sidebar-items">
+          <li>
+            <span class="story-cat">Bauhaus</span>
+            <a href="#">Primary colors and radical geometry define this Constructivist masterwork.</a>
+          </li>
+          <li>
+            <span class="story-cat">Monochrome</span>
+            <a href="#">Pure black on white — when the serif does all the talking.</a>
+          </li>
+          <li>
+            <span class="story-cat">Linear / Modern</span>
+            <a href="#">Ambient depth and precise motion for the product era.</a>
+          </li>
+        </ul>
+      </aside>
+
+    </div>
+  </div>
+</section>
+
+<!-- ─── ORNAMENT ─── -->
+<div class="ornament container" aria-hidden="true">&#x2727; &nbsp; &#x2727; &nbsp; &#x2727;</div>
+
+<!-- ─── FEATURE STRIP ─── -->
+<section class="feature-strip">
+  <div class="feature-grid container" style="padding-left: 24px; padding-right: 24px;">
+
+    <a href="#" class="feature-card hard-shadow-hover">
+      <span class="card-cat">Typography</span>
+      <h3 class="font-serif">Why Serif Still Dominates Editorial UI</h3>
+      <p class="font-body">Playfair Display brings 200 years of typographic authority to the browser. High contrast, high drama.</p>
+      <div class="card-meta">
+        <span>5 min read</span>
+        <span>&#9642; Systems</span>
+      </div>
+    </a>
+
+    <a href="#" class="feature-card hard-shadow-hover">
+      <span class="card-cat">Layout</span>
+      <h3 class="font-serif">The Art of the Collapsed Grid Border</h3>
+      <p class="font-body">Adjacent cells share one border. Double borders are an editorial sin. Here is how the grid holds itself together.</p>
+      <div class="card-meta">
+        <span>3 min read</span>
+        <span>&#9642; Engineering</span>
+      </div>
+    </a>
+
+    <a href="#" class="feature-card hard-shadow-hover">
+      <span class="card-cat">Colour</span>
+      <h3 class="font-serif">Red as Punctuation, Not Decoration</h3>
+      <p class="font-body">One accent, used twice per page. The editorial red earns its place by being almost entirely absent.</p>
+      <div class="card-meta">
+        <span>4 min read</span>
+        <span>&#9642; Design</span>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+<script>
+  // Inject today's date into the header meta
+  const d = new Date();
+  const fmt = d.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+  document.getElementById('date-display').textContent = fmt;
+</script>
+
+</body>
+</html>

@@ -31,45 +31,85 @@ const DesignPromptCard = ({ prompt }) => {
       }}
       className="dp-card-base dp-card"
     >
-      {/* Swatch Area */}
-      <Link to={`/design-prompts/${prompt.slug}`} style={{ display: "block", color: "inherit", textDecoration: "none" }}>
-        <div
-          className="flex flex-col justify-center items-center"
-          style={{
-            backgroundColor: prompt.palette.background,
-            height: "120px",
-            borderBottom: "1px solid var(--color-border)",
-          }}
-        >
-          <h2
+      {/* Preview area — iframe if previewUrl exists, swatch if not */}
+      <Link
+        to={`/design-prompts/${prompt.slug}`}
+        style={{ display: "block", color: "inherit", textDecoration: "none" }}
+      >
+        {prompt.previewUrl ? (
+          /* ── Live iframe preview ── */
+          <div
             style={{
-              color: prompt.palette.foreground,
-              fontFamily: "var(--font-sans)",
-              fontWeight: 800,
-              fontSize: "24px",
-              letterSpacing: "-0.02em",
+              position: "relative",
+              width: "100%",
+              /* 16:10 aspect ratio */
+              paddingTop: "62.5%",
+              overflow: "hidden",
+              borderBottom: "1px solid var(--color-border)",
+              backgroundColor: prompt.palette.background,
             }}
           >
-            {prompt.name}
-          </h2>
-          <div className="flex gap-1.5 mt-2">
-            {paletteColors.map((color, index) => (
-              <div
-                key={index}
-                style={{
-                  width: "12px",
-                  height: "12px",
-                  borderRadius: "2px",
-                  border: "1px solid rgba(0,0,0,0.2)",
-                  backgroundColor: color,
-                }}
-              />
-            ))}
+            <iframe
+              src={prompt.previewUrl}
+              loading="lazy"
+              title={`${prompt.name} design system preview`}
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: "200%",
+                height: "200%",
+                border: "none",
+                /* Scale the full-size page down to fit the 50% container */
+                transform: "scale(0.5)",
+                transformOrigin: "top left",
+                pointerEvents: "none",
+              }}
+            />
           </div>
-        </div>
+        ) : (
+          /* ── Swatch preview (unchanged) ── */
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              backgroundColor: prompt.palette.background,
+              height: "120px",
+              borderBottom: "1px solid var(--color-border)",
+            }}
+          >
+            <h2
+              style={{
+                color: prompt.palette.foreground,
+                fontFamily: "var(--font-sans)",
+                fontWeight: 800,
+                fontSize: "24px",
+                letterSpacing: "-0.02em",
+              }}
+            >
+              {prompt.name}
+            </h2>
+            <div style={{ display: "flex", gap: "6px", marginTop: "8px" }}>
+              {paletteColors.map((color, index) => (
+                <div
+                  key={index}
+                  style={{
+                    width: "12px",
+                    height: "12px",
+                    borderRadius: "2px",
+                    border: "1px solid rgba(0,0,0,0.2)",
+                    backgroundColor: color,
+                  }}
+                />
+              ))}
+            </div>
+          </div>
+        )}
       </Link>
 
-      {/* Body Area */}
+      {/* Body Area — identical for all cards */}
       <div style={{ padding: "16px" }}>
         <Link to={`/design-prompts/${prompt.slug}`} style={{ color: "inherit", textDecoration: "none" }}>
           <h3
@@ -96,7 +136,7 @@ const DesignPromptCard = ({ prompt }) => {
         </p>
 
         {/* Tags */}
-        <div className="flex flex-wrap" style={{ marginTop: "12px", gap: "6px" }}>
+        <div style={{ display: "flex", flexWrap: "wrap", marginTop: "12px", gap: "6px" }}>
           {prompt.tags.map((tag) => (
             <span
               key={tag}

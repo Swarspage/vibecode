@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bauhaus — Design System Preview</title>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700;900&display=block');
+
+    /* ─── Reset ─── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ─── Tokens ─── */
+    :root {
+      --bg:     #F0F0F0;
+      --fg:     #121212;
+      --red:    #D02020;
+      --blue:   #1040C0;
+      --yellow: #F0C020;
+      --border: #121212;
+      --muted:  #E0E0E0;
+    }
+
+    /* ─── Base ─── */
+    html, body {
+      min-height: 100%;
+      background-color: var(--bg);
+      color: var(--fg);
+      font-family: 'Outfit', 'Helvetica Neue', sans-serif;
+      font-size: 16px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── Container ─── */
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ─── Header / Nav ─── */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background-color: var(--bg);
+      border-bottom: 4px solid var(--border);
+    }
+
+    .nav-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 0;
+    }
+
+    /* Geometric logo: three shapes */
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+    }
+    .logo-circle {
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: var(--red);
+      border: 2px solid var(--border);
+    }
+    .logo-square {
+      width: 16px; height: 16px;
+      background: var(--blue);
+      border: 2px solid var(--border);
+    }
+    .logo-triangle {
+      width: 0; height: 0;
+      border-left: 9px solid transparent;
+      border-right: 9px solid transparent;
+      border-bottom: 16px solid var(--yellow);
+      flex-shrink: 0;
+    }
+    .logo-text {
+      font-family: 'Outfit', sans-serif;
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      color: var(--fg);
+      margin-left: 6px;
+      text-transform: uppercase;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 0;
+      border: 2px solid var(--border);
+    }
+    nav ul li { border-right: 2px solid var(--border); }
+    nav ul li:last-child { border-right: none; }
+    nav ul li a {
+      display: block;
+      padding: 8px 16px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--fg);
+      transition: background-color 0.2s ease-out, color 0.2s ease-out;
+    }
+    nav ul li a:hover {
+      background: var(--fg);
+      color: var(--bg);
+    }
+
+    /* ─── Hero ─── */
+    .hero {
+      border-bottom: 4px solid var(--border);
+    }
+
+    .hero-inner {
+      display: grid;
+      grid-template-columns: 1fr;
+    }
+
+    @media (min-width: 768px) {
+      .hero-inner { grid-template-columns: 7fr 5fr; }
+    }
+
+    /* Left — black panel */
+    .hero-main {
+      background: var(--fg);
+      color: var(--bg);
+      padding: 48px 40px;
+      border-right: 4px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Dot-grid pattern on dark bg */
+    .hero-main::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(#fff 2px, transparent 2px);
+      background-size: 20px 20px;
+      opacity: 0.06;
+      pointer-events: none;
+    }
+
+    .hero-kicker {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .badge {
+      background: var(--red);
+      color: #fff;
+      font-family: 'Outfit', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border: 2px solid var(--border);
+    }
+
+    .kicker-label {
+      font-family: 'Outfit', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+    }
+
+    .hero-headline {
+      font-family: 'Outfit', sans-serif;
+      font-size: clamp(52px, 9vw, 96px);
+      font-weight: 900;
+      line-height: 0.9;
+      letter-spacing: -0.04em;
+      color: #fff;
+      text-transform: uppercase;
+      margin-bottom: 28px;
+      position: relative;
+    }
+
+    /* Yellow accent line under headline */
+    .hero-headline span {
+      color: var(--yellow);
+    }
+
+    .hero-body {
+      font-family: 'Outfit', sans-serif;
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 1.65;
+      color: rgba(255,255,255,0.7);
+      max-width: 440px;
+      margin-bottom: 36px;
+      position: relative;
+    }
+
+    .hero-cta-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      position: relative;
+    }
+
+    .btn-primary {
+      display: inline-block;
+      background: var(--red);
+      color: #fff;
+      font-family: 'Outfit', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 14px 28px;
+      border: 2px solid var(--border);
+      box-shadow: 4px 4px 0px 0px var(--border);
+      min-height: 44px;
+      border-radius: 0;
+      cursor: pointer;
+      transition: box-shadow 0.2s ease-out, transform 0.2s ease-out;
+    }
+    .btn-primary:hover {
+      box-shadow: none;
+      transform: translate(4px, 4px);
+    }
+
+    .btn-secondary {
+      display: inline-block;
+      background: var(--yellow);
+      color: var(--fg);
+      font-family: 'Outfit', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 14px 24px;
+      border: 2px solid var(--border);
+      box-shadow: 4px 4px 0px 0px var(--border);
+      min-height: 44px;
+      border-radius: 0;
+      cursor: pointer;
+      transition: box-shadow 0.2s ease-out, transform 0.2s ease-out;
+    }
+    .btn-secondary:hover {
+      box-shadow: none;
+      transform: translate(4px, 4px);
+    }
+
+    /* Right — blue geometric composition panel */
+    .hero-geo {
+      background: var(--blue);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 280px;
+      padding: 40px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .geo-composition {
+      position: relative;
+      width: 180px;
+      height: 180px;
+    }
+
+    .geo-circle {
+      position: absolute;
+      width: 160px; height: 160px;
+      border-radius: 50%;
+      border: 4px solid #fff;
+      top: 0; left: 0;
+    }
+
+    .geo-square-large {
+      position: absolute;
+      width: 80px; height: 80px;
+      background: var(--yellow);
+      border: 4px solid var(--border);
+      bottom: 0; right: 0;
+    }
+
+    .geo-square-rotate {
+      position: absolute;
+      width: 50px; height: 50px;
+      background: var(--red);
+      border: 4px solid var(--border);
+      top: 20px; right: 10px;
+      transform: rotate(45deg);
+    }
+
+    /* ─── Feature Strip ─── */
+    .feature-strip {
+      border-bottom: 4px solid var(--border);
+    }
+
+    /* Yellow section background */
+    .feature-strip .section-bg {
+      background: var(--yellow);
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      border-top: 4px solid var(--border);
+    }
+
+    @media (min-width: 640px) {
+      .feature-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (min-width: 1024px) {
+      .feature-grid { grid-template-columns: 1fr 1fr 1fr; }
+    }
+
+    .feature-card {
+      border-right: 2px solid var(--border);
+      padding: 28px;
+      background: var(--bg);
+      text-decoration: none;
+      color: inherit;
+      display: block;
+      position: relative;
+      transition: transform 0.2s ease-out, background-color 0.2s ease-out;
+    }
+
+    @media (min-width: 640px) {
+      .feature-card:nth-child(2n) { border-right: none; }
+    }
+
+    @media (min-width: 1024px) {
+      .feature-card:nth-child(2n) { border-right: 2px solid var(--border); }
+      .feature-card:nth-child(3n) { border-right: none; }
+    }
+
+    .feature-card:hover {
+      transform: translateY(-4px);
+      background: #fff;
+    }
+
+    /* Colored corner decoration */
+    .feature-card::after {
+      content: '';
+      position: absolute;
+      top: 16px; right: 16px;
+      width: 10px; height: 10px;
+      border-radius: 0;
+    }
+    .feature-card:nth-child(1)::after { background: var(--red); }
+    .feature-card:nth-child(2)::after { background: var(--blue); border-radius: 50%; }
+    .feature-card:nth-child(3)::after {
+      width: 0; height: 0;
+      background: none;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-bottom: 10px solid var(--yellow);
+    }
+
+    .feature-card .card-number {
+      font-family: 'Outfit', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(18,18,18,0.4);
+      display: block;
+      margin-bottom: 14px;
+    }
+
+    .feature-card h3 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 22px;
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      color: var(--fg);
+    }
+
+    .feature-card p {
+      font-family: 'Outfit', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      color: rgba(18,18,18,0.65);
+      line-height: 1.6;
+    }
+
+    /* ─── Section header bar ─── */
+    .section-bar {
+      background: var(--yellow);
+      border-bottom: 4px solid var(--border);
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .section-bar-label {
+      font-family: 'Outfit', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--fg);
+    }
+
+    .section-bar-line {
+      flex: 1;
+      height: 2px;
+      background: var(--border);
+    }
+  </style>
+</head>
+<body>
+
+<!-- ─── HEADER ─── -->
+<header>
+  <div class="container">
+    <div class="nav-bar">
+      <a href="#" class="logo" aria-label="Bauhaus home">
+        <div class="logo-circle"></div>
+        <div class="logo-square"></div>
+        <div class="logo-triangle"></div>
+        <span class="logo-text">Bauhaus</span>
+      </a>
+
+      <nav aria-label="Primary navigation">
+        <ul>
+          <li><a href="#">Form</a></li>
+          <li><a href="#">Function</a></li>
+          <li><a href="#">Systems</a></li>
+          <li><a href="#">Workshop</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<!-- ─── HERO ─── -->
+<section class="hero">
+  <div class="hero-inner">
+
+    <!-- Left: black text panel -->
+    <article class="hero-main">
+      <div class="hero-kicker">
+        <span class="badge">Manifesto</span>
+        <span class="kicker-label">Design System</span>
+      </div>
+
+      <h1 class="hero-headline">
+        Form<br>follows<br><span>function.</span>
+      </h1>
+
+      <p class="hero-body">
+        The Bauhaus design system reduces every interface to its geometric
+        essence. Circles, squares, and triangles. Primary colors, thick borders,
+        and hard shadows. Nothing is decoration. Everything is structure.
+      </p>
+
+      <div class="hero-cta-row">
+        <a href="#" class="btn-primary">Apply This System</a>
+        <a href="#" class="btn-secondary">View Gallery</a>
+      </div>
+    </article>
+
+    <!-- Right: blue geometric composition -->
+    <div class="hero-geo" aria-hidden="true">
+      <div class="geo-composition">
+        <div class="geo-circle"></div>
+        <div class="geo-square-large"></div>
+        <div class="geo-square-rotate"></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ─── SECTION BAR ─── -->
+<div class="section-bar container" style="padding-left: 24px; padding-right: 24px;">
+  <span class="section-bar-label">Principles</span>
+  <div class="section-bar-line"></div>
+  <span class="section-bar-label">3 elements</span>
+</div>
+
+<!-- ─── FEATURE STRIP ─── -->
+<section class="feature-strip">
+  <div class="feature-grid container" style="padding-left: 24px; padding-right: 24px;">
+
+    <a href="#" class="feature-card">
+      <span class="card-number">01 — Geometry</span>
+      <h3>Every shape is intentional</h3>
+      <p>Circles, squares, and triangles are the only decorative vocabulary. Nothing is arbitrary. Each form serves a structural purpose.</p>
+    </a>
+
+    <a href="#" class="feature-card">
+      <span class="card-number">02 — Color</span>
+      <h3>Three primaries. No exceptions.</h3>
+      <p>Red, Blue, and Yellow are not accents — they are the palette. Used in full-section blocks, not sprinkled as highlights.</p>
+    </a>
+
+    <a href="#" class="feature-card">
+      <span class="card-number">03 — Borders</span>
+      <h3>Thick lines define the grid</h3>
+      <p>2px and 4px solid black borders aren't decoration — they are the structure. Hard shadows replace elevation. Nothing floats.</p>
+    </a>
+
+  </div>
+</section>
+
+</body>
+</html>

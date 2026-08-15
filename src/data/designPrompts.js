@@ -23,6 +23,7 @@ export const designPrompts = [
       ui: "Inter",
       mono: "JetBrains Mono"
     },
+    previewUrl: "/previews/newsprint.html",
     prompt: newsprintPrompt
   },
   {
@@ -44,6 +45,7 @@ export const designPrompts = [
       ui: "Inter",
       mono: "JetBrains Mono"
     },
+    previewUrl: "/previews/monochrome.html",
     prompt: monochromePrompt
   },
   {
@@ -65,6 +67,7 @@ export const designPrompts = [
       ui: "Outfit",
       mono: "JetBrains Mono"
     },
+    previewUrl: "/previews/bauhaus.html",
     prompt: bauhausPrompt
   },
   {
@@ -86,6 +89,7 @@ export const designPrompts = [
       ui: "Inter",
       mono: "JetBrains Mono"
     },
+    previewUrl: "/previews/modern-dark.html",
     prompt: modernDarkPrompt
   }
 ];

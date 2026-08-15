@@ -10,7 +10,7 @@ const DesignPromptDetailPage = () => {
 
   if (!prompt) {
     return (
-      <section style={{ paddingTop: "112px", paddingBottom: "96px" }}>
+      <section style={{ paddingTop: "80px", paddingBottom: "96px" }}>
         <div style={{ marginBottom: "16px" }}>
           <span
             style={{
@@ -41,11 +41,11 @@ const DesignPromptDetailPage = () => {
           style={{
             fontFamily: "var(--font-mono)",
             fontSize: "12px",
-            color: "var(--color-fg)",
-            textDecoration: "underline",
+            color: "var(--color-muted)",
           }}
+          className="detail-back-link"
         >
-          Return to directory
+          All design prompts
         </Link>
       </section>
     );
@@ -65,24 +65,9 @@ const DesignPromptDetailPage = () => {
   const typographyEntries = Object.entries(prompt.typography);
 
   return (
-    <section style={{ paddingTop: "80px", paddingBottom: "96px", maxWidth: "800px" }}>
+    <section style={{ paddingTop: "80px", paddingBottom: "96px" }}>
       {/* Top Area */}
       <div style={{ marginBottom: "48px" }}>
-        <Link
-          to="/design-prompts"
-          style={{
-            display: "inline-block",
-            fontFamily: "var(--font-mono)",
-            fontSize: "12px",
-            letterSpacing: "0.08em",
-            textTransform: "uppercase",
-            textDecoration: "none",
-            marginBottom: "32px",
-          }}
-          className="detail-back-link"
-        >
-          ← All design prompts
-        </Link>
         <div style={{ marginBottom: "12px" }}>
           <span
             style={{
@@ -99,7 +84,7 @@ const DesignPromptDetailPage = () => {
         <h1
           style={{
             fontFamily: "var(--font-sans)",
-            fontSize: "clamp(2rem, 5vw, 3.5rem)",
+            fontSize: "clamp(1.75rem, 4vw, 2.75rem)",
             fontWeight: 800,
             letterSpacing: "-0.03em",
             color: "var(--color-fg)",
@@ -112,9 +97,8 @@ const DesignPromptDetailPage = () => {
         <p
           style={{
             fontFamily: "var(--font-body)",
-            fontSize: "var(--text-lg)",
+            fontSize: "var(--text-base)",
             color: "var(--color-muted)",
-            maxWidth: "560px",
             lineHeight: 1.65,
           }}
         >
@@ -122,9 +106,61 @@ const DesignPromptDetailPage = () => {
         </p>
       </div>
 
+      {/* Live Preview — only if previewUrl exists */}
+      {prompt.previewUrl && (
+        <div style={{ marginBottom: "48px" }}>
+          <h2
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: "12px",
+              color: "var(--color-accent)",
+              letterSpacing: "0.1em",
+              textTransform: "uppercase",
+              marginBottom: "12px",
+            }}
+          >
+            Live Preview
+          </h2>
+          <div
+            style={{
+              position: "relative",
+              width: "100%",
+              /* 16:9 aspect ratio */
+              paddingTop: "56.25%",
+              overflow: "hidden",
+              border: "1px solid var(--color-border)",
+              borderRadius: "var(--radius-sm)",
+              backgroundColor: "#F9F9F7",
+            }}
+          >
+            <iframe
+              src={prompt.previewUrl}
+              loading="lazy"
+              title={`${prompt.name} live preview`}
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: "100%",
+                border: "none",
+              }}
+            />
+          </div>
+        </div>
+      )}
+
       {/* Metadata Section */}
-      <div style={{ marginBottom: "64px" }} className="flex flex-col md:flex-row gap-12">
-        <div style={{ flex: 2 }}>
+      <div
+        style={{
+          marginBottom: "64px",
+          display: "flex",
+          flexDirection: "column",
+          gap: "48px",
+        }}
+      >
+        {/* Palette */}
+        <div>
           <h2
             style={{
               fontFamily: "var(--font-mono)",
@@ -139,14 +175,14 @@ const DesignPromptDetailPage = () => {
           </h2>
           <div style={{ display: "flex", flexWrap: "wrap", gap: "12px" }}>
             {paletteEntries.map(([key, value]) => (
-              <div key={key} style={{ width: "100%", maxWidth: "120px" }}>
+              <div key={key} style={{ width: "100%", maxWidth: "100px" }}>
                 <div
                   style={{
-                    height: "72px",
+                    height: "56px",
                     borderRadius: "var(--radius-sm)",
                     backgroundColor: value,
                     border: "1px solid var(--color-border)",
-                    marginBottom: "8px",
+                    marginBottom: "6px",
                   }}
                 />
                 <div
@@ -174,7 +210,8 @@ const DesignPromptDetailPage = () => {
           </div>
         </div>
 
-        <div style={{ flex: 1 }}>
+        {/* Typography */}
+        <div>
           <h2
             style={{
               fontFamily: "var(--font-mono)",
@@ -189,13 +226,13 @@ const DesignPromptDetailPage = () => {
           </h2>
           <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
             {typographyEntries.map(([key, value]) => (
-              <div key={key} style={{ display: "flex", alignItems: "center" }}>
+              <div key={key} style={{ display: "flex", alignItems: "center", gap: "16px" }}>
                 <span
                   style={{
                     fontFamily: "var(--font-mono)",
                     fontSize: "12px",
                     color: "var(--color-muted)",
-                    width: "100px",
+                    minWidth: "80px",
                   }}
                 >
                   {key}
@@ -217,7 +254,14 @@ const DesignPromptDetailPage = () => {
 
       {/* Prompt Section */}
       <div>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: "12px",
+          }}
+        >
           <h2
             style={{
               fontFamily: "var(--font-mono)",

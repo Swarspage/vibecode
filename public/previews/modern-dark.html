@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Linear / Modern — Design System Preview</title>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=block');
+
+    /* ─── Reset ─── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ─── Tokens ─── */
+    :root {
+      --bg-deep:     #020203;
+      --bg-base:     #050506;
+      --bg-elevated: #0a0a0c;
+      --surface:     rgba(255,255,255,0.05);
+      --surface-hover: rgba(255,255,255,0.08);
+      --fg:          #EDEDEF;
+      --fg-muted:    #8A8F98;
+      --fg-subtle:   rgba(255,255,255,0.60);
+      --accent:      #5E6AD2;
+      --accent-bright: #6872D9;
+      --accent-glow: rgba(94,106,210,0.3);
+      --border:      rgba(255,255,255,0.06);
+      --border-hover: rgba(255,255,255,0.10);
+    }
+
+    /* ─── Base ─── */
+    html, body {
+      min-height: 100%;
+      background-color: var(--bg-base);
+      color: var(--fg);
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 16px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+
+      /* Radial gradient base from spec */
+      background-image: radial-gradient(ellipse at top, #0a0a0f 0%, #050506 50%, #020203 100%);
+    }
+
+    /* ─── Animated ambient blobs ─── */
+    .blobs {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(120px);
+    }
+
+    .blob-1 {
+      width: 700px; height: 700px;
+      background: rgba(94,106,210,0.18);
+      top: -200px; left: 50%;
+      transform: translateX(-50%);
+      animation: float1 9s ease-in-out infinite;
+    }
+
+    .blob-2 {
+      width: 450px; height: 550px;
+      background: rgba(80,40,180,0.10);
+      top: 100px; left: -150px;
+      animation: float2 11s ease-in-out infinite;
+    }
+
+    .blob-3 {
+      width: 380px; height: 480px;
+      background: rgba(50,80,210,0.08);
+      top: 80px; right: -100px;
+      animation: float2 13s ease-in-out infinite reverse;
+    }
+
+    @keyframes float1 {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50%       { transform: translateX(-50%) translateY(-24px) rotate(1deg); }
+    }
+
+    @keyframes float2 {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50%       { transform: translateY(-16px) rotate(1.5deg); }
+    }
+
+    /* ─── Subtle grid overlay from spec ─── */
+    .grid-overlay {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 64px 64px;
+    }
+
+    /* ─── Container ─── */
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ─── Header / Nav ─── */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      border-bottom: 1px solid var(--border);
+      background: rgba(5,5,6,0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+
+    .nav-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 0;
+    }
+
+    .wordmark {
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      color: var(--fg);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Accent dot before wordmark */
+    .wordmark::before {
+      content: '';
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 10px var(--accent-glow);
+      flex-shrink: 0;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 4px;
+    }
+
+    nav ul li a {
+      display: block;
+      padding: 6px 14px;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      text-decoration: none;
+      color: var(--fg-muted);
+      border-radius: 6px;
+      transition: color 0.2s ease-out, background-color 0.2s ease-out;
+    }
+
+    nav ul li a:hover {
+      color: var(--fg);
+      background: var(--surface-hover);
+    }
+
+    /* ─── Hero ─── */
+    .hero {
+      padding: 80px 0 64px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-inner {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+
+    @media (min-width: 768px) {
+      .hero-inner { grid-template-columns: 8fr 4fr; gap: 40px; }
+    }
+
+    .hero-main {
+      padding-right: 0;
+    }
+
+    @media (min-width: 768px) {
+      .hero-main { padding-right: 40px; }
+    }
+
+    /* Pill badge */
+    .hero-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid rgba(94,106,210,0.30);
+      border-radius: 9999px;
+      padding: 4px 14px 4px 8px;
+      margin-bottom: 28px;
+    }
+
+    .hero-pill-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 8px var(--accent-glow);
+    }
+
+    .hero-pill span {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    /* Gradient headline */
+    .hero-headline {
+      font-family: 'Inter', sans-serif;
+      font-size: clamp(40px, 7vw, 80px);
+      font-weight: 600;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      margin-bottom: 24px;
+
+      background: linear-gradient(to bottom, #ffffff 0%, rgba(255,255,255,0.7) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Accent word in shimmer gradient */
+    .hero-headline .accent-word {
+      background: linear-gradient(90deg, var(--accent) 0%, #818CF8 50%, var(--accent) 100%);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: shimmer 4s linear infinite;
+    }
+
+    @keyframes shimmer {
+      from { background-position: 200% center; }
+      to   { background-position: -200% center; }
+    }
+
+    .hero-body {
+      font-family: 'Inter', sans-serif;
+      font-size: 17px;
+      font-weight: 400;
+      line-height: 1.7;
+      color: var(--fg-muted);
+      max-width: 480px;
+      margin-bottom: 36px;
+    }
+
+    .hero-cta-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    /* Primary accent button with glow */
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--accent);
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      text-decoration: none;
+      padding: 10px 22px;
+      border-radius: 8px;
+      min-height: 44px;
+      cursor: pointer;
+      box-shadow:
+        0 0 0 1px rgba(94,106,210,0.5),
+        0 4px 12px rgba(94,106,210,0.3),
+        inset 0 1px 0 rgba(255,255,255,0.2);
+      transition: background-color 0.2s ease-out, box-shadow 0.2s ease-out, transform 0.2s ease-out;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-bright);
+      box-shadow:
+        0 0 0 1px rgba(94,106,210,0.7),
+        0 8px 24px rgba(94,106,210,0.4),
+        inset 0 1px 0 rgba(255,255,255,0.2);
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--surface);
+      color: var(--fg);
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      text-decoration: none;
+      padding: 10px 22px;
+      border-radius: 8px;
+      min-height: 44px;
+      cursor: pointer;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 0 0 1px var(--border);
+      transition: background-color 0.2s ease-out, box-shadow 0.2s ease-out;
+    }
+
+    .btn-secondary:hover {
+      background: var(--surface-hover);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 0 0 1px var(--border-hover);
+    }
+
+    /* Hero right — mock product card */
+    .hero-sidebar {
+      display: none;
+    }
+
+    @media (min-width: 768px) {
+      .hero-sidebar { display: block; }
+    }
+
+    .mock-card {
+      background: linear-gradient(to bottom, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.06),
+        0 2px 20px rgba(0,0,0,0.4);
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Gradient line at top of card */
+    .mock-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(94,106,210,0.5), transparent);
+    }
+
+    .mock-card-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+
+    .mock-card h3 {
+      font-family: 'Inter', sans-serif;
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--fg);
+      margin-bottom: 8px;
+    }
+
+    .mock-card p {
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      color: var(--fg-muted);
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .mock-stat-row {
+      display: flex;
+      gap: 12px;
+      border-top: 1px solid var(--border);
+      padding-top: 16px;
+    }
+
+    .mock-stat {
+      flex: 1;
+    }
+
+    .mock-stat-value {
+      font-family: 'Inter', sans-serif;
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      color: var(--fg);
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .mock-stat-key {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 400;
+      color: var(--fg-muted);
+    }
+
+    /* ─── Feature Strip ─── */
+    .feature-strip {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .strip-label {
+      padding: 20px 0 0;
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--fg-muted);
+      margin-bottom: 16px;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      padding-bottom: 32px;
+    }
+
+    @media (min-width: 640px) {
+      .feature-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (min-width: 1024px) {
+      .feature-grid { grid-template-columns: 1fr 1fr 1fr; }
+    }
+
+    .feature-card {
+      background: linear-gradient(to bottom, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+      transition: border-color 0.2s ease-out, box-shadow 0.2s ease-out, transform 0.2s ease-out, background-color 0.2s ease-out;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Gradient top-edge highlight */
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+    }
+
+    .feature-card:hover {
+      background: var(--surface-hover);
+      border-color: var(--border-hover);
+      box-shadow: 0 4px 24px rgba(0,0,0,0.4), 0 0 40px rgba(94,106,210,0.05);
+      transform: translateY(-3px);
+    }
+
+    .feature-card .card-icon {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 14px;
+      font-size: 14px;
+    }
+
+    .feature-card h3 {
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      color: var(--fg);
+      margin-bottom: 6px;
+    }
+
+    .feature-card p {
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--fg-muted);
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Ambient blobs + grid overlay -->
+<div class="blobs" aria-hidden="true">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+</div>
+<div class="grid-overlay" aria-hidden="true"></div>
+
+<!-- ─── HEADER ─── -->
+<header>
+  <div class="container">
+    <div class="nav-bar">
+      <a href="#" class="wordmark">Linear / Modern</a>
+
+      <nav aria-label="Primary navigation">
+        <ul>
+          <li><a href="#">Product</a></li>
+          <li><a href="#">Engineers</a></li>
+          <li><a href="#">Changelog</a></li>
+          <li><a href="#">Pricing</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<!-- ─── HERO ─── -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-inner">
+
+      <!-- Main -->
+      <article class="hero-main">
+        <div class="hero-pill">
+          <div class="hero-pill-dot"></div>
+          <span>Now in production</span>
+        </div>
+
+        <h1 class="hero-headline">
+          Ship faster.<br>Think <span class="accent-word">precisely.</span>
+        </h1>
+
+        <p class="hero-body">
+          Linear / Modern is the design system for tools that feel expensive.
+          Layered ambient light, cinematic depth, and obsessive micro-detail —
+          built for developer products that compete at the highest level.
+        </p>
+
+        <div class="hero-cta-row">
+          <a href="#" class="btn-primary">Get Started →</a>
+          <a href="#" class="btn-secondary">View the Docs</a>
+        </div>
+      </article>
+
+      <!-- Right: mock stat card -->
+      <aside class="hero-sidebar" aria-label="System at a glance">
+        <div class="mock-card">
+          <p class="mock-card-label">System Overview</p>
+          <h3>Linear / Modern</h3>
+          <p>Precision dark mode with layered ambient lighting and multi-layer shadow system.</p>
+          <div class="mock-stat-row">
+            <div class="mock-stat">
+              <span class="mock-stat-value">∞</span>
+              <span class="mock-stat-key">Depth layers</span>
+            </div>
+            <div class="mock-stat">
+              <span class="mock-stat-value">4</span>
+              <span class="mock-stat-key">Shadow layers</span>
+            </div>
+            <div class="mock-stat">
+              <span class="mock-stat-value">200ms</span>
+              <span class="mock-stat-key">Transitions</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+    </div>
+  </div>
+</section>
+
+<!-- ─── FEATURE STRIP ─── -->
+<section class="feature-strip">
+  <div class="container">
+    <p class="strip-label">Why this system</p>
+    <div class="feature-grid">
+
+      <a href="#" class="feature-card">
+        <div class="card-icon">✦</div>
+        <h3>Ambient depth, not flat dark</h3>
+        <p>Four stacked gradients, noise texture, and animated light blobs create genuine atmospheric presence.</p>
+      </a>
+
+      <a href="#" class="feature-card">
+        <div class="card-icon">⬡</div>
+        <h3>Precision at every layer</h3>
+        <p>Multi-layer shadows combine border highlight, diffuse shadow, and accent glow. Never a single shadow.</p>
+      </a>
+
+      <a href="#" class="feature-card">
+        <div class="card-icon">→</div>
+        <h3>200ms expo-out everywhere</h3>
+        <p>Every transition is swift, decisive, and expo-out. Nothing bounces. Nothing lags. It feels like software.</p>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+</body>
+</html>
