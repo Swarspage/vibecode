@@ -7,12 +7,14 @@ const categories = [
   { id: "investigate", label: "Investigate" },
   { id: "build", label: "Build" },
   { id: "debug", label: "Debug" },
+  { id: "audit", label: "Audit" },
   { id: "ship", label: "Ship" },
 ];
 
 const WorkflowPromptsPage = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [activeCategory, setActiveCategory] = useState("all");
 
   const query = searchQuery.trim().toLowerCase();
 
@@ -31,7 +33,12 @@ const WorkflowPromptsPage = () => {
     return haystack.includes(query);
   };
 
-  const totalMatches = workflowPrompts.filter(matchesSearch).length;
+  const matchesCategory = (prompt) =>
+    activeCategory === "all" || prompt.category === activeCategory;
+
+  const totalMatches = workflowPrompts.filter(
+    (p) => matchesSearch(p) && matchesCategory(p)
+  ).length;
 
   return (
     <section style={{ paddingTop: "var(--space-page-top)", paddingBottom: "96px" }}>
@@ -105,8 +112,8 @@ const WorkflowPromptsPage = () => {
           id="workflow-sidebar-nav"
           className={`docs-sidebar${sidebarOpen ? " open" : ""}`}
         >
-          {/* Search */}
-          <div style={{ marginBottom: "16px" }}>
+          {/* Search & Filter */}
+          <div className="sidebar-search-filter">
             <input
               type="search"
               className="search-input"
@@ -115,6 +122,25 @@ const WorkflowPromptsPage = () => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
+            <div className="filter-chip-row">
+              <button
+                type="button"
+                className={`filter-chip${activeCategory === "all" ? " active" : ""}`}
+                onClick={() => setActiveCategory("all")}
+              >
+                All
+              </button>
+              {categories.map((cat) => (
+                <button
+                  key={cat.id}
+                  type="button"
+                  className={`filter-chip${activeCategory === cat.id ? " active" : ""}`}
+                  onClick={() => setActiveCategory(cat.id)}
+                >
+                  {cat.label}
+                </button>
+              ))}
+            </div>
           </div>
 
           <nav aria-label="Workflow prompt navigation">
@@ -124,6 +150,8 @@ const WorkflowPromptsPage = () => {
               </p>
             ) : (
               categories.map((cat) => {
+                if (activeCategory !== "all" && cat.id !== activeCategory) return null;
+
                 const prompts = workflowPrompts.filter(
                   (p) => p.category === cat.id && matchesSearch(p)
                 );

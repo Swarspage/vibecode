@@ -23,6 +23,14 @@ import characterizingLegacyCode from "./prompts/workflow/22-characterizing-legac
 import preparingPrDescription from "./prompts/workflow/23-preparing-pr-description.md?raw";
 import writingRollbackReleasePlan from "./prompts/workflow/24-writing-rollback-release-plan.md?raw";
 import postIncidentReview from "./prompts/workflow/25-post-incident-review.md?raw";
+import tracingRenders from "./prompts/workflow/26-frontend-tracing-renders.md?raw";
+import accessibilityAudit from "./prompts/workflow/27-accessibility-audit.md?raw";
+import layoutResponsiveBug from "./prompts/workflow/28-layout-responsive-bug.md?raw";
+import dependencyAudit from "./prompts/workflow/29-dependency-audit.md?raw";
+import evaluatingNewDependency from "./prompts/workflow/30-evaluating-new-dependency.md?raw";
+import majorVersionUpgrade from "./prompts/workflow/31-major-version-upgrade.md?raw";
+import featureSizing from "./prompts/workflow/32-feature-sizing-estimate.md?raw";
+import namingConsistencyAudit from "./prompts/workflow/33-naming-pattern-consistency-audit.md?raw";
 
 export const workflowPrompts = [
   {
@@ -160,7 +168,7 @@ export const workflowPrompts = [
     number: 14,
     title: "Auditing Security & Attack Surface",
     slug: "auditing-security",
-    category: "investigate",
+    category: "audit",
     summary: "Static security review with prioritized remediation.",
     tags: ["security", "audit", "vulnerabilities", "review"],
     prompt: auditingSecurity
@@ -170,7 +178,7 @@ export const workflowPrompts = [
     number: 15,
     title: "Mapping Test Coverage & Risk",
     slug: "mapping-test-coverage",
-    category: "investigate",
+    category: "audit",
     summary: "Map test coverage to critical paths and prioritize missing tests.",
     tags: ["testing", "coverage", "risk", "quality"],
     prompt: mappingTestCoverage
@@ -180,7 +188,7 @@ export const workflowPrompts = [
     number: 16,
     title: "Tracing a Performance Bottleneck",
     slug: "tracing-performance-bottleneck",
-    category: "investigate",
+    category: "debug",
     summary: "Trace a slow operation and locate the bottleneck before fixing.",
     tags: ["performance", "trace", "optimization", "profiling"],
     prompt: tracingPerformance
@@ -200,7 +208,7 @@ export const workflowPrompts = [
     number: 18,
     title: "Debugging a Production Incident from Logs",
     slug: "debugging-production-incident",
-    category: "debug",
+    category: "ship",
     summary: "Build a timeline and root-cause analysis from logs and stack traces.",
     tags: ["production", "incident", "logs", "debugging"],
     prompt: debuggingProductionIncident
@@ -240,7 +248,7 @@ export const workflowPrompts = [
     number: 22,
     title: "Characterizing Legacy Code with Tests",
     slug: "characterizing-legacy-code",
-    category: "build",
+    category: "investigate",
     summary: "Pin down untested legacy behavior before making changes.",
     tags: ["legacy", "testing", "refactor", "safety"],
     prompt: characterizingLegacyCode
@@ -274,5 +282,85 @@ export const workflowPrompts = [
     summary: "Facilitate a blameless postmortem with clear action items.",
     tags: ["postmortem", "incident", "review", "learning"],
     prompt: postIncidentReview
+  },
+  {
+    id: "frontend-tracing-renders",
+    number: 26,
+    title: "Tracing a Component's State & Re-renders",
+    slug: "frontend-tracing-renders",
+    category: "debug",
+    summary: "Trace frontend render paths, state changes, and stale UI behavior.",
+    tags: ["frontend", "react", "renders", "state", "debugging"],
+    prompt: tracingRenders
+  },
+  {
+    id: "accessibility-audit",
+    number: 27,
+    title: "Accessibility Audit",
+    slug: "accessibility-audit",
+    category: "audit",
+    summary: "WCAG 2.2 AA audit with prioritized fixes.",
+    tags: ["accessibility", "a11y", "frontend", "audit"],
+    prompt: accessibilityAudit
+  },
+  {
+    id: "layout-responsive-bug",
+    number: 28,
+    title: "Diagnosing a Layout or Responsive Bug",
+    slug: "layout-responsive-bug",
+    category: "debug",
+    summary: "Find the offending CSS or component structure before changing it.",
+    tags: ["frontend", "css", "responsive", "layout", "debugging"],
+    prompt: layoutResponsiveBug
+  },
+  {
+    id: "dependency-audit",
+    number: 29,
+    title: "Auditing Outdated & Vulnerable Dependencies",
+    slug: "dependency-audit",
+    category: "audit",
+    summary: "Review dependency health, security, and maintenance risk.",
+    tags: ["dependencies", "security", "audit", "maintenance"],
+    prompt: dependencyAudit
+  },
+  {
+    id: "evaluating-new-dependency",
+    number: 30,
+    title: "Evaluating Whether to Add a New Dependency",
+    slug: "evaluating-new-dependency",
+    category: "build",
+    summary: "Assess bundle, maintenance, and alternatives before installing.",
+    tags: ["dependencies", "tradeoffs", "architecture", "planning"],
+    prompt: evaluatingNewDependency
+  },
+  {
+    id: "major-version-upgrade",
+    number: 31,
+    title: "Assessing a Major Version Upgrade",
+    slug: "major-version-upgrade",
+    category: "build",
+    summary: "Investigate breaking changes and blast radius before upgrading.",
+    tags: ["upgrade", "migration", "dependencies", "risk"],
+    prompt: majorVersionUpgrade
+  },
+  {
+    id: "feature-sizing-estimate",
+    number: 32,
+    title: "Estimating & Sizing a Feature Before Building",
+    slug: "feature-sizing-estimate",
+    category: "orient",
+    summary: "Understand complexity, risk, and unknowns before planning.",
+    tags: ["planning", "estimation", "architecture", "scoping"],
+    prompt: featureSizing
+  },
+  {
+    id: "naming-pattern-consistency-audit",
+    number: 33,
+    title: "Auditing Naming & Pattern Consistency Across the Repo",
+    slug: "naming-pattern-consistency-audit",
+    category: "investigate",
+    summary: "Find drift, duplicate utilities, and inconsistent conventions.",
+    tags: ["patterns", "naming", "consistency", "refactor"],
+    prompt: namingConsistencyAudit
   }
 ];

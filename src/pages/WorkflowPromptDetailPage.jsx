@@ -7,6 +7,7 @@ const categoryLabels = {
   investigate: "Investigate",
   build: "Build",
   debug: "Debug",
+  audit: "Audit",
   ship: "Ship",
 };
 

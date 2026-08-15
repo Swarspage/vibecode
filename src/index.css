@@ -319,7 +319,48 @@ pre {
   color: var(--color-accent);
 }
 
-/* ─── Search ─────────────────────────────────────────────────────── */
+/* ─── Search & Filter ───────────────────────────────────────────── */
+.sidebar-search-filter {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: var(--color-bg);
+  padding-bottom: 12px;
+  margin-bottom: 8px;
+}
+
+.filter-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.filter-chip {
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-muted);
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.05em;
+  padding: 4px 10px;
+  text-transform: uppercase;
+  transition: color 160ms ease, border-color 160ms ease,
+    background-color 160ms ease;
+}
+
+.filter-chip:hover {
+  border-color: var(--color-accent-dim);
+  color: var(--color-fg);
+}
+
+.filter-chip.active {
+  background: var(--color-surface);
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
 .search-input {
   width: 100%;
   min-height: 44px;
@@ -373,7 +414,7 @@ pre {
   display: flex;
   flex-direction: column;
   gap: 32px;
-  margin-top: 40px;
+  margin-top: 32px;
 }
 
 @media (min-width: 768px) {
@@ -391,12 +432,14 @@ pre {
 
 @media (min-width: 768px) {
   .docs-sidebar {
-    width: 240px;
+    width: 300px;
     position: sticky;
-    top: 80px;
-    max-height: calc(100vh - 112px);
+    top: 88px;
+    max-height: calc(100vh - 136px);
     overflow-y: auto;
     padding-bottom: 24px;
+    padding-right: 6px;
+    scrollbar-gutter: stable;
   }
 }
 
@@ -419,6 +462,7 @@ pre {
   border-left: 2px solid transparent;
   font-family: var(--font-mono);
   font-size: 12px;
+  line-height: 1.35;
   color: var(--color-muted);
   text-decoration: none;
   transition: color 160ms ease, border-color 160ms ease,
@@ -427,7 +471,7 @@ pre {
 
 @media (min-width: 768px) {
   .docs-sidebar-link {
-    padding: 6px 10px;
+    padding: 8px 10px;
   }
 }
 
@@ -443,7 +487,7 @@ pre {
 }
 
 .docs-sidebar-link-nested {
-  padding-left: 20px;
+  padding-left: 14px;
 }
 
 .docs-content {
