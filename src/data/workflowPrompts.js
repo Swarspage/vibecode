@@ -51,6 +51,11 @@ import canaryReleasePlan from "./prompts/workflow/50-canary-release-plan.md?raw"
 import auditingLoggingObservability from "./prompts/workflow/51-auditing-logging-observability.md?raw";
 import auditingErrorMessagesApi from "./prompts/workflow/52-auditing-error-messages-api.md?raw";
 import auditingCiPipeline from "./prompts/workflow/53-auditing-ci-pipeline.md?raw";
+import explainingEntireProject from "./prompts/workflow/54-explaining-entire-project.md?raw";
+import seoPerformanceAudit from "./prompts/workflow/55-seo-performance-web-audit.md?raw";
+import documentationAudit from "./prompts/workflow/56-documentation-audit.md?raw";
+import productionReadinessAudit from "./prompts/workflow/57-production-readiness-audit.md?raw";
+import codeHealthMaintainabilityAudit from "./prompts/workflow/58-code-health-maintainability-audit.md?raw";
 
 export const workflowPrompts = [
   {
@@ -583,5 +588,55 @@ export const workflowPrompts = [
     summary: "Workflow prompt for Auditing CI Pipeline & Build Health.",
     tags: ["audit","ci-cd","build","infrastructure"],
     prompt: auditingCiPipeline
+  },
+  {
+    id: "explaining-entire-project",
+    number: 54,
+    title: "Explaining the Entire Project in Detail",
+    slug: "explaining-entire-project",
+    summary: "Act as a senior staff engineer producing a complete, professional explanation of this repository for a new senior engineer.",
+    prompt: explainingEntireProject,
+    category: "orient",
+    tags: ["Onboarding", "Documentation", "Architecture"]
+  },
+  {
+    id: "seo-performance-web-audit",
+    number: 55,
+    title: "Technical SEO, Performance & Web Platform Audit",
+    slug: "seo-performance-web-audit",
+    summary: "Act as a senior technical SEO and web performance specialist to audit a project's public web presence.",
+    prompt: seoPerformanceAudit,
+    category: "audit",
+    tags: ["SEO", "Performance", "Web Vitals", "Accessibility"]
+  },
+  {
+    id: "documentation-audit",
+    number: 56,
+    title: "Documentation & Developer Onboarding Audit",
+    slug: "documentation-audit",
+    summary: "Audit the documentation and developer onboarding experience of a repository for a new engineer.",
+    prompt: documentationAudit,
+    category: "audit",
+    tags: ["Documentation", "Onboarding", "Developer Experience"]
+  },
+  {
+    id: "production-readiness-audit",
+    number: 57,
+    title: "Production Readiness & Reliability Audit",
+    slug: "production-readiness-audit",
+    summary: "Act as a senior SRE auditing a codebase for production readiness, configuration, logging, and scaling.",
+    prompt: productionReadinessAudit,
+    category: "audit",
+    tags: ["SRE", "Reliability", "Production", "Monitoring"]
+  },
+  {
+    id: "code-health-maintainability-audit",
+    number: 58,
+    title: "Code Health & Maintainability Deep Audit",
+    slug: "code-health-maintainability-audit",
+    summary: "Audit the long-term maintainability of a codebase focusing on complexity, duplication, and boundaries.",
+    prompt: codeHealthMaintainabilityAudit,
+    category: "audit",
+    tags: ["Maintainability", "Code Health", "Tech Debt", "Refactoring"]
   }
 ];
