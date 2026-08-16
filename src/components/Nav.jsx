@@ -97,6 +97,17 @@ const Nav = () => {
                 Workflow Prompts
               </NavLink>
             </li>
+            <li>
+              <NavLink
+                to="/image-prompts"
+                id="nav-image-prompts"
+                className={({ isActive }) =>
+                  isActive ? "nav-link active" : "nav-link"
+                }
+              >
+                Image Prompts
+              </NavLink>
+            </li>
           </ul>
         </nav>
 
@@ -139,6 +150,15 @@ const Nav = () => {
             onClick={closeMenu}
           >
             Workflow Prompts
+          </NavLink>
+          <NavLink
+            to="/image-prompts"
+            className={({ isActive }) =>
+              isActive ? "nav-mobile-link active" : "nav-mobile-link"
+            }
+            onClick={closeMenu}
+          >
+            Image Prompts
           </NavLink>
         </nav>
       )}

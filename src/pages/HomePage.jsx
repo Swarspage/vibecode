@@ -3,6 +3,7 @@ import Hero from "../components/Hero";
 import DesignPromptCard from "../components/DesignPromptCard";
 import { designPrompts } from "../data/designPrompts";
 import { workflowPrompts } from "../data/workflowPrompts";
+import { imagePrompts } from "../data/imagePrompts";
 
 // First 3 design systems for the preview row
 const designPreview = designPrompts.slice(0, 3);
@@ -15,6 +16,9 @@ const workflowPreview = [
   workflowPrompts.find((p) => p.slug === "solving-bug"),
   workflowPrompts.find((p) => p.slug === "checking-change"),
 ];
+
+// First 6 image prompts for the preview grid
+const imagePreview = imagePrompts.slice(0, 6);
 
 // Inline category label map — mirrors WorkflowPromptDetailPage
 const categoryLabels = {
@@ -245,6 +249,138 @@ const HomePage = () => {
                   }}
                 >
                   {categoryLabels[prompt.category] ?? prompt.category}
+                </span>
+                <span
+                  style={{
+                    fontFamily: "var(--font-mono)",
+                    fontSize: "var(--text-xs)",
+                    color: "var(--color-muted)",
+                  }}
+                >
+                  →
+                </span>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* ─── Image Prompts Preview ────────────────────────────── */}
+      <section style={sectionStyle} aria-labelledby="home-image-heading">
+        {/* Section header */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "flex-end",
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+            gap: "16px",
+            marginBottom: "32px",
+          }}
+        >
+          <div>
+            <span style={sectionLabelStyle}>Image Prompts</span>
+            <h2 id="home-image-heading" style={sectionHeadingStyle}>
+              Gemini Image Generation
+            </h2>
+            <p style={sectionDescStyle}>
+              Copy-paste prompts for Gemini photo editing and image generation.
+              Portraits, restyling, restoration, seasonal edits, and cinematic
+              effects — grouped by what you want to make.
+            </p>
+          </div>
+          <Link
+            to="/image-prompts"
+            style={viewAllLinkStyle}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.color = "var(--color-fg)";
+              e.currentTarget.style.borderColor = "var(--color-fg)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.color = "var(--color-muted)";
+              e.currentTarget.style.borderColor = "var(--color-border)";
+            }}
+          >
+            View all image prompts →
+          </Link>
+        </div>
+
+        {/* Preview card rows */}
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr",
+            gap: "1px",
+            border: "1px solid var(--color-border)",
+            borderRadius: "var(--radius-md)",
+            overflow: "hidden",
+          }}
+        >
+          {imagePreview.map((prompt) => (
+            <Link
+              key={prompt.id}
+              to="/image-prompts"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                gap: "16px",
+                padding: "14px 20px",
+                textDecoration: "none",
+                color: "inherit",
+                borderTop: "1px solid var(--color-border)",
+                backgroundColor: "var(--color-surface)",
+                transition: "background-color 0.15s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = "var(--color-border)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = "var(--color-surface)";
+              }}
+            >
+              {/* Left: title */}
+              <span
+                style={{
+                  fontFamily: "var(--font-sans)",
+                  fontSize: "var(--text-sm)",
+                  fontWeight: 500,
+                  color: "var(--color-fg)",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                  flex: 1,
+                  minWidth: 0,
+                }}
+              >
+                {prompt.title}
+              </span>
+
+              {/* Right: upload badge + arrow */}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "10px",
+                  flexShrink: 0,
+                }}
+              >
+                <span
+                  style={{
+                    fontFamily: "var(--font-mono)",
+                    fontSize: "var(--text-2xs)",
+                    color: prompt.requiresUpload
+                      ? "var(--color-muted)"
+                      : "var(--color-accent)",
+                    letterSpacing: "0.08em",
+                    textTransform: "uppercase",
+                    border: "1px solid var(--color-border)",
+                    borderRadius: "var(--radius-sm)",
+                    padding: "2px 8px",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  {prompt.requiresUpload ? "Upload" : "Standalone"}
                 </span>
                 <span
                   style={{
