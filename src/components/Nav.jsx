@@ -4,7 +4,7 @@ import { Link, NavLink } from "react-router-dom";
 const Nav = () => {
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const closeMenu = () => setMenuOpen(false);
+  const closeMenu = () => setTimeout(() => setMenuOpen(false), 50);
   return (
     <header
       id="site-nav"
