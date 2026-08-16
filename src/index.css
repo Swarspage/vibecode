@@ -306,6 +306,18 @@ pre {
   color: var(--color-accent);
 }
 
+.footer-social-link {
+  transition: border-color 160ms ease, background-color 160ms ease;
+}
+
+.footer-social-link:hover {
+  border-color: var(--color-accent) !important;
+}
+
+.footer-social-link:hover .footer-social-val {
+  color: var(--color-accent) !important;
+}
+
 
 .detail-back-link {
   display: inline-flex;
