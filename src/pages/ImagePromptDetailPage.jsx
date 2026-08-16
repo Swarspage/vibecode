@@ -76,6 +76,24 @@ const ImagePromptDetailPage = () => {
     }
   };
 
+  const handleOpenChatGPT = async () => {
+    try {
+      await navigator.clipboard.writeText(prompt.prompt);
+      window.open("https://chatgpt.com/", "_blank", "noopener,noreferrer");
+    } catch (err) {
+      console.error("Failed to copy", err);
+    }
+  };
+
+  const handleOpenGemini = async () => {
+    try {
+      await navigator.clipboard.writeText(prompt.prompt);
+      window.open("https://gemini.google.com/app", "_blank", "noopener,noreferrer");
+    } catch (err) {
+      console.error("Failed to copy", err);
+    }
+  };
+
   const categoryLabel =
     categoryLabels[prompt.category] ?? prompt.category;
 
@@ -203,7 +221,7 @@ const ImagePromptDetailPage = () => {
       </div>
 
       {/* ── Preview image ──────────────────────────────────────────── */}
-      {prompt.image ? (
+      {prompt.detailImage || prompt.image ? (
         <div style={{ marginBottom: "48px" }}>
           <h2
             style={{
@@ -221,22 +239,24 @@ const ImagePromptDetailPage = () => {
             style={{
               width: "100%",
               maxWidth: "720px",
-              aspectRatio: "16 / 10",
-              overflow: "hidden",
-              borderRadius: "var(--radius-sm)",
-              border: "1px solid var(--color-border)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
               backgroundColor: "var(--color-surface)",
+              border: "1px solid var(--color-border)",
+              borderRadius: "var(--radius-sm)",
+              overflow: "hidden",
             }}
           >
             <img
-              src={prompt.image}
+              src={prompt.detailImage || prompt.image}
               alt={`${prompt.title} example output`}
               loading="lazy"
               style={{
                 width: "100%",
-                height: "100%",
-                objectFit: "cover",
-                objectPosition: "center top",
+                height: "auto",
+                maxHeight: "620px",
+                objectFit: "contain",
                 display: "block",
               }}
             />
@@ -316,33 +336,71 @@ const ImagePromptDetailPage = () => {
             Prompt
           </h2>
 
-          <button
-            id={`copy-detail-${prompt.id}`}
-            onClick={handleCopy}
-            className={
-              copied || copyError ? "dp-copy-btn" : "dp-copy-btn dp-copy-base"
-            }
-            style={{
-              minWidth: "120px",
-              height: "44px",
-              fontFamily: "var(--font-mono)",
-              fontSize: "12px",
-              backgroundColor: "var(--color-surface)",
-              borderRadius: "var(--radius-sm)",
-              cursor: "pointer",
-              ...(copied && {
-                border: "1px solid var(--color-accent)",
-                color: "var(--color-accent)",
-              }),
-              ...(copyError && {
-                border: "1px solid var(--color-border)",
-                color: "var(--color-muted)",
-              }),
-            }}
-            aria-label="Copy prompt to clipboard"
-          >
-            {copied ? "Copied" : copyError ? "Copy failed" : "Copy Prompt"}
-          </button>
+          <div style={{ display: "flex", gap: "8px" }}>
+            <button
+              onClick={handleOpenChatGPT}
+              className="dp-copy-btn dp-copy-base"
+              style={{
+                height: "44px",
+                padding: "0 16px",
+                fontFamily: "var(--font-mono)",
+                fontSize: "12px",
+                backgroundColor: "var(--color-surface)",
+                borderRadius: "var(--radius-sm)",
+                cursor: "pointer",
+              }}
+              title="Copies the prompt and opens ChatGPT"
+              aria-label="Copy prompt and open ChatGPT"
+            >
+              Copy & Open ChatGPT
+            </button>
+
+            <button
+              onClick={handleOpenGemini}
+              className="dp-copy-btn dp-copy-base"
+              style={{
+                height: "44px",
+                padding: "0 16px",
+                fontFamily: "var(--font-mono)",
+                fontSize: "12px",
+                backgroundColor: "var(--color-surface)",
+                borderRadius: "var(--radius-sm)",
+                cursor: "pointer",
+              }}
+              title="Copies the prompt and opens Gemini"
+              aria-label="Copy prompt and open Gemini"
+            >
+              Copy & Open Gemini
+            </button>
+
+            <button
+              id={`copy-detail-${prompt.id}`}
+              onClick={handleCopy}
+              className={
+                copied || copyError ? "dp-copy-btn" : "dp-copy-btn dp-copy-base"
+              }
+              style={{
+                minWidth: "120px",
+                height: "44px",
+                fontFamily: "var(--font-mono)",
+                fontSize: "12px",
+                backgroundColor: "var(--color-surface)",
+                borderRadius: "var(--radius-sm)",
+                cursor: "pointer",
+                ...(copied && {
+                  border: "1px solid var(--color-accent)",
+                  color: "var(--color-accent)",
+                }),
+                ...(copyError && {
+                  border: "1px solid var(--color-border)",
+                  color: "var(--color-muted)",
+                }),
+              }}
+              aria-label="Copy prompt to clipboard"
+            >
+              {copied ? "Copied" : copyError ? "Copy failed" : "Copy Prompt"}
+            </button>
+          </div>
 
           {/* Screen-reader live region */}
           <span aria-live="polite" aria-atomic="true" className="sr-only">

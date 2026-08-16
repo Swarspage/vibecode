@@ -11,6 +11,8 @@ export const imagePrompts = [
     requiresUpload: true,
     aspectRatio: null,
     image: "/images/gemini/girl-portrait.webp",
+    cardImage: "/images/gemini/girl-portrait.webp",
+    detailImage: "/images/gemini/girl-portrait.webp",
   },
   {
     id: "ip-002",
@@ -24,6 +26,8 @@ export const imagePrompts = [
     requiresUpload: true,
     aspectRatio: "4:5",
     image: "/images/gemini/cinematic-boy-portrait.webp",
+    cardImage: "/images/gemini/cinematic-boy-portrait.webp",
+    detailImage: "/images/gemini/cinematic-boy-portrait.webp",
   },
   {
     id: "ip-003",
@@ -37,6 +41,8 @@ export const imagePrompts = [
     requiresUpload: true,
     aspectRatio: null,
     image: "/images/gemini/cinematic-couple.webp",
+    cardImage: "/images/gemini/cinematic-couple.webp",
+    detailImage: "/images/gemini/cinematic-couple.webp",
   },
   {
     id: "ip-004",
@@ -50,6 +56,8 @@ export const imagePrompts = [
     requiresUpload: true,
     aspectRatio: "4:5",
     image: "/images/gemini/3d-figure.webp",
+    cardImage: "/images/gemini/3d-figure.webp",
+    detailImage: "/images/gemini/3d-figure.webp",
   },
   {
     id: "ip-005",
@@ -63,6 +71,8 @@ export const imagePrompts = [
     requiresUpload: true,
     aspectRatio: null,
     image: "/images/gemini/photo-restoration.webp",
+    cardImage: "/images/gemini/photo-restoration.webp",
+    detailImage: "/images/gemini/photo-restoration.webp",
   },
   {
     id: "ip-006",
@@ -76,6 +86,8 @@ export const imagePrompts = [
     requiresUpload: true,
     aspectRatio: null,
     image: "/images/gemini/y2k-style.webp",
+    cardImage: "/images/gemini/y2k-style.webp",
+    detailImage: "/images/gemini/y2k-style.webp",
   },
   {
     id: "ip-007",
@@ -88,7 +100,9 @@ export const imagePrompts = [
       "Edit the uploaded photo. Keep the same face and identity exactly. Restyle into an aura-farm aesthetic portrait: dramatic colored rim light glowing around the subject, moody dark atmospheric background, soft volumetric haze, confident low-angle framing, rich cinematic color grade, subtle particles in the air, high-detail vertical portrait. Keep skin texture natural and true to life.",
     requiresUpload: true,
     aspectRatio: null,
-    image: "/images/gemini/aura-farm.png",
+    image: "/images/gemini/aura-farm.webp",
+    cardImage: "/images/gemini/aura-farm.webp",
+    detailImage: "/images/gemini/aura-farm.webp",
   },
   {
     id: "ip-008",
@@ -102,5 +116,7 @@ export const imagePrompts = [
     requiresUpload: true,
     aspectRatio: null,
     image: "/images/gemini/red-man.webp",
+    cardImage: "/images/gemini/red-man.webp",
+    detailImage: "/images/gemini/red-man.webp",
   },
 ];

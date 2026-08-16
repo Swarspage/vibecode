@@ -1,12 +1,31 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useLayoutEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 
 const DesignPromptCard = ({ prompt }) => {
   const [copied, setCopied] = useState(false);
   const [iframeLoaded, setIframeLoaded] = useState(false);
+  const cardPreviewFrameRef = useRef(null);
+  const [viewportScale, setViewportScale] = useState(0.25);
 
   useEffect(() => {
     setIframeLoaded(false);
+  }, [prompt.previewUrl]);
+
+  useLayoutEffect(() => {
+    const el = cardPreviewFrameRef.current;
+    if (!el) return;
+
+    const updateScale = () => {
+      const width = el.getBoundingClientRect().width;
+      setViewportScale(width / 1280);
+    };
+
+    updateScale();
+
+    const observer = new ResizeObserver(updateScale);
+    observer.observe(el);
+
+    return () => observer.disconnect();
   }, [prompt.previewUrl]);
 
   const handleCopy = async () => {
@@ -45,18 +64,23 @@ const DesignPromptCard = ({ prompt }) => {
         style={{ display: "block", color: "inherit", textDecoration: "none" }}
       >
         {prompt.previewUrl ? (
-          /* ── Live iframe preview with mobile fallback ── */
+          /* ── Live iframe preview with scaling sandbox ── */
           <div
-            className={`preview-frame${iframeLoaded ? " is-ready" : " is-loading"}`}
+            ref={cardPreviewFrameRef}
+            className={`card-preview-frame${iframeLoaded ? " is-ready" : " is-loading"}`}
           >
-            <iframe
-              src={prompt.previewUrl}
-              loading="lazy"
-              title={`${prompt.name} design system preview`}
-              className="preview-iframe"
-              tabIndex={-1}
-              onLoad={() => setIframeLoaded(true)}
-            />
+            <div
+              className="card-preview-viewport"
+              style={{ transform: `scale(${viewportScale})` }}
+            >
+              <iframe
+                src={prompt.previewUrl}
+                loading="lazy"
+                title={`${prompt.name} card preview`}
+                tabIndex={-1}
+                onLoad={() => setIframeLoaded(true)}
+              />
+            </div>
 
             <div className="preview-skeleton preview-skeleton-glow" aria-hidden="true">
               <div className="preview-skeleton-shimmer preview-skeleton-title" />

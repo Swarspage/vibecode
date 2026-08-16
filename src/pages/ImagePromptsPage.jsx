@@ -14,6 +14,7 @@ const categories = [
 /* ─── Image Prompt Card ─────────────────────────────────────────────── */
 const ImagePromptCard = ({ prompt }) => {
   const [copied, setCopied] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   const handleCopy = async () => {
     try {
@@ -45,7 +46,7 @@ const ImagePromptCard = ({ prompt }) => {
         to={`/image-prompts/${prompt.slug}`} 
         style={{ display: "block", color: "inherit", textDecoration: "none", flexShrink: 0 }}
       >
-        {prompt.image ? (
+        {prompt.cardImage || prompt.image ? (
           <div
             style={{
               width: "100%",
@@ -55,17 +56,35 @@ const ImagePromptCard = ({ prompt }) => {
               position: "relative",
             }}
           >
+            {/* Skeleton Placeholder */}
+            {!imageLoaded && (
+              <div
+                className="preview-skeleton-shimmer"
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  width: "100%",
+                  height: "100%",
+                  zIndex: 0,
+                }}
+              />
+            )}
+
             <img
-              src={prompt.image}
+              src={prompt.cardImage || prompt.image}
               alt={prompt.title}
               loading="lazy"
+              onLoad={() => setImageLoaded(true)}
               style={{
                 width: "100%",
                 height: "100%",
                 objectFit: "cover",
                 objectPosition: "center top",
                 display: "block",
-                transition: "transform 400ms ease",
+                transition: "transform 400ms ease, opacity 400ms ease",
+                opacity: imageLoaded ? 1 : 0,
+                position: "relative",
+                zIndex: 1,
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = "scale(1.04)";
@@ -82,6 +101,7 @@ const ImagePromptCard = ({ prompt }) => {
                 background:
                   "linear-gradient(to top, rgba(10,10,11,0.55) 0%, transparent 60%)",
                 pointerEvents: "none",
+                zIndex: 2,
               }}
             />
           </div>
