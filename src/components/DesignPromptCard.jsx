@@ -15,14 +15,22 @@ const DesignPromptCard = ({ prompt }) => {
     const el = cardPreviewFrameRef.current;
     if (!el) return;
 
-    const updateScale = () => {
-      const width = el.getBoundingClientRect().width;
-      setViewportScale(width / 1280);
-    };
+    let lastWidth = null;
 
-    updateScale();
+    const observer = new ResizeObserver((entries) => {
+      for (let entry of entries) {
+        const newWidth = entry.contentRect.width;
+        // Only update if difference is > 1px to prevent subpixel layout thrashing loops
+        if (lastWidth === null || Math.abs(newWidth - lastWidth) > 1) {
+          lastWidth = newWidth;
+          // Use requestAnimationFrame to decouple state update from the resize observer callback
+          window.requestAnimationFrame(() => {
+            setViewportScale(newWidth / 1280);
+          });
+        }
+      }
+    });
 
-    const observer = new ResizeObserver(updateScale);
     observer.observe(el);
 
     return () => observer.disconnect();
