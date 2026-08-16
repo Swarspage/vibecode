@@ -321,7 +321,7 @@ const ImagePromptsPage = () => {
             marginBottom: "16px",
           }}
         >
-          Gemini Image Prompts
+          Image Prompts
         </h1>
         <p
           style={{

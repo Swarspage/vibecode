@@ -1,14 +1,20 @@
+import { useRef } from "react";
 import { Link } from "react-router-dom";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Hero from "../components/Hero";
 import DesignPromptCard from "../components/DesignPromptCard";
 import { designPrompts } from "../data/designPrompts";
 import { workflowPrompts } from "../data/workflowPrompts";
 import { imagePrompts } from "../data/imagePrompts";
 
+gsap.registerPlugin(ScrollTrigger, useGSAP);
+
 // First 3 design systems for the preview row
 const designPreview = designPrompts.slice(0, 3);
 
-// A hand-picked cross-section of 5 workflow prompts spanning all 5 categories
+// A hand-picked cross-section of 5 workflow prompts
 const workflowPreview = [
   workflowPrompts.find((p) => p.slug === "exploring-new-codebase"),
   workflowPrompts.find((p) => p.slug === "tracing-backend"),
@@ -17,10 +23,9 @@ const workflowPreview = [
   workflowPrompts.find((p) => p.slug === "checking-change"),
 ];
 
-// First 6 image prompts for the preview grid
+// First 6 image prompts
 const imagePreview = imagePrompts.slice(0, 6);
 
-// Inline category label map — mirrors WorkflowPromptDetailPage
 const categoryLabels = {
   orient: "Orient",
   investigate: "Investigate",
@@ -38,7 +43,7 @@ const sectionStyle = {
 
 const sectionLabelStyle = {
   fontFamily: "var(--font-mono)",
-  fontSize: "var(--text-2xs)",
+  fontSize: "12px",
   color: "var(--color-accent)",
   letterSpacing: "0.12em",
   textTransform: "uppercase",
@@ -57,7 +62,7 @@ const sectionHeadingStyle = {
 
 const sectionDescStyle = {
   fontFamily: "var(--font-body)",
-  fontSize: "var(--text-base)",
+  fontSize: "16px",
   color: "var(--color-muted-bright)",
   lineHeight: 1.6,
   maxWidth: "480px",
@@ -65,7 +70,7 @@ const sectionDescStyle = {
 
 const viewAllLinkStyle = {
   fontFamily: "var(--font-mono)",
-  fontSize: "var(--text-xs)",
+  fontSize: "12px",
   color: "var(--color-muted-bright)",
   letterSpacing: "0.08em",
   textTransform: "uppercase",
@@ -79,13 +84,190 @@ const viewAllLinkStyle = {
 };
 
 const HomePage = () => {
+  const mainRef = useRef(null);
+
+  useGSAP(
+    () => {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+      const elements = gsap.utils.toArray("[data-home-reveal]");
+      
+      elements.forEach((el) => {
+        gsap.from(el, {
+          scrollTrigger: {
+            trigger: el,
+            start: "top 85%",
+            toggleActions: "play none none reverse",
+          },
+          opacity: 0,
+          y: 20,
+          duration: 0.6,
+          ease: "power2.out",
+        });
+      });
+    },
+    { scope: mainRef }
+  );
+
   return (
-    <>
+    <main ref={mainRef}>
       <Hero />
 
+      {/* ─── Marquee Strip ────────────────────────────────────────── */}
+      <div className="home-marquee" aria-hidden="true">
+        <div className="home-marquee-track">
+          {[...Array(6)].map((_, i) => (
+            <div key={i} className="home-marquee-item">
+              <span>COPY</span>
+              <span style={{ color: "var(--color-accent)" }}>✦</span>
+              <span>PASTE</span>
+              <span style={{ color: "var(--color-accent)" }}>✦</span>
+              <span>SHIP</span>
+              <span style={{ color: "var(--color-accent)" }}>✦</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ─── How it works ────────────────────────────────────────── */}
+      <section style={{ padding: "96px 0" }} data-home-reveal>
+        <div style={{ marginBottom: "48px", textAlign: "center" }}>
+          <h2 style={{
+            fontFamily: "var(--font-sans)",
+            fontSize: "clamp(2rem, 5vw, 2.5rem)",
+            fontWeight: 800,
+            letterSpacing: "-0.03em",
+            color: "var(--color-fg)",
+            marginBottom: "12px",
+          }}>
+            How it works
+          </h2>
+          <p style={{
+            fontFamily: "var(--font-body)",
+            color: "var(--color-muted-bright)",
+            maxWidth: "500px",
+            margin: "0 auto",
+          }}>
+            Drop-in context for any AI tool. Three simple steps to ship faster.
+          </p>
+        </div>
+        
+        <div className="home-steps-grid">
+          {/* Step 1 */}
+          <div className="home-step-card">
+            <span style={{ fontFamily: "var(--font-mono)", color: "var(--color-accent)", fontSize: "14px" }}>01.</span>
+            <h3 style={{ fontFamily: "var(--font-sans)", fontWeight: 700, fontSize: "20px", color: "var(--color-fg)" }}>Copy</h3>
+            <p style={{ fontFamily: "var(--font-body)", color: "var(--color-muted-bright)", fontSize: "14px", lineHeight: 1.5 }}>
+              Copy a specialized prompt directly from Scaffold. Design systems, workflows, or image templates.
+            </p>
+          </div>
+          {/* Step 2 */}
+          <div className="home-step-card">
+            <span style={{ fontFamily: "var(--font-mono)", color: "var(--color-accent)", fontSize: "14px" }}>02.</span>
+            <h3 style={{ fontFamily: "var(--font-sans)", fontWeight: 700, fontSize: "20px", color: "var(--color-fg)" }}>Paste</h3>
+            <p style={{ fontFamily: "var(--font-body)", color: "var(--color-muted-bright)", fontSize: "14px", lineHeight: 1.5 }}>
+              Paste it straight into your AI IDE or chat tool. The context is pre-engineered for you.
+            </p>
+          </div>
+          {/* Step 3 */}
+          <div className="home-step-card">
+            <span style={{ fontFamily: "var(--font-mono)", color: "var(--color-accent)", fontSize: "14px" }}>03.</span>
+            <h3 style={{ fontFamily: "var(--font-sans)", fontWeight: 700, fontSize: "20px", color: "var(--color-fg)" }}>Ship</h3>
+            <p style={{ fontFamily: "var(--font-body)", color: "var(--color-muted-bright)", fontSize: "14px", lineHeight: 1.5 }}>
+              Let the AI generate the code, execute the debugging workflow, or output the asset immediately.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── Pillars Showcase ────────────────────────────────────── */}
+      <section style={{ paddingBottom: "96px" }}>
+        <div style={{ marginBottom: "40px" }}>
+          <span style={sectionLabelStyle}>The Framework</span>
+          <h2 style={sectionHeadingStyle}>Three Prompt Pillars</h2>
+        </div>
+
+        <div className="home-pillars">
+          {/* Pillar 1: Design Systems */}
+          <Link to="/design-prompts" className="home-pillar-card" data-home-reveal>
+            <div className="home-pillar-content">
+              <span style={{ fontFamily: "var(--font-mono)", fontSize: "12px", color: "var(--color-accent)", marginBottom: "8px", textTransform: "uppercase", letterSpacing: "0.1em" }}>Pillar 01</span>
+              <h3 style={{ fontFamily: "var(--font-sans)", fontWeight: 800, fontSize: "clamp(1.5rem, 4vw, 2.5rem)", letterSpacing: "-0.03em", color: "var(--color-fg)", marginBottom: "16px" }}>
+                Design Systems
+              </h3>
+              <p style={{ fontFamily: "var(--font-body)", color: "var(--color-muted-bright)", fontSize: "16px", lineHeight: 1.6, marginBottom: "32px" }}>
+                Not just color palettes. Full design-system prompts for AI codegen — tokens, typography, components, and motion.
+              </p>
+              <span style={{ fontFamily: "var(--font-mono)", fontSize: "12px", color: "var(--color-fg)", textTransform: "uppercase", letterSpacing: "0.05em", display: "flex", alignItems: "center", gap: "8px" }}>
+                Browse systems <span style={{ color: "var(--color-accent)" }}>→</span>
+              </span>
+            </div>
+            <div className="home-pillar-visual">
+              {/* Fake UI Swatch Grid */}
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "12px", padding: "32px", width: "100%" }}>
+                <div style={{ height: "64px", backgroundColor: "var(--color-bg)", border: "1px solid var(--color-border)", borderRadius: "var(--radius-sm)" }} />
+                <div style={{ height: "64px", backgroundColor: "var(--color-surface)", border: "1px solid var(--color-border)", borderRadius: "var(--radius-sm)" }} />
+                <div style={{ height: "64px", backgroundColor: "var(--color-accent)", borderRadius: "var(--radius-sm)" }} />
+                <div style={{ height: "64px", backgroundColor: "var(--color-accent-dim)", borderRadius: "var(--radius-sm)" }} />
+              </div>
+            </div>
+          </Link>
+
+          {/* Pillar 2: Workflow Prompts */}
+          <Link to="/workflow-prompts" className="home-pillar-card" data-home-reveal>
+            <div className="home-pillar-content">
+              <span style={{ fontFamily: "var(--font-mono)", fontSize: "12px", color: "var(--color-accent)", marginBottom: "8px", textTransform: "uppercase", letterSpacing: "0.1em" }}>Pillar 02</span>
+              <h3 style={{ fontFamily: "var(--font-sans)", fontWeight: 800, fontSize: "clamp(1.5rem, 4vw, 2.5rem)", letterSpacing: "-0.03em", color: "var(--color-fg)", marginBottom: "16px" }}>
+                Engineering Workflows
+              </h3>
+              <p style={{ fontFamily: "var(--font-body)", color: "var(--color-muted-bright)", fontSize: "16px", lineHeight: 1.6, marginBottom: "32px" }}>
+                Production prompts for reading, debugging, shipping, and refactoring real codebases with an AI IDE.
+              </p>
+              <span style={{ fontFamily: "var(--font-mono)", fontSize: "12px", color: "var(--color-fg)", textTransform: "uppercase", letterSpacing: "0.05em", display: "flex", alignItems: "center", gap: "8px" }}>
+                Explore workflows <span style={{ color: "var(--color-accent)" }}>→</span>
+              </span>
+            </div>
+            <div className="home-pillar-visual" style={{ backgroundColor: "rgba(0,0,0,0.4)" }}>
+              {/* Fake Terminal Snippet */}
+              <div style={{ padding: "32px", width: "100%", fontFamily: "var(--font-mono)", fontSize: "12px", lineHeight: 2, color: "var(--color-muted)" }}>
+                <div><span style={{ color: "var(--color-accent)" }}>01</span> [orient] codebase-exploration</div>
+                <div><span style={{ color: "var(--color-accent)" }}>02</span> [investigate] backend-tracing</div>
+                <div><span style={{ color: "var(--color-accent)" }}>03</span> [build] feature-implementation</div>
+                <div><span style={{ color: "var(--color-accent)" }}>04</span> [debug] unhandled-exception</div>
+                <div><span style={{ color: "var(--color-accent)" }}>05</span> [ship] pre-commit-check</div>
+              </div>
+            </div>
+          </Link>
+
+          {/* Pillar 3: Image Prompts */}
+          <Link to="/image-prompts" className="home-pillar-card" data-home-reveal>
+            <div className="home-pillar-content">
+              <span style={{ fontFamily: "var(--font-mono)", fontSize: "12px", color: "var(--color-accent)", marginBottom: "8px", textTransform: "uppercase", letterSpacing: "0.1em" }}>Pillar 03</span>
+              <h3 style={{ fontFamily: "var(--font-sans)", fontWeight: 800, fontSize: "clamp(1.5rem, 4vw, 2.5rem)", letterSpacing: "-0.03em", color: "var(--color-fg)", marginBottom: "16px" }}>
+                Image Generation
+              </h3>
+              <p style={{ fontFamily: "var(--font-body)", color: "var(--color-muted-bright)", fontSize: "16px", lineHeight: 1.6, marginBottom: "32px" }}>
+                Copy-paste prompts for photo editing, restoration, seasonal edits, and cinematic effects.
+              </p>
+              <span style={{ fontFamily: "var(--font-mono)", fontSize: "12px", color: "var(--color-fg)", textTransform: "uppercase", letterSpacing: "0.05em", display: "flex", alignItems: "center", gap: "8px" }}>
+                See image prompts <span style={{ color: "var(--color-accent)" }}>→</span>
+              </span>
+            </div>
+            <div className="home-pillar-visual">
+              {/* Fake Image Grid */}
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "8px", padding: "24px", width: "100%", height: "100%" }}>
+                <div style={{ backgroundColor: "#2A2A35", borderRadius: "var(--radius-sm)", height: "100px" }} />
+                <div style={{ backgroundColor: "#333344", borderRadius: "var(--radius-sm)", height: "100px" }} />
+                <div style={{ backgroundColor: "#1A1A24", borderRadius: "var(--radius-sm)", height: "100px" }} />
+                <div style={{ backgroundColor: "#444455", borderRadius: "var(--radius-sm)", height: "100px" }} />
+              </div>
+            </div>
+          </Link>
+        </div>
+      </section>
+
       {/* ─── Design Prompts Preview ──────────────────────────────── */}
-      <section style={sectionStyle} aria-labelledby="home-design-heading">
-        {/* Section header */}
+      <section style={sectionStyle} aria-labelledby="home-design-heading" data-home-reveal>
         <div
           style={{
             display: "flex",
@@ -97,9 +279,9 @@ const HomePage = () => {
           }}
         >
           <div>
-            <span style={sectionLabelStyle}>Design Prompts</span>
+            <span style={sectionLabelStyle}>Design System Prompts</span>
             <h2 id="home-design-heading" style={sectionHeadingStyle}>
-              Design Systems
+              Live System Previews
             </h2>
             <p style={sectionDescStyle}>
               Drop-in design-system prompts for AI codegen. Each one ships
@@ -123,7 +305,6 @@ const HomePage = () => {
           </Link>
         </div>
 
-        {/* Card grid — reuses DesignPromptCard exactly as-is */}
         <div className="prompt-grid">
           {designPreview.map((prompt) => (
             <DesignPromptCard key={prompt.id} prompt={prompt} />
@@ -132,8 +313,7 @@ const HomePage = () => {
       </section>
 
       {/* ─── Workflow Prompts Preview ────────────────────────────── */}
-      <section style={sectionStyle} aria-labelledby="home-workflow-heading">
-        {/* Section header */}
+      <section style={sectionStyle} aria-labelledby="home-workflow-heading" data-home-reveal>
         <div
           style={{
             display: "flex",
@@ -147,7 +327,7 @@ const HomePage = () => {
           <div>
             <span style={sectionLabelStyle}>Workflow Prompts</span>
             <h2 id="home-workflow-heading" style={sectionHeadingStyle}>
-              Codebase Workflows
+              Codebase Utilities
             </h2>
             <p style={sectionDescStyle}>
               13 production prompts for reading, debugging, refactoring, and
@@ -171,7 +351,6 @@ const HomePage = () => {
           </Link>
         </div>
 
-        {/* Lightweight prompt rows */}
         <div
           style={{
             display: "flex",
@@ -205,12 +384,11 @@ const HomePage = () => {
                 e.currentTarget.style.backgroundColor = "var(--color-surface)";
               }}
             >
-              {/* Left: number + title */}
               <div style={{ display: "flex", alignItems: "center", gap: "14px", minWidth: 0 }}>
                 <span
                   style={{
                     fontFamily: "var(--font-mono)",
-                    fontSize: "var(--text-2xs)",
+                    fontSize: "10px",
                     color: "var(--color-muted-bright)",
                     letterSpacing: "0.08em",
                     flexShrink: 0,
@@ -221,7 +399,7 @@ const HomePage = () => {
                 <span
                   style={{
                     fontFamily: "var(--font-sans)",
-                    fontSize: "var(--text-sm)",
+                    fontSize: "14px",
                     fontWeight: 500,
                     color: "var(--color-fg)",
                     overflow: "hidden",
@@ -233,12 +411,11 @@ const HomePage = () => {
                 </span>
               </div>
 
-              {/* Right: category tag + arrow */}
               <div style={{ display: "flex", alignItems: "center", gap: "10px", flexShrink: 0 }}>
                 <span
                   style={{
                     fontFamily: "var(--font-mono)",
-                    fontSize: "var(--text-2xs)",
+                    fontSize: "10px",
                     color: "var(--color-muted-bright)",
                     letterSpacing: "0.1em",
                     textTransform: "uppercase",
@@ -253,7 +430,7 @@ const HomePage = () => {
                 <span
                   style={{
                     fontFamily: "var(--font-mono)",
-                    fontSize: "var(--text-xs)",
+                    fontSize: "12px",
                     color: "var(--color-muted-bright)",
                   }}
                 >
@@ -266,8 +443,7 @@ const HomePage = () => {
       </section>
 
       {/* ─── Image Prompts Preview ────────────────────────────── */}
-      <section style={sectionStyle} aria-labelledby="home-image-heading">
-        {/* Section header */}
+      <section style={sectionStyle} aria-labelledby="home-image-heading" data-home-reveal>
         <div
           style={{
             display: "flex",
@@ -281,12 +457,12 @@ const HomePage = () => {
           <div>
             <span style={sectionLabelStyle}>Image Prompts</span>
             <h2 id="home-image-heading" style={sectionHeadingStyle}>
-              Gemini Image Generation
+              Photo & Asset Generation
             </h2>
             <p style={sectionDescStyle}>
-              Copy-paste prompts for Gemini photo editing and image generation.
+              Copy-paste prompts for AI photo editing and image generation.
               Portraits, restyling, restoration, seasonal edits, and cinematic
-              effects — grouped by what you want to make.
+              effects.
             </p>
           </div>
           <Link
@@ -305,7 +481,6 @@ const HomePage = () => {
           </Link>
         </div>
 
-        {/* Preview card rows */}
         <div
           style={{
             display: "grid",
@@ -339,11 +514,10 @@ const HomePage = () => {
                 e.currentTarget.style.backgroundColor = "var(--color-surface)";
               }}
             >
-              {/* Left: title */}
               <span
                 style={{
                   fontFamily: "var(--font-sans)",
-                  fontSize: "var(--text-sm)",
+                  fontSize: "14px",
                   fontWeight: 500,
                   color: "var(--color-fg)",
                   overflow: "hidden",
@@ -356,7 +530,6 @@ const HomePage = () => {
                 {prompt.title}
               </span>
 
-              {/* Right: upload badge + arrow */}
               <div
                 style={{
                   display: "flex",
@@ -368,7 +541,7 @@ const HomePage = () => {
                 <span
                   style={{
                     fontFamily: "var(--font-mono)",
-                    fontSize: "var(--text-2xs)",
+                    fontSize: "10px",
                     color: prompt.requiresUpload
                       ? "var(--color-muted-bright)"
                       : "var(--color-accent)",
@@ -385,7 +558,7 @@ const HomePage = () => {
                 <span
                   style={{
                     fontFamily: "var(--font-mono)",
-                    fontSize: "var(--text-xs)",
+                    fontSize: "12px",
                     color: "var(--color-muted-bright)",
                   }}
                 >
@@ -396,7 +569,7 @@ const HomePage = () => {
           ))}
         </div>
       </section>
-    </>
+    </main>
   );
 };
 

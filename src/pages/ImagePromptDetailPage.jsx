@@ -67,24 +67,6 @@ const ImagePromptDetailPage = () => {
     }
   };
 
-  const handleOpenChatGPT = async () => {
-    try {
-      await navigator.clipboard.writeText(prompt.prompt);
-      window.open("https://chatgpt.com/", "_blank", "noopener,noreferrer");
-    } catch (err) {
-      console.error("Failed to copy", err);
-    }
-  };
-
-  const handleOpenGemini = async () => {
-    try {
-      await navigator.clipboard.writeText(prompt.prompt);
-      window.open("https://gemini.google.com/app", "_blank", "noopener,noreferrer");
-    } catch (err) {
-      console.error("Failed to copy", err);
-    }
-  };
-
   const categoryLabel =
     categoryLabels[prompt.category] ?? prompt.category;
 
@@ -317,41 +299,7 @@ const ImagePromptDetailPage = () => {
           </h2>
 
           <div style={{ display: "flex", gap: "8px" }}>
-            <button
-              onClick={handleOpenChatGPT}
-              className="dp-copy-btn dp-copy-base"
-              style={{
-                height: "44px",
-                padding: "0 16px",
-                fontFamily: "var(--font-mono)",
-                fontSize: "12px",
-                backgroundColor: "var(--color-surface)",
-                borderRadius: "var(--radius-sm)",
-                cursor: "pointer",
-              }}
-              title="Copies the prompt and opens ChatGPT"
-              aria-label="Copy prompt and open ChatGPT"
-            >
-              Copy & Open ChatGPT
-            </button>
-
-            <button
-              onClick={handleOpenGemini}
-              className="dp-copy-btn dp-copy-base"
-              style={{
-                height: "44px",
-                padding: "0 16px",
-                fontFamily: "var(--font-mono)",
-                fontSize: "12px",
-                backgroundColor: "var(--color-surface)",
-                borderRadius: "var(--radius-sm)",
-                cursor: "pointer",
-              }}
-              title="Copies the prompt and opens Gemini"
-              aria-label="Copy prompt and open Gemini"
-            >
-              Copy & Open Gemini
-            </button>
+            {/* The useless external copy buttons were removed */}
 
             <button
               id={`copy-detail-${prompt.id}`}

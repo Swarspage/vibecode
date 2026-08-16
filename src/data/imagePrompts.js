@@ -5,7 +5,7 @@ export const imagePrompts = [
     slug: "soft-glam-trending-girl-portrait",
     category: "trending-portraits",
     summary:
-      "Restyle an uploaded selfie into a polished soft-glam portrait with dewy skin, warm butterfly glow, and a pastel background — the most copied Gemini photo format right now.",
+      "Restyle an uploaded selfie into a polished soft-glam portrait with dewy skin, warm butterfly glow, and a pastel background — the most copied AI photo format right now.",
     prompt:
       "Edit the uploaded photo. This is an identity-preserving restyle, not a face replacement.\n\nIDENTITY PRESERVATION (NON-NEGOTIABLE): Keep the subject's facial identity exactly as in the source photo. Do not alter face shape, bone structure, eyes, eyebrows, nose, lips, teeth, skin tone, skin texture, beauty marks, scars, facial hair, hairline, or natural expression. The person must remain instantly recognizable as the same individual. Do not smooth, slim, de-age, age, beautify, or otherwise alter the face. Do not generate a new person.\n\nSTYLE CHANGE ONLY: Restyle the scene and finish into a soft-glam aesthetic selfie. Apply a dewy, luminous skin finish while preserving natural skin texture; avoid heavy smoothing or plastic skin. Add warm, soft highlight and a subtle butterfly lighting effect. Use a dreamy pastel background, high-key diffuse lighting, glossy lips, soft rosy makeup, and polished hair styling if appropriate. Keep the original face and identity unchanged.\n\nTECHNICAL: High-resolution, hyper-realistic, fashion-editorial portrait, 8k detail, sharp focus on eyes, natural depth of field, soft rim light, vertical social frame if suitable.",
     requiresUpload: true,
