@@ -176,29 +176,6 @@ const Hero = () => {
               Open Workflow Prompts
             </Link>
 
-            <Link
-              to="/image-prompts"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                justifyContent: "center",
-                height: "48px",
-                padding: "0 24px",
-                backgroundColor: "transparent",
-                border: "1px solid var(--color-border)",
-                color: "var(--color-fg)",
-                fontFamily: "var(--font-sans)",
-                fontWeight: 600,
-                fontSize: "14px",
-                borderRadius: "24px",
-                textDecoration: "none",
-                transition: "border-color 0.2s ease",
-              }}
-              onMouseEnter={(e) => (e.target.style.borderColor = "var(--color-muted)")}
-              onMouseLeave={(e) => (e.target.style.borderColor = "var(--color-border)")}
-            >
-              Explore Image Prompts
-            </Link>
           </div>
         </div>
 
@@ -222,9 +199,7 @@ const Hero = () => {
             <div data-hero-term-line style={{ color: "var(--color-muted)" }}>
               {">"} 33 codebase workflow prompts loaded
             </div>
-            <div data-hero-term-line style={{ color: "var(--color-muted)" }}>
-              {">"} 8 gemini image prompts loaded
-            </div>
+
             <div data-hero-term-line style={{ color: "var(--color-accent)", marginTop: "8px" }}>
               {">"} [OK] Ready to copy<span className="home-terminal-cursor" />
             </div>

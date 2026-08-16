@@ -7,7 +7,6 @@ import Hero from "../components/Hero";
 import DesignPromptCard from "../components/DesignPromptCard";
 import { designPrompts } from "../data/designPrompts";
 import { workflowPrompts } from "../data/workflowPrompts";
-import { imagePrompts } from "../data/imagePrompts";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
@@ -22,9 +21,6 @@ const workflowPreview = [
   workflowPrompts.find((p) => p.slug === "solving-bug"),
   workflowPrompts.find((p) => p.slug === "checking-change"),
 ];
-
-// First 6 image prompts
-const imagePreview = imagePrompts.slice(0, 6);
 
 const categoryLabels = {
   orient: "Orient",
@@ -91,7 +87,7 @@ const HomePage = () => {
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
       const elements = gsap.utils.toArray("[data-home-reveal]");
-      
+
       elements.forEach((el) => {
         gsap.from(el, {
           scrollTrigger: {
@@ -151,7 +147,7 @@ const HomePage = () => {
             Drop-in context for any AI tool. Three simple steps to ship faster.
           </p>
         </div>
-        
+
         <div className="home-steps-grid">
           {/* Step 1 */}
           <div className="home-step-card">
@@ -184,7 +180,7 @@ const HomePage = () => {
       <section style={{ paddingBottom: "96px" }}>
         <div style={{ marginBottom: "40px" }}>
           <span style={sectionLabelStyle}>The Framework</span>
-          <h2 style={sectionHeadingStyle}>Four Prompt Pillars</h2>
+          <h2 style={sectionHeadingStyle}>Two Prompt Pillars</h2>
         </div>
 
         <div className="home-pillars">
@@ -235,31 +231,6 @@ const HomePage = () => {
                 <div><span style={{ color: "var(--color-accent)" }}>03</span> [build] feature-implementation</div>
                 <div><span style={{ color: "var(--color-accent)" }}>04</span> [debug] unhandled-exception</div>
                 <div><span style={{ color: "var(--color-accent)" }}>05</span> [ship] pre-commit-check</div>
-              </div>
-            </div>
-          </Link>
-
-          {/* Pillar 3: Image Prompts */}
-          <Link to="/image-prompts" className="home-pillar-card" data-home-reveal>
-            <div className="home-pillar-content">
-              <span style={{ fontFamily: "var(--font-mono)", fontSize: "12px", color: "var(--color-accent)", marginBottom: "8px", textTransform: "uppercase", letterSpacing: "0.1em" }}>Pillar 03</span>
-              <h3 style={{ fontFamily: "var(--font-sans)", fontWeight: 800, fontSize: "clamp(1.5rem, 4vw, 2.5rem)", letterSpacing: "-0.03em", color: "var(--color-fg)", marginBottom: "16px" }}>
-                Image Generation
-              </h3>
-              <p style={{ fontFamily: "var(--font-body)", color: "var(--color-muted-bright)", fontSize: "16px", lineHeight: 1.6, marginBottom: "32px" }}>
-                Copy-paste prompts for photo editing, restoration, seasonal edits, and cinematic effects.
-              </p>
-              <span style={{ fontFamily: "var(--font-mono)", fontSize: "12px", color: "var(--color-fg)", textTransform: "uppercase", letterSpacing: "0.05em", display: "flex", alignItems: "center", gap: "8px" }}>
-                See image prompts <span style={{ color: "var(--color-accent)" }}>→</span>
-              </span>
-            </div>
-            <div className="home-pillar-visual">
-              {/* Fake Image Grid */}
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "8px", padding: "24px", width: "100%", height: "100%" }}>
-                <div style={{ backgroundColor: "#2A2A35", borderRadius: "var(--radius-sm)", height: "100px" }} />
-                <div style={{ backgroundColor: "#333344", borderRadius: "var(--radius-sm)", height: "100px" }} />
-                <div style={{ backgroundColor: "#1A1A24", borderRadius: "var(--radius-sm)", height: "100px" }} />
-                <div style={{ backgroundColor: "#444455", borderRadius: "var(--radius-sm)", height: "100px" }} />
               </div>
             </div>
           </Link>
@@ -427,134 +398,6 @@ const HomePage = () => {
                   }}
                 >
                   {categoryLabels[prompt.category] ?? prompt.category}
-                </span>
-                <span
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "12px",
-                    color: "var(--color-muted-bright)",
-                  }}
-                >
-                  →
-                </span>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      {/* ─── Image Prompts Preview ────────────────────────────── */}
-      <section style={sectionStyle} aria-labelledby="home-image-heading" data-home-reveal>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "flex-end",
-            justifyContent: "space-between",
-            flexWrap: "wrap",
-            gap: "16px",
-            marginBottom: "32px",
-          }}
-        >
-          <div>
-            <span style={sectionLabelStyle}>Image Prompts</span>
-            <h2 id="home-image-heading" style={sectionHeadingStyle}>
-              Photo & Asset Generation
-            </h2>
-            <p style={sectionDescStyle}>
-              Copy-paste prompts for AI photo editing and image generation.
-              Portraits, restyling, restoration, seasonal edits, and cinematic
-              effects.
-            </p>
-          </div>
-          <Link
-            to="/image-prompts"
-            style={viewAllLinkStyle}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.color = "var(--color-accent)";
-              e.currentTarget.style.borderColor = "var(--color-accent)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.color = "var(--color-muted-bright)";
-              e.currentTarget.style.borderColor = "var(--color-border)";
-            }}
-          >
-            View all image prompts →
-          </Link>
-        </div>
-
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr",
-            gap: "1px",
-            border: "1px solid var(--color-border)",
-            borderRadius: "var(--radius-md)",
-            overflow: "hidden",
-          }}
-        >
-          {imagePreview.map((prompt) => (
-            <Link
-              key={prompt.id}
-              to="/image-prompts"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                gap: "16px",
-                padding: "14px 20px",
-                textDecoration: "none",
-                color: "inherit",
-                borderTop: "1px solid var(--color-border)",
-                backgroundColor: "var(--color-surface)",
-                transition: "background-color 0.15s ease",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = "var(--color-border)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = "var(--color-surface)";
-              }}
-            >
-              <span
-                style={{
-                  fontFamily: "var(--font-sans)",
-                  fontSize: "14px",
-                  fontWeight: 500,
-                  color: "var(--color-fg)",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
-                  flex: 1,
-                  minWidth: 0,
-                }}
-              >
-                {prompt.title}
-              </span>
-
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "10px",
-                  flexShrink: 0,
-                }}
-              >
-                <span
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "10px",
-                    color: prompt.requiresUpload
-                      ? "var(--color-muted-bright)"
-                      : "var(--color-accent)",
-                    letterSpacing: "0.08em",
-                    textTransform: "uppercase",
-                    border: "1px solid var(--color-border)",
-                    borderRadius: "var(--radius-sm)",
-                    padding: "2px 8px",
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  {prompt.requiresUpload ? "Upload" : "Standalone"}
                 </span>
                 <span
                   style={{
