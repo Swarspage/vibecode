@@ -5,6 +5,7 @@ import DesignPromptsPage from "./pages/DesignPromptsPage";
 import DesignPromptDetailPage from "./pages/DesignPromptDetailPage";
 import WorkflowPromptsPage from "./pages/WorkflowPromptsPage";
 import WorkflowPromptDetailPage from "./pages/WorkflowPromptDetailPage";
+import MyKitPage from "./pages/MyKitPage";
 import { workflowPrompts } from "./data/workflowPrompts";
 
 const App = () => {
@@ -25,6 +26,8 @@ const App = () => {
           />
           <Route path=":slug" element={<WorkflowPromptDetailPage />} />
         </Route>
+
+        <Route path="/my-kit" element={<MyKitPage />} />
 
       </Route>
     </Routes>

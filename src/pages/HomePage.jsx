@@ -28,6 +28,7 @@ const categoryLabels = {
   build: "Build",
   debug: "Debug",
   ship: "Ship",
+  audit: "Audit",
 };
 
 /* ─── Shared section styles ──────────────────────────────────────── */
@@ -154,7 +155,7 @@ const HomePage = () => {
             <span style={{ fontFamily: "var(--font-mono)", color: "var(--color-accent)", fontSize: "14px" }}>01.</span>
             <h3 style={{ fontFamily: "var(--font-sans)", fontWeight: 700, fontSize: "20px", color: "var(--color-fg)" }}>Copy</h3>
             <p style={{ fontFamily: "var(--font-body)", color: "var(--color-muted-bright)", fontSize: "14px", lineHeight: 1.5 }}>
-              Copy a specialized prompt directly from Scaffold. Design systems, workflows, or image templates.
+              Copy a specialized prompt directly from Scaffold. Design systems and workflows.
             </p>
           </div>
           {/* Step 2 */}
@@ -170,7 +171,7 @@ const HomePage = () => {
             <span style={{ fontFamily: "var(--font-mono)", color: "var(--color-accent)", fontSize: "14px" }}>03.</span>
             <h3 style={{ fontFamily: "var(--font-sans)", fontWeight: 700, fontSize: "20px", color: "var(--color-fg)" }}>Ship</h3>
             <p style={{ fontFamily: "var(--font-body)", color: "var(--color-muted-bright)", fontSize: "14px", lineHeight: 1.5 }}>
-              Let the AI generate the code, execute the debugging workflow, or output the asset immediately.
+              Let the AI generate the code or execute the debugging workflow immediately.
             </p>
           </div>
         </div>
@@ -302,7 +303,7 @@ const HomePage = () => {
               Codebase Utilities
             </h2>
             <p style={sectionDescStyle}>
-              13 production prompts for reading, debugging, refactoring, and
+              {workflowPrompts.length} production prompts for reading, debugging, refactoring, and
               shipping real codebases with an AI IDE. Organised by workflow
               stage.
             </p>

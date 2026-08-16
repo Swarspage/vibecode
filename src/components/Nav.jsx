@@ -1,8 +1,20 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, NavLink } from "react-router-dom";
+import { getKit } from "../utils/kit";
 
 const Nav = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [kitCount, setKitCount] = useState(() => getKit().length);
+
+  useEffect(() => {
+    const handleUpdate = () => setKitCount(getKit().length);
+    window.addEventListener("kit-updated", handleUpdate);
+    window.addEventListener("focus", handleUpdate);
+    return () => {
+      window.removeEventListener("kit-updated", handleUpdate);
+      window.removeEventListener("focus", handleUpdate);
+    };
+  }, []);
 
   const closeMenu = () => setTimeout(() => setMenuOpen(false), 50);
   return (
@@ -97,6 +109,17 @@ const Nav = () => {
                 Workflow Prompts
               </NavLink>
             </li>
+            <li>
+              <NavLink
+                to="/my-kit"
+                id="nav-my-kit"
+                className={({ isActive }) =>
+                  isActive ? "nav-link active" : "nav-link"
+                }
+              >
+                Kit {kitCount > 0 && `(${kitCount})`}
+              </NavLink>
+            </li>
           </ul>
         </nav>
 
@@ -139,6 +162,15 @@ const Nav = () => {
             onClick={closeMenu}
           >
             Workflow Prompts
+          </NavLink>
+          <NavLink
+            to="/my-kit"
+            className={({ isActive }) =>
+              isActive ? "nav-mobile-link active" : "nav-mobile-link"
+            }
+            onClick={closeMenu}
+          >
+            Kit {kitCount > 0 && `(${kitCount})`}
           </NavLink>
         </nav>
       )}

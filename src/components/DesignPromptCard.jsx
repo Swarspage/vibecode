@@ -1,5 +1,6 @@
 import { useState, useEffect, useLayoutEffect, useRef } from "react";
 import { Link } from "react-router-dom";
+import BookmarkButton from "./BookmarkButton";
 
 const DesignPromptCard = ({ prompt }) => {
   const [copied, setCopied] = useState(false);
@@ -63,9 +64,24 @@ const DesignPromptCard = ({ prompt }) => {
         display: "flex",
         flexDirection: "column",
         height: "100%",
+        position: "relative",
       }}
       className="dp-card-base dp-card"
     >
+      <div style={{ position: "absolute", top: "12px", right: "12px", zIndex: 10 }}>
+        <BookmarkButton
+          type="design"
+          slug={prompt.slug}
+          title={prompt.name}
+          style={{
+            backgroundColor: "var(--color-bg)",
+            border: "1px solid var(--color-border)",
+            borderRadius: "var(--radius-sm)",
+            boxShadow: "var(--shadow-card)",
+          }}
+        />
+      </div>
+
       {/* Preview area — iframe if previewUrl exists, swatch if not */}
       <Link
         to={`/design-prompts/${prompt.slug}`}

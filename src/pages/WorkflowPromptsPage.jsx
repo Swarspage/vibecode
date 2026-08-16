@@ -2,6 +2,7 @@ import { useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import { workflowPrompts } from "../data/workflowPrompts";
 import BackButton from "../components/BackButton";
+import BookmarkButton from "../components/BookmarkButton";
 
 const categories = [
   { id: "orient", label: "Orient" },
@@ -147,19 +148,29 @@ const WorkflowPromptsPage = () => {
                   <div key={cat.id} className="docs-sidebar-group">
                     <div className="docs-sidebar-heading">{cat.label}</div>
                     {prompts.map((prompt) => (
-                      <NavLink
-                        key={prompt.id}
-                        to={`/workflow-prompts/${prompt.slug}`}
-                        className={({ isActive }) =>
-                          isActive
-                            ? "docs-sidebar-link docs-sidebar-link-nested active"
-                            : "docs-sidebar-link docs-sidebar-link-nested"
-                        }
-                        onClick={() => setSidebarOpen(false)}
-                      >
-                        {prompt.number < 10 ? `0${prompt.number}` : prompt.number}{" "}
-                        {prompt.title}
-                      </NavLink>
+                      <div key={prompt.id} style={{ position: "relative", display: "flex", alignItems: "center" }}>
+                        <NavLink
+                          to={`/workflow-prompts/${prompt.slug}`}
+                          className={({ isActive }) =>
+                            isActive
+                              ? "docs-sidebar-link docs-sidebar-link-nested active"
+                              : "docs-sidebar-link docs-sidebar-link-nested"
+                          }
+                          style={{ flex: 1, paddingRight: "36px" }}
+                          onClick={() => setSidebarOpen(false)}
+                        >
+                          {prompt.number < 10 ? `0${prompt.number}` : prompt.number}{" "}
+                          {prompt.title}
+                        </NavLink>
+                        <div style={{ position: "absolute", right: "0px", top: "50%", transform: "translateY(-50%)" }}>
+                          <BookmarkButton
+                            type="workflow"
+                            slug={prompt.slug}
+                            title={prompt.title}
+                            style={{ width: "32px", height: "32px" }}
+                          />
+                        </div>
+                      </div>
                     ))}
                   </div>
                 );

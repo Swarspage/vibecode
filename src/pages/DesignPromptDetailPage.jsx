@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { designPrompts } from "../data/designPrompts";
 import BackButton from "../components/BackButton";
+import BookmarkButton from "../components/BookmarkButton";
 
 const DesignPromptDetailPage = () => {
   const { slug } = useParams();
@@ -98,19 +99,26 @@ const DesignPromptDetailPage = () => {
             Design System Prompt
           </span>
         </div>
-        <h1
-          style={{
-            fontFamily: "var(--font-sans)",
-            fontSize: "clamp(1.75rem, 4vw, 2.75rem)",
-            fontWeight: 800,
-            letterSpacing: "-0.03em",
-            color: "var(--color-fg)",
-            lineHeight: 1.1,
-            marginBottom: "16px",
-          }}
-        >
-          {prompt.name}
-        </h1>
+        <div style={{ display: "flex", alignItems: "center", gap: "16px", marginBottom: "16px" }}>
+          <h1
+            style={{
+              fontFamily: "var(--font-sans)",
+              fontSize: "clamp(1.75rem, 4vw, 2.75rem)",
+              fontWeight: 800,
+              letterSpacing: "-0.03em",
+              color: "var(--color-fg)",
+              lineHeight: 1.1,
+            }}
+          >
+            {prompt.name}
+          </h1>
+          <BookmarkButton
+            type="design"
+            slug={prompt.slug}
+            title={prompt.name}
+            style={{ flexShrink: 0 }}
+          />
+        </div>
         <p
           style={{
             fontFamily: "var(--font-body)",
