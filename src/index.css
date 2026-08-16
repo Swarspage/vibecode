@@ -57,7 +57,7 @@
   --shadow-float: 0 8px 32px rgb(0 0 0 / 0.5);
 
   /* Spacing */
-  --space-page-top: 80px;
+  --space-page-top: 40px;
 }
 
 /* ─── Base Reset & Body ─────────────────────────────────────────── */
@@ -445,19 +445,54 @@ pre {
 
 @media (min-width: 768px) {
   .docs-sidebar {
-    width: 300px;
+    width: 340px;
     position: sticky;
     top: 88px;
     max-height: calc(100vh - 136px);
     overflow-y: auto;
     padding-bottom: 24px;
-    padding-right: 6px;
+    padding-right: 16px; /* Extra padding for the floating scrollbar */
     scrollbar-gutter: stable;
+    
+    /* Premium Firefox Scrollbar */
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border) transparent;
+  }
+
+  /* Premium Webkit Scrollbar specifically for the sidebar */
+  .docs-sidebar::-webkit-scrollbar {
+    width: 4px;
+  }
+  .docs-sidebar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .docs-sidebar::-webkit-scrollbar-thumb {
+    background: transparent;
+    border-radius: 4px;
+  }
+  /* Only show thumb when hovering the sidebar to keep it minimal */
+  .docs-sidebar:hover::-webkit-scrollbar-thumb {
+    background: var(--color-border);
+  }
+  .docs-sidebar::-webkit-scrollbar-thumb:hover {
+    background: var(--color-muted) !important;
   }
 }
 
 .docs-sidebar-group {
-  margin-bottom: 20px;
+  margin-bottom: 24px;
+  position: relative;
+}
+
+.docs-sidebar-group::before {
+  content: "";
+  position: absolute;
+  top: 26px;
+  bottom: 0;
+  left: 12px;
+  width: 1px;
+  background-color: var(--color-border);
+  z-index: 0;
 }
 
 .docs-sidebar-heading {
@@ -500,13 +535,14 @@ pre {
 }
 
 .docs-sidebar-link-nested {
-  padding-left: 14px;
+  padding-left: 24px;
+  margin-left: 12px;
 }
 
 .docs-content {
   flex: 1;
   min-width: 0;
-  max-width: 800px;
+  max-width: 1100px;
 }
 
 /* ─── Focus-Visible Ring System ─────────────────────────────────── */

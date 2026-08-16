@@ -7,6 +7,7 @@ import WorkflowPromptsPage from "./pages/WorkflowPromptsPage";
 import WorkflowPromptDetailPage from "./pages/WorkflowPromptDetailPage";
 import ImagePromptsPage from "./pages/ImagePromptsPage";
 import ImagePromptDetailPage from "./pages/ImagePromptDetailPage";
+import PublicApisPage from "./pages/PublicApisPage";
 import { workflowPrompts } from "./data/workflowPrompts";
 
 const App = () => {
@@ -31,6 +32,9 @@ const App = () => {
         {/* Image Prompts: flat gallery pattern */}
         <Route path="/image-prompts" element={<ImagePromptsPage />} />
         <Route path="/image-prompts/:slug" element={<ImagePromptDetailPage />} />
+
+        {/* Public APIs: directory pattern */}
+        <Route path="/public-apis" element={<PublicApisPage />} />
       </Route>
     </Routes>
   );

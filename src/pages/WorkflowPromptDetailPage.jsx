@@ -64,13 +64,19 @@ const WorkflowPromptDetailPage = () => {
   };
 
   const categoryLabel = categoryLabels[prompt.category] ?? prompt.category;
+  const relatedPrompts = workflowPrompts
+    .filter((p) => p.category === prompt.category && p.slug !== prompt.slug)
+    .slice(0, 3);
 
   return (
     <section style={{ paddingTop: "0", paddingBottom: "96px" }}>
-      {/* Top Area */}
-      <div style={{ marginBottom: "40px" }}>
-        <BackButton fallbackTo="/workflow-prompts" />
-        <div style={{ marginBottom: "12px" }}>
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-12 items-start">
+        {/* Main Content Column */}
+        <div>
+          {/* Top Area */}
+          <div style={{ marginBottom: "40px" }}>
+            <BackButton fallbackTo="/workflow-prompts" />
+            <div style={{ marginBottom: "12px" }}>
           <span
             style={{
               fontFamily: "var(--font-mono)",
@@ -206,6 +212,68 @@ const WorkflowPromptDetailPage = () => {
         >
           {prompt.prompt}
         </pre>
+      </div>
+      </div>
+
+      {/* Right Sidebar Column */}
+      <aside className="hidden lg:flex flex-col gap-8 sticky top-[120px]">
+        
+        {/* Pro Tip Card */}
+        <div 
+          style={{
+            backgroundColor: "var(--color-surface)",
+            border: "1px solid var(--color-border)",
+            borderRadius: "var(--radius-md)",
+            padding: "20px",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="16" x2="12" y2="12"></line>
+              <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+            <span style={{ fontFamily: "var(--font-mono)", fontSize: "12px", color: "var(--color-fg)", textTransform: "uppercase", letterSpacing: "0.05em" }}>Pro Tip</span>
+          </div>
+          <p style={{ fontFamily: "var(--font-body)", fontSize: "14px", color: "var(--color-muted)", lineHeight: 1.6, margin: 0 }}>
+            Paste this prompt into your IDE's AI chat or a new Claude/ChatGPT session. For the best context, use an AI IDE like Cursor or Windsurf that can read your workspace automatically.
+          </p>
+        </div>
+
+        {/* Related Workflows */}
+        {relatedPrompts.length > 0 && (
+          <div>
+            <h3 style={{ fontFamily: "var(--font-mono)", fontSize: "12px", color: "var(--color-muted-bright)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: "16px" }}>
+              Related Workflows
+            </h3>
+            <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+              {relatedPrompts.map((related) => (
+                <Link
+                  key={related.id}
+                  to={`/workflow-prompts/${related.slug}`}
+                  className="dp-card"
+                  style={{
+                    display: "block",
+                    padding: "16px",
+                    backgroundColor: "var(--color-surface)",
+                    border: "1px solid var(--color-border)",
+                    borderRadius: "var(--radius-sm)",
+                    textDecoration: "none",
+                  }}
+                >
+                  <div style={{ fontFamily: "var(--font-mono)", fontSize: "10px", color: "var(--color-accent)", marginBottom: "4px" }}>
+                    {related.number < 10 ? `0${related.number}` : related.number}
+                  </div>
+                  <div style={{ fontFamily: "var(--font-sans)", fontSize: "14px", fontWeight: 500, color: "var(--color-fg)", lineHeight: 1.4 }}>
+                    {related.title}
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
+
+      </aside>
       </div>
     </section>
   );

@@ -31,6 +31,26 @@ import evaluatingNewDependency from "./prompts/workflow/30-evaluating-new-depend
 import majorVersionUpgrade from "./prompts/workflow/31-major-version-upgrade.md?raw";
 import featureSizing from "./prompts/workflow/32-feature-sizing-estimate.md?raw";
 import namingConsistencyAudit from "./prompts/workflow/33-naming-pattern-consistency-audit.md?raw";
+import tracingAuthFlow from "./prompts/workflow/34-tracing-auth-flow.md?raw";
+import tracingErrorHandling from "./prompts/workflow/35-tracing-error-handling.md?raw";
+import mappingFeatureFlags from "./prompts/workflow/36-mapping-feature-flags.md?raw";
+import readingStackTrace from "./prompts/workflow/37-reading-stack-trace.md?raw";
+import debuggingMemoryLeak from "./prompts/workflow/38-debugging-memory-leak.md?raw";
+import debuggingRaceCondition from "./prompts/workflow/39-debugging-race-condition.md?raw";
+import debuggingDeadlock from "./prompts/workflow/40-debugging-deadlock.md?raw";
+import debuggingEnvironmentSpecificBug from "./prompts/workflow/41-debugging-environment-specific-bug.md?raw";
+import settingUpLocalDevEnvironment from "./prompts/workflow/42-setting-up-local-dev-environment.md?raw";
+import writingUnitTestsExistingCode from "./prompts/workflow/43-writing-unit-tests-existing-code.md?raw";
+import addingFeatureFlag from "./prompts/workflow/44-adding-feature-flag.md?raw";
+import buildingCliTool from "./prompts/workflow/45-building-cli-tool.md?raw";
+import creatingApiClient from "./prompts/workflow/46-creating-api-client.md?raw";
+import mockingExternalServices from "./prompts/workflow/47-mocking-external-services.md?raw";
+import postDeploymentVerification from "./prompts/workflow/48-post-deployment-verification.md?raw";
+import changelogReleaseNotes from "./prompts/workflow/49-changelog-release-notes.md?raw";
+import canaryReleasePlan from "./prompts/workflow/50-canary-release-plan.md?raw";
+import auditingLoggingObservability from "./prompts/workflow/51-auditing-logging-observability.md?raw";
+import auditingErrorMessagesApi from "./prompts/workflow/52-auditing-error-messages-api.md?raw";
+import auditingCiPipeline from "./prompts/workflow/53-auditing-ci-pipeline.md?raw";
 
 export const workflowPrompts = [
   {
@@ -362,5 +382,206 @@ export const workflowPrompts = [
     summary: "Find drift, duplicate utilities, and inconsistent conventions.",
     tags: ["patterns", "naming", "consistency", "refactor"],
     prompt: namingConsistencyAudit
+  }
+  ,
+  {
+    id: "tracing-auth-flow",
+    number: 34,
+    title: "Tracing an Authentication & Authorization Flow",
+    slug: "tracing-auth-flow",
+    category: "investigate",
+    summary: "Workflow prompt for Tracing an Authentication & Authorization Flow.",
+    tags: ["auth","security","investigate","trace"],
+    prompt: tracingAuthFlow
+  }  ,
+  {
+    id: "tracing-error-handling",
+    number: 35,
+    title: "Tracing Error Handling & Recovery Paths",
+    slug: "tracing-error-handling",
+    category: "investigate",
+    summary: "Workflow prompt for Tracing Error Handling & Recovery Paths.",
+    tags: ["errors","recovery","trace","resilience"],
+    prompt: tracingErrorHandling
+  }  ,
+  {
+    id: "mapping-feature-flags",
+    number: 36,
+    title: "Mapping Feature Flags & Configuration",
+    slug: "mapping-feature-flags",
+    category: "investigate",
+    summary: "Workflow prompt for Mapping Feature Flags & Configuration.",
+    tags: ["config","feature-flags","environment","audit"],
+    prompt: mappingFeatureFlags
+  }  ,
+  {
+    id: "reading-stack-trace",
+    number: 37,
+    title: "Reading and Explaining a Stack Trace",
+    slug: "reading-stack-trace",
+    category: "debug",
+    summary: "Workflow prompt for Reading and Explaining a Stack Trace.",
+    tags: ["debugging","errors","stack-trace"],
+    prompt: readingStackTrace
+  }  ,
+  {
+    id: "debugging-memory-leak",
+    number: 38,
+    title: "Debugging a Memory Leak",
+    slug: "debugging-memory-leak",
+    category: "debug",
+    summary: "Workflow prompt for Debugging a Memory Leak.",
+    tags: ["debugging","memory","performance","leak"],
+    prompt: debuggingMemoryLeak
+  }  ,
+  {
+    id: "debugging-race-condition",
+    number: 39,
+    title: "Debugging a Race Condition or Concurrency Bug",
+    slug: "debugging-race-condition",
+    category: "debug",
+    summary: "Workflow prompt for Debugging a Race Condition or Concurrency Bug.",
+    tags: ["debugging","concurrency","race-condition","state"],
+    prompt: debuggingRaceCondition
+  }  ,
+  {
+    id: "debugging-deadlock",
+    number: 40,
+    title: "Debugging a Deadlock",
+    slug: "debugging-deadlock",
+    category: "debug",
+    summary: "Workflow prompt for Debugging a Deadlock.",
+    tags: ["debugging","concurrency","deadlock","performance"],
+    prompt: debuggingDeadlock
+  }  ,
+  {
+    id: "debugging-environment-specific-bug",
+    number: 41,
+    title: "Debugging an Environment-Specific Bug",
+    slug: "debugging-environment-specific-bug",
+    category: "debug",
+    summary: "Workflow prompt for Debugging an Environment-Specific Bug.",
+    tags: ["debugging","environment","infrastructure","config"],
+    prompt: debuggingEnvironmentSpecificBug
+  }  ,
+  {
+    id: "setting-up-local-dev-environment",
+    number: 42,
+    title: "Setting Up a Local Development Environment",
+    slug: "setting-up-local-dev-environment",
+    category: "build",
+    summary: "Workflow prompt for Setting Up a Local Development Environment.",
+    tags: ["setup","onboarding","environment","build"],
+    prompt: settingUpLocalDevEnvironment
+  }  ,
+  {
+    id: "writing-unit-tests-existing-code",
+    number: 43,
+    title: "Writing Unit Tests for Existing Code",
+    slug: "writing-unit-tests-existing-code",
+    category: "build",
+    summary: "Workflow prompt for Writing Unit Tests for Existing Code.",
+    tags: ["testing","unit-tests","refactoring","quality"],
+    prompt: writingUnitTestsExistingCode
+  }  ,
+  {
+    id: "adding-feature-flag",
+    number: 44,
+    title: "Adding a Feature Flag Safely",
+    slug: "adding-feature-flag",
+    category: "build",
+    summary: "Workflow prompt for Adding a Feature Flag Safely.",
+    tags: ["feature-flags","deployment","safety","build"],
+    prompt: addingFeatureFlag
+  }  ,
+  {
+    id: "building-cli-tool",
+    number: 45,
+    title: "Building a CLI Tool or Script",
+    slug: "building-cli-tool",
+    category: "build",
+    summary: "Workflow prompt for Building a CLI Tool or Script.",
+    tags: ["cli","tooling","scripts","automation"],
+    prompt: buildingCliTool
+  }  ,
+  {
+    id: "creating-api-client",
+    number: 46,
+    title: "Creating an API Client Module",
+    slug: "creating-api-client",
+    category: "build",
+    summary: "Workflow prompt for Creating an API Client Module.",
+    tags: ["api","client","integration","architecture"],
+    prompt: creatingApiClient
+  }  ,
+  {
+    id: "mocking-external-services",
+    number: 47,
+    title: "Mocking External Services for Tests",
+    slug: "mocking-external-services",
+    category: "build",
+    summary: "Workflow prompt for Mocking External Services for Tests.",
+    tags: ["testing","mocking","integration","quality"],
+    prompt: mockingExternalServices
+  }  ,
+  {
+    id: "post-deployment-verification",
+    number: 48,
+    title: "Writing a Post-Deployment Verification Checklist",
+    slug: "post-deployment-verification",
+    category: "ship",
+    summary: "Workflow prompt for Writing a Post-Deployment Verification Checklist.",
+    tags: ["deployment","release","verification","qa"],
+    prompt: postDeploymentVerification
+  }  ,
+  {
+    id: "changelog-release-notes",
+    number: 49,
+    title: "Writing a Changelog & Release Notes",
+    slug: "changelog-release-notes",
+    category: "ship",
+    summary: "Workflow prompt for Writing a Changelog & Release Notes.",
+    tags: ["documentation","release","changelog","communication"],
+    prompt: changelogReleaseNotes
+  }  ,
+  {
+    id: "canary-release-plan",
+    number: 50,
+    title: "Planning a Canary Release or Gradual Rollout",
+    slug: "canary-release-plan",
+    category: "ship",
+    summary: "Workflow prompt for Planning a Canary Release or Gradual Rollout.",
+    tags: ["release","rollout","deployment","safety"],
+    prompt: canaryReleasePlan
+  }  ,
+  {
+    id: "auditing-logging-observability",
+    number: 51,
+    title: "Auditing Logging & Observability",
+    slug: "auditing-logging-observability",
+    category: "audit",
+    summary: "Workflow prompt for Auditing Logging & Observability.",
+    tags: ["audit","observability","logging","monitoring"],
+    prompt: auditingLoggingObservability
+  }  ,
+  {
+    id: "auditing-error-messages-api",
+    number: 52,
+    title: "Auditing Error Messages & API Responses",
+    slug: "auditing-error-messages-api",
+    category: "audit",
+    summary: "Workflow prompt for Auditing Error Messages & API Responses.",
+    tags: ["audit","api","errors","ux"],
+    prompt: auditingErrorMessagesApi
+  }  ,
+  {
+    id: "auditing-ci-pipeline",
+    number: 53,
+    title: "Auditing CI Pipeline & Build Health",
+    slug: "auditing-ci-pipeline",
+    category: "audit",
+    summary: "Workflow prompt for Auditing CI Pipeline & Build Health.",
+    tags: ["audit","ci-cd","build","infrastructure"],
+    prompt: auditingCiPipeline
   }
 ];

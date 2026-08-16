@@ -21,17 +21,15 @@ const WorkflowPromptsPage = () => {
 
   const matchesSearch = (prompt) => {
     if (!query) return true;
-    const category = categories.find((c) => c.id === prompt.category);
-    const haystack = [
-      prompt.title,
-      prompt.summary,
-      String(prompt.number),
-      ...(prompt.tags ?? []),
-      category?.label ?? prompt.category,
-    ]
-      .join(" ")
-      .toLowerCase();
-    return haystack.includes(query);
+    
+    // Combine every single property (including the full markdown prompt body) into one giant searchable string
+    const haystack = Object.values(prompt)
+      .map(val => (val == null ? "" : String(val).toLowerCase()))
+      .join(" ");
+      
+    // Split query by spaces and ensure EVERY word exists in the haystack (order independent)
+    const searchTerms = query.split(/\s+/).filter(Boolean);
+    return searchTerms.every(term => haystack.includes(term));
   };
 
   const matchesCategory = (prompt) =>
@@ -46,19 +44,6 @@ const WorkflowPromptsPage = () => {
       {/* Page Header */}
       <div>
         <BackButton fallbackTo="/" />
-        <div style={{ marginBottom: "12px" }}>
-          <span
-            style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: "var(--text-2xs)",
-              color: "var(--color-accent)",
-              letterSpacing: "0.12em",
-              textTransform: "uppercase",
-            }}
-          >
-            Workflow Prompts
-          </span>
-        </div>
         <h1
           style={{
             fontFamily: "var(--font-sans)",

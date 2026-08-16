@@ -267,15 +267,15 @@ const ImagePromptsPage = () => {
 
   const matchesSearch = (prompt) => {
     if (!query) return true;
-    const haystack = [
-      prompt.title,
-      prompt.summary,
-      prompt.category,
-      ...(prompt.tags ?? []),
-    ]
-      .join(" ")
-      .toLowerCase();
-    return haystack.includes(query);
+    
+    // Combine every single property into one giant searchable string
+    const haystack = Object.values(prompt)
+      .map(val => (val == null ? "" : String(val).toLowerCase()))
+      .join(" ");
+      
+    // Split query by spaces and ensure EVERY word exists in the haystack (order independent)
+    const searchTerms = query.split(/\s+/).filter(Boolean);
+    return searchTerms.every(term => haystack.includes(term));
   };
 
   const matchesCategory = (prompt) =>
@@ -296,19 +296,6 @@ const ImagePromptsPage = () => {
       {/* ── Page Header ──────────────────────────────────────────── */}
       <div style={{ marginBottom: "40px" }}>
         <BackButton fallbackTo="/" />
-        <div style={{ marginBottom: "12px" }}>
-          <span
-            style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: "var(--text-2xs)",
-              color: "var(--color-accent)",
-              letterSpacing: "0.12em",
-              textTransform: "uppercase",
-            }}
-          >
-            Image Prompts
-          </span>
-        </div>
         <h1
           style={{
             fontFamily: "var(--font-sans)",
