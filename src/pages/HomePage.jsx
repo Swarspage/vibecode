@@ -264,38 +264,6 @@ const HomePage = () => {
             </div>
           </Link>
 
-          {/* Pillar 4: Public APIs */}
-          <Link to="/public-apis" className="home-pillar-card" data-home-reveal>
-            <div className="home-pillar-content">
-              <span style={{ fontFamily: "var(--font-mono)", fontSize: "12px", color: "var(--color-accent)", marginBottom: "8px", textTransform: "uppercase", letterSpacing: "0.1em" }}>Pillar 04</span>
-              <h3 style={{ fontFamily: "var(--font-sans)", fontWeight: 800, fontSize: "clamp(1.5rem, 4vw, 2.5rem)", letterSpacing: "-0.03em", color: "var(--color-fg)", marginBottom: "16px" }}>
-                Public APIs
-              </h3>
-              <p style={{ fontFamily: "var(--font-body)", color: "var(--color-muted-bright)", fontSize: "16px", lineHeight: 1.6, marginBottom: "32px" }}>
-                Curated directory of free public APIs for weather, finance, games, data, AI, and more. Copy the API URL and start building.
-              </p>
-              <span style={{ fontFamily: "var(--font-mono)", fontSize: "12px", color: "var(--color-fg)", textTransform: "uppercase", letterSpacing: "0.05em", display: "flex", alignItems: "center", gap: "8px" }}>
-                Browse APIs <span style={{ color: "var(--color-accent)" }}>→</span>
-              </span>
-            </div>
-            <div className="home-pillar-visual" style={{ backgroundColor: "var(--color-surface)" }}>
-              {/* Fake API grid */}
-              <div style={{ padding: "32px", width: "100%", display: "flex", flexDirection: "column", gap: "8px" }}>
-                <div style={{ display: "flex", gap: "8px" }}>
-                  <div style={{ flex: 1, height: "32px", backgroundColor: "var(--color-bg)", borderRadius: "var(--radius-sm)", border: "1px solid var(--color-border)" }} />
-                  <div style={{ width: "64px", height: "32px", backgroundColor: "var(--color-bg)", borderRadius: "var(--radius-sm)", border: "1px solid var(--color-border)" }} />
-                </div>
-                <div style={{ display: "flex", gap: "8px" }}>
-                  <div style={{ width: "48px", height: "32px", backgroundColor: "var(--color-bg)", borderRadius: "var(--radius-sm)", border: "1px solid var(--color-border)" }} />
-                  <div style={{ flex: 1, height: "32px", backgroundColor: "var(--color-bg)", borderRadius: "var(--radius-sm)", border: "1px solid var(--color-border)" }} />
-                </div>
-                <div style={{ display: "flex", gap: "8px" }}>
-                  <div style={{ flex: 1, height: "32px", backgroundColor: "var(--color-bg)", borderRadius: "var(--radius-sm)", border: "1px solid var(--color-border)" }} />
-                  <div style={{ width: "80px", height: "32px", backgroundColor: "var(--color-bg)", borderRadius: "var(--radius-sm)", border: "1px solid var(--color-border)" }} />
-                </div>
-              </div>
-            </div>
-          </Link>
         </div>
       </section>
 
