@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { designPrompts } from "../data/designPrompts";
 import DesignPromptCard from "../components/DesignPromptCard";
+import BackButton from "../components/BackButton";
 
 const DesignPromptsPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -22,6 +23,7 @@ const DesignPromptsPage = () => {
     <section style={{ paddingTop: "var(--space-page-top)", paddingBottom: "96px" }}>
       {/* Page Header */}
       <div style={{ marginBottom: "48px" }}>
+        <BackButton fallbackTo="/" />
         <div style={{ marginBottom: "12px" }}>
           <span
             style={{

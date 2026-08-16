@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { designPrompts } from "../data/designPrompts";
+import BackButton from "../components/BackButton";
 
 const DesignPromptDetailPage = () => {
   const { slug } = useParams();
@@ -60,17 +61,7 @@ const DesignPromptDetailPage = () => {
         >
           Prompt not found
         </h1>
-        <Link
-          to="/design-prompts"
-          style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: "12px",
-            color: "var(--color-muted)",
-          }}
-          className="detail-back-link"
-        >
-          All design prompts
-        </Link>
+        <BackButton fallbackTo="/design-prompts" />
       </section>
     );
   }
@@ -93,6 +84,7 @@ const DesignPromptDetailPage = () => {
     <section style={{ paddingTop: "var(--space-page-top)", paddingBottom: "96px" }}>
       {/* Top Area */}
       <div style={{ marginBottom: "48px" }}>
+        <BackButton fallbackTo="/design-prompts" />
         <div style={{ marginBottom: "12px" }}>
           <span
             style={{

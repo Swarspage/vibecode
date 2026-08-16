@@ -10,7 +10,8 @@
   --color-surface: #131316;
   --color-border: #232327;
   --color-fg: #F2F2F0;
-  --color-muted: #8C8C91;
+  --color-muted: #A6A6AC;
+  --color-muted-bright: #C2C2C7;
   --color-accent: #C9A227;
   --color-accent-dim: #A07E1A;
 
@@ -238,7 +239,7 @@ h6 {
 }
 
 p {
-  color: var(--color-muted);
+  color: var(--color-muted-bright);
   font-family: var(--font-body);
 }
 
@@ -713,16 +714,6 @@ button:focus-visible {
   opacity: 0;
 }
 
-@media (max-width: 639px) {
-  .preview-iframe {
-    display: none;
-  }
-
-  .preview-fallback {
-    display: flex;
-  }
-}
-
 /* ─── Mobile sidebar toggle ─────────────────────────────────────── */
 .mobile-sidebar-toggle {
   display: none;
@@ -817,4 +808,9 @@ button:focus-visible {
 .card-preview-frame .preview-fallback {
   position: absolute;
   inset: 0;
+}
+
+/* ─── Utilities ─────────────────────────────────────────────────── */
+.text-readable {
+  color: var(--color-muted-bright);
 }

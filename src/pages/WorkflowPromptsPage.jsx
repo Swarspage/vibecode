@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import { workflowPrompts } from "../data/workflowPrompts";
+import BackButton from "../components/BackButton";
 
 const categories = [
   { id: "orient", label: "Orient" },
@@ -44,6 +45,7 @@ const WorkflowPromptsPage = () => {
     <section style={{ paddingTop: "var(--space-page-top)", paddingBottom: "96px" }}>
       {/* Page Header */}
       <div>
+        <BackButton fallbackTo="/" />
         <div style={{ marginBottom: "12px" }}>
           <span
             style={{

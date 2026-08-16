@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { imagePrompts } from "../data/imagePrompts";
+import BackButton from "../components/BackButton";
 
 const categoryLabels = {
   "trending-portraits": "Trending Portraits",
@@ -49,17 +50,7 @@ const ImagePromptDetailPage = () => {
         >
           Prompt not found
         </h1>
-        <Link
-          to="/image-prompts"
-          className="detail-back-link"
-          style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: "12px",
-            color: "var(--color-muted)",
-          }}
-        >
-          ← All image prompts
-        </Link>
+        <BackButton fallbackTo="/image-prompts" />
       </section>
     );
   }
@@ -104,18 +95,7 @@ const ImagePromptDetailPage = () => {
     >
       {/* Back link */}
       <div style={{ marginBottom: "32px" }}>
-        <Link
-          to="/image-prompts"
-          className="detail-back-link"
-          style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: "12px",
-            textTransform: "uppercase",
-            letterSpacing: "0.08em",
-          }}
-        >
-          ← All image prompts
-        </Link>
+        <BackButton fallbackTo="/image-prompts" />
       </div>
 
       {/* ── Top area ───────────────────────────────────────────────── */}

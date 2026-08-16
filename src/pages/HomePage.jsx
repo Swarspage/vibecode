@@ -58,7 +58,7 @@ const sectionHeadingStyle = {
 const sectionDescStyle = {
   fontFamily: "var(--font-body)",
   fontSize: "var(--text-base)",
-  color: "var(--color-muted)",
+  color: "var(--color-muted-bright)",
   lineHeight: 1.6,
   maxWidth: "480px",
 };
@@ -66,7 +66,7 @@ const sectionDescStyle = {
 const viewAllLinkStyle = {
   fontFamily: "var(--font-mono)",
   fontSize: "var(--text-xs)",
-  color: "var(--color-muted)",
+  color: "var(--color-muted-bright)",
   letterSpacing: "0.08em",
   textTransform: "uppercase",
   textDecoration: "none",
@@ -111,11 +111,11 @@ const HomePage = () => {
             to="/design-prompts"
             style={viewAllLinkStyle}
             onMouseEnter={(e) => {
-              e.currentTarget.style.color = "var(--color-fg)";
-              e.currentTarget.style.borderColor = "var(--color-fg)";
+              e.currentTarget.style.color = "var(--color-accent)";
+              e.currentTarget.style.borderColor = "var(--color-accent)";
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.color = "var(--color-muted)";
+              e.currentTarget.style.color = "var(--color-muted-bright)";
               e.currentTarget.style.borderColor = "var(--color-border)";
             }}
           >
@@ -159,11 +159,11 @@ const HomePage = () => {
             to="/workflow-prompts"
             style={viewAllLinkStyle}
             onMouseEnter={(e) => {
-              e.currentTarget.style.color = "var(--color-fg)";
-              e.currentTarget.style.borderColor = "var(--color-fg)";
+              e.currentTarget.style.color = "var(--color-accent)";
+              e.currentTarget.style.borderColor = "var(--color-accent)";
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.color = "var(--color-muted)";
+              e.currentTarget.style.color = "var(--color-muted-bright)";
               e.currentTarget.style.borderColor = "var(--color-border)";
             }}
           >
@@ -211,7 +211,7 @@ const HomePage = () => {
                   style={{
                     fontFamily: "var(--font-mono)",
                     fontSize: "var(--text-2xs)",
-                    color: "var(--color-muted)",
+                    color: "var(--color-muted-bright)",
                     letterSpacing: "0.08em",
                     flexShrink: 0,
                   }}
@@ -239,7 +239,7 @@ const HomePage = () => {
                   style={{
                     fontFamily: "var(--font-mono)",
                     fontSize: "var(--text-2xs)",
-                    color: "var(--color-muted)",
+                    color: "var(--color-muted-bright)",
                     letterSpacing: "0.1em",
                     textTransform: "uppercase",
                     border: "1px solid var(--color-border)",
@@ -254,7 +254,7 @@ const HomePage = () => {
                   style={{
                     fontFamily: "var(--font-mono)",
                     fontSize: "var(--text-xs)",
-                    color: "var(--color-muted)",
+                    color: "var(--color-muted-bright)",
                   }}
                 >
                   →
@@ -293,11 +293,11 @@ const HomePage = () => {
             to="/image-prompts"
             style={viewAllLinkStyle}
             onMouseEnter={(e) => {
-              e.currentTarget.style.color = "var(--color-fg)";
-              e.currentTarget.style.borderColor = "var(--color-fg)";
+              e.currentTarget.style.color = "var(--color-accent)";
+              e.currentTarget.style.borderColor = "var(--color-accent)";
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.color = "var(--color-muted)";
+              e.currentTarget.style.color = "var(--color-muted-bright)";
               e.currentTarget.style.borderColor = "var(--color-border)";
             }}
           >
@@ -370,7 +370,7 @@ const HomePage = () => {
                     fontFamily: "var(--font-mono)",
                     fontSize: "var(--text-2xs)",
                     color: prompt.requiresUpload
-                      ? "var(--color-muted)"
+                      ? "var(--color-muted-bright)"
                       : "var(--color-accent)",
                     letterSpacing: "0.08em",
                     textTransform: "uppercase",
@@ -386,7 +386,7 @@ const HomePage = () => {
                   style={{
                     fontFamily: "var(--font-mono)",
                     fontSize: "var(--text-xs)",
-                    color: "var(--color-muted)",
+                    color: "var(--color-muted-bright)",
                   }}
                 >
                   →

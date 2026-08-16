@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { imagePrompts } from "../data/imagePrompts";
+import BackButton from "../components/BackButton";
 
 const categories = [
   { id: "trending-portraits", label: "Trending Portraits" },
@@ -294,6 +295,7 @@ const ImagePromptsPage = () => {
     >
       {/* ── Page Header ──────────────────────────────────────────── */}
       <div style={{ marginBottom: "40px" }}>
+        <BackButton fallbackTo="/" />
         <div style={{ marginBottom: "12px" }}>
           <span
             style={{

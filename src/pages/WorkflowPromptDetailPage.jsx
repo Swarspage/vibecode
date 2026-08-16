@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { workflowPrompts } from "../data/workflowPrompts";
+import BackButton from "../components/BackButton";
 
 const categoryLabels = {
   orient: "Orient",
@@ -46,13 +47,7 @@ const WorkflowPromptDetailPage = () => {
         >
           Prompt not found
         </h1>
-        <Link
-          to="/workflow-prompts"
-          className="detail-back-link"
-          style={{ fontFamily: "var(--font-mono)", fontSize: "12px" }}
-        >
-          All workflow prompts
-        </Link>
+        <BackButton fallbackTo="/workflow-prompts" />
       </section>
     );
   }
@@ -74,6 +69,7 @@ const WorkflowPromptDetailPage = () => {
     <section style={{ paddingTop: "0", paddingBottom: "96px" }}>
       {/* Top Area */}
       <div style={{ marginBottom: "40px" }}>
+        <BackButton fallbackTo="/workflow-prompts" />
         <div style={{ marginBottom: "12px" }}>
           <span
             style={{
