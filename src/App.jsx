@@ -5,6 +5,8 @@ import DesignPromptsPage from "./pages/DesignPromptsPage";
 import DesignPromptDetailPage from "./pages/DesignPromptDetailPage";
 import WorkflowPromptsPage from "./pages/WorkflowPromptsPage";
 import WorkflowPromptDetailPage from "./pages/WorkflowPromptDetailPage";
+import ImagePromptsPage from "./pages/ImagePromptsPage";
+import ImagePromptDetailPage from "./pages/ImagePromptDetailPage";
 import MyKitPage from "./pages/MyKitPage";
 import { workflowPrompts } from "./data/workflowPrompts";
 
@@ -26,6 +28,10 @@ const App = () => {
           />
           <Route path=":slug" element={<WorkflowPromptDetailPage />} />
         </Route>
+
+        {/* Image Prompts: flat gallery pattern */}
+        <Route path="/image-prompts" element={<ImagePromptsPage />} />
+        <Route path="/image-prompts/:slug" element={<ImagePromptDetailPage />} />
 
         <Route path="/my-kit" element={<MyKitPage />} />
 
