@@ -1,4 +1,4 @@
-﻿import newsprintPrompt from "./prompts/Newsprint.md?raw";
+import newsprintPrompt from "./prompts/Newsprint.md?raw";
 import monochromePrompt from "./prompts/Monochrome.md?raw";
 import modernDarkPrompt from "./prompts/Modern Dark.md?raw";
 import bauhausPrompt from "./prompts/Bauhaus.md?raw";
@@ -30,6 +30,7 @@ import neumorphismPrompt from "./prompts/Neumorphism.md?raw";
 import organicNaturalPrompt from "./prompts/Organic Natural.md?raw";
 import maximalismDopaminePrompt from "./prompts/Maximalism Dopamine.md?raw";
 import retro90sPrompt from "./prompts/Retro 90s Nostalgia.md?raw";
+import aurelPrompt from "./prompts/Aurel Quiet Luxury Wealth.md?raw";
 
 export const designPrompts = [
   {
@@ -672,5 +673,27 @@ export const designPrompts = [
     },
     previewUrl: "/previews/retro-90s-nostalgia.html",
     prompt: retro90sPrompt
+  },
+  {
+    id: "aurel-quiet-luxury-wealth",
+    name: "Aurel / Quiet Luxury Wealth",
+    slug: "aurel-quiet-luxury-wealth",
+    summary: "Understated, precise, expensive, and calm. Ink, bone, and champagne palette for private wealth platforms.",
+    tags: ["dark", "luxury", "wealth", "serif", "institutional", "metallic"],
+    palette: {
+      background: "#07070A",
+      foreground: "#E7E5E0",
+      muted: "#0C0C10",
+      accent: "#E8C88C",
+      border: "rgba(255,255,255,0.06)"
+    },
+    typography: {
+      heading: "Instrument Serif",
+      body: "Inter",
+      ui: "Inter",
+      mono: "JetBrains Mono"
+    },
+    previewUrl: "/previews/aurel.html",
+    prompt: aurelPrompt
   }
 ];
