@@ -112,9 +112,9 @@ export const imagePrompts = [
     "prompt": "Surreal advertising composite of impossible balance, vertical 4:5, hyper-realistic, clean commercial finish. COMPOSITION: EXTREME LOW ANGLE from the ground pointing almost vertically upward, with a tower of basketballs entering from the bottom edge and the subject silhouetted against open sky. THE STRUCTURE: five or six BASKETBALLS stacked into an irregular column that widens toward the top, defying physics, with the man standing on the two uppermost balls — one foot on each. The instability is obvious and deliberate.\n\nMAIN SUBJECT: a young man (face of the reference person) standing in a RELAXED BALANCING POSTURE, legs slightly apart resting on two separate balls, torso upright. HEAD TURNED IN PROFILE looking up and off into the distance. He does not look at the balls and shows no concern about falling — this calm is what makes the image work: an impossible balance treated as entirely ordinary.\n\nTHE BAG — the true protagonist: a large duffel travel bag in glossy BLACK leather with RED trim stripes and red stitching, and a side panel featuring an embossed lattice pattern, hanging from his extended right arm and occupying the right third of the frame — its palette deliberately echoing the outfit.\n\nOUTFIT: an oversized cropped BLACK glossy technical bomber jacket with a high stand-up funnel collar, boxy dropped shoulders and long sleeves, with a small RED zippered chest pocket detail; wide-leg washed BLACK denim jeans with a faded worn finish and heavy drape stacking over the boots; and BLACK high-top boots with red soles, red panelling and long loose RED LACES trailing dramatically in the air below his feet.\n\nBACKGROUND: pale blue sky with scattered white cumulus clouds and NOTHING ELSE — the total absence of any ground reference is what makes the altitude impossible to gauge, and why the image feels vertiginous.",
     "requiresUpload": true,
     "aspectRatio": "4:5",
-    "image": "/images/gemini/impossible-balance.png",
-    "cardImage": "/images/gemini/impossible-balance.png",
-    "detailImage": "/images/gemini/impossible-balance.png"
+    "image": "/images/gemini/impossible-balance.webp",
+    "cardImage": "/images/gemini/impossible-balance.webp",
+    "detailImage": "/images/gemini/impossible-balance.webp"
   },
   {
     "id": "ip-new-clean-2",
@@ -125,9 +125,9 @@ export const imagePrompts = [
     "prompt": "Surreal multi-scale duplication photograph, vertical 3:4, hyperrealistic composite, viral streetwear aesthetic, deliberately unpolished finish.\n\nCOMPOSITION: EXTREME LOW ANGLE from ground level allowing the large figures to dominate and the vertical lines to converge dramatically.\n\nTHE SAME MAN (face of the reference person) APPEARS FOUR TIMES at radically different scales in one frame:\n\n(1) a COLOSSAL figure entering from the left edge, cropped by the frame so only his enormous torso and legs are visible, crouching slightly and LOOKING DOWN toward the normal-sized figure, roughly eight to ten meters tall;\n\n(2) a second COLOSSAL figure leaning over from behind the building roof, cropped by the top edge, only his torso and dangling tie visible, similar scale;\n\n(3) the NORMAL-SIZED figure standing at true human scale in the center of the parking lot, head tilted BACK LOOKING UP at the giants — he is the reference anchor and the viewer's point of identification;\n\n(4) a MINIATURE figure standing in the lower right corner at roughly one quarter scale, seen from behind or in profile.\n\nTHE GAZE NETWORK: the giants look down, the normal one looks up, and the small one looks toward the center — this web of crossing sightlines is what connects the four instances into a single scene rather than a collage.\n\nOUTFIT, IDENTICAL AT ALL FOUR SCALES: an oversized white button-up shirt with sleeves rolled up, a loose red and white striped tie, ultra-wide light-wash baggy jeans with heavy drape, and wheatcolored work boots; the largest figure also wears sunglasses.\n\nSETTING: an Asian street-level commercial storefront — a gray corrugated metal facade with a sloped roof, red and green shop signage, product-filled display windows, potted plants, yellow traffic cones, and a silver car parked on the right, on gray concrete paving.\n\nSKY: bright blue with dense white cumulus clouds on a clear tropical day.\n\nLIGHTING: direct high tropical midday sun from slightly behind, casting short hard shadows beneath the central and miniature figures, high contrast, with the white shirts slightly overexposed. Shadow consistency across all four instances is what holds the composite together.\n\nPalette: dominant denim blue filling huge portions of the frame against the white of the shirts and clouds, with the red of the tie and signage as the saturated accent and the wheat-colored boots as a second warm accent; highly legible and high contrast.\n\nShot on a 16-24mm ultra wide angle from ground level, evident in the distortion of the giant's legs and the extreme convergence of verticals, deep depth of field, 8k.",
     "requiresUpload": true,
     "aspectRatio": "3:4",
-    "image": "/images/gemini/multi-scale-duplication.png",
-    "cardImage": "/images/gemini/multi-scale-duplication.png",
-    "detailImage": "/images/gemini/multi-scale-duplication.png"
+    "image": "/images/gemini/multi-scale-duplication.webp",
+    "cardImage": "/images/gemini/multi-scale-duplication.webp",
+    "detailImage": "/images/gemini/multi-scale-duplication.webp"
   },
   {
     "id": "ip-new-clean-3",
@@ -138,9 +138,9 @@ export const imagePrompts = [
     "prompt": "Leaning casually against the motorcycle near the rear seat is a stylish young Indian man viewed from the side profile. He has funky black hair, a neatly groomed beard, warm brown skin, and a calm, reflective expression while looking toward the distant mountains.\n\nHe wears:\n* Blue and white plaid flannel shirt with sleeves rolled to the forearms\n- Slim-fit black trousers\n- Black sneakers with white stripes\n- Holding a smartphone casually in his right hand\n\nThe road curves dramatically toward the left, protected by metallic roadside guardrails that lead the viewer's eye into the distance. The surrounding landscape features rolling mountain ranges, lush green valleys, scattered trees, and layered hills fading into atmospheric haze.\n\nThe sky is filled with spectacular golden-orange sunset light. The sun sits low near the horizon, casting long shadows across the road while illuminating scattered clouds with warm amber and orange tones. Rich cinematic lens flare and subtle volumetric sunlight enhance the atmosphere.\n\nThe road surface has realistic asphalt texture with warm reflections from the sunset.\n\n# AUGMENTED REALITY NAVIGATION OVERLAY\nCreate a semi-transparent Google Maps-style holographic interface projected directly onto the road surface.\n\nElements include:\n- A glowing yellow navigation route stretching along the road\n- Blue location marker labeled \"Kurnool, Andhra Pradesh\"\n- Red destination pin labeled \"Varanasi, Uttar Pradesh\"\n- Route following NH44\n- Floating navigation information panel on the right side displaying:\n- 96 hr 00 min\n- 1410 km - NH44\n- Fastest route, the usual traffic\n- Live traffic indicator with green, yellow, and red bars\n- ETA: 7:45 PM\n- Speed: 0 km/h\n- Fuel: 80%\n- Small Google Maps logo at the bottom\n\nThe interface should appear as a realistic transparent hologram with subtle reflections blending naturally into the road surface.\n\n# LIGHTING\n- Warm golden-hour sunlight\n- Long cinematic shadows\n- Soft atmospheric haze\n- HDR exposure\n- High dynamic range\n- Realistic sunlight reflections on chrome and asphalt\n- Volumetric light rays\n\n# PHOTOGRAPHY STYLE\n- Ultra-realistic travel photography\n- Luxury motorcycle campaign\n- Royal Enfield commercial photography\n- Adventure lifestyle editorial\n- Cinematic road-trip aesthetic\n- Hyper-realistic automotive detailing\n- Premium travel documentary style\n- Google Maps augmented reality visualization\n- High-end commercial photography\n- Professional color grading\n- HDR photography\n- Ultra-sharp details\n- 24mm wide-angle lens\n- Deep depth of field\n- Natural atmospheric perspective",
     "requiresUpload": true,
     "aspectRatio": "3:4",
-    "image": "/images/gemini/motorcycle-ar-map.png",
-    "cardImage": "/images/gemini/motorcycle-ar-map.png",
-    "detailImage": "/images/gemini/motorcycle-ar-map.png"
+    "image": "/images/gemini/motorcycle-ar-map.webp",
+    "cardImage": "/images/gemini/motorcycle-ar-map.webp",
+    "detailImage": "/images/gemini/motorcycle-ar-map.webp"
   },
   {
     "id": "ip-new-clean-4",
@@ -151,9 +151,9 @@ export const imagePrompts = [
     "prompt": "The background features a towering mist-covered mountain occupying the upper half of the frame. Thick white fog slowly wraps around the mountain slopes, creating a dreamy atmospheric effect. Soft diffused sunlight enters from the upper-right corner through the clouds, producing a gentle golden haze and volumetric light without harsh shadows.\n\nThe middle ground is filled with dense tropical vegetation including tall coconut palm trees, bamboo clusters, and lush green rainforest foliage. Thin utility wires subtly cross the scene, while small village houses peek through the trees, enhancing the authentic tropical roadside atmosphere.\n\nIn the foreground, a matte-black compact hatchback is parked diagonally beside a roadside concrete barrier. The car has tinted windows, alloy wheels, realistic reflections from the cloudy sky, and two bright white LED auxiliary lights mounted on the front bumper. The pavement appears slightly damp from recent rain, adding realism and soft reflections.\n\nLeaning casually against the front-right side of the car is a relaxed young South Indian man with authentic facial features, naturally wavy black hair hidden beneath a black baseball cap with small yellow embroidered lettering. He has a short well-groomed beard and moustache, warm brown skin, and a thoughtful expression while looking toward the right side of the frame.\n\nHe wears:\n- Loose black oversized polo shirt\n- Light blue acid-wash denim shorts reaching above the knees\n- Olive green rubber clogs\n- Bright neon-yellow digital wristwatch\n\nHis pose is relaxed with one leg slightly bent and his hands resting casually in front of him, conveying a peaceful travel mood.\n\nLighting is soft natural overcast daylight with subtle warm highlights from the sun breaking through the clouds. The color grading features muted greens, warm gray skies, deep blacks, and earthy tones for a premium cinematic travel aesthetic.\n\n# TYPOGRAPHY LAYOUT\nTop Center\nARUDRA ESWAR\nStyle:\n- Small uppercase sans-serif\n- Thin font weight\n- Dark charcoal color\n- Wide letter spacing\n- Minimal editorial appearance\n\nMain Heading\nSOMETIMES\nStyle:\n- Large elegant luxury serif font\n- Rich golden-yellow (#D8A528)\n- High contrast\n- Premium magazine typography\n- Center aligned\n- Dominant visual element\n\nSubtitle\nThe best way to fresh the mind is just go out\nStyle:\n- White sans-serif font\n- Medium weight\n- Two centered lines\n* Soft drop shadow for readability\n- Clean editorial spacing\n\nBottom Center\nTiny branding:\nwild box stories\nStyle:\n- Small lowercase sans-serif\n- White with reduced opacity\n- Minimal branding\n\n# PHOTOGRAPHY STYLE\n- Ultra-realistic travel photography\n- Cinematic lifestyle portrait\n- Luxury travel campaign\n- Atmospheric landscape photography\n- Tropical rainforest aesthetic\n- Moody monsoon weather\n- Soft volumetric lighting\n- HDR photography\n- Hyper-realistic textures\n- Natural skin tones\n- Realistic vehicle reflections\n- Professional color grading\n- High dynamic range\n- 35mm documentary lens\n- Deep depth of field\n- Premium Instagram story design\n- Award-winning travel editorial photography\n- 8K ultra-high resolution\n\nAspect Ratio: 4:5 (Instagram Post)",
     "requiresUpload": true,
     "aspectRatio": "4:5",
-    "image": "/images/gemini/hatchback-mountain-poster.png",
-    "cardImage": "/images/gemini/hatchback-mountain-poster.png",
-    "detailImage": "/images/gemini/hatchback-mountain-poster.png"
+    "image": "/images/gemini/hatchback-mountain-poster.webp",
+    "cardImage": "/images/gemini/hatchback-mountain-poster.webp",
+    "detailImage": "/images/gemini/hatchback-mountain-poster.webp"
   },
   {
     "id": "ip-new-clean-5",
@@ -164,9 +164,9 @@ export const imagePrompts = [
     "prompt": "thick frames and dark tinted lenses, completely covering his eyes.\n\nHe wears an oversized cream-colored lightweight linen resort shirt with a relaxed open Cuban collar. The shirt is partially unbuttoned, revealing part of his chest and a thin minimalist gold chain necklace. The fabric features subtle woven texture, natural wrinkles, and soft folds moving gently with the wind.\n\nThe background consists entirely of a vast muted blue evening sky with a smooth gradient and abundant negative space occupying nearly 70% of the composition. The atmosphere is peaceful, minimalist, and cinematic with soft natural ambient light.\n\nLighting is warm golden-hour sunlight coming from camera right, creating gentle highlights along the hair, face, collar, and shoulders while maintaining soft shadows. The overall color grading combines warm golden skin tones with cool blue skies, producing a premium luxury editorial mood.\n\nTypography at the upper center:\nENJOY YOUR OWN COMPANY.\n\nTypography style:\n- Small uppercase sans-serif font\n- Pure white lettering\n- Medium weight\n- Wide letter spacing\n- Clean minimalist layout\n- Center aligned\n- No outline\n- No shadow\n- Luxury editorial magazine style\n\nSmall branding text centered at the bottom:\nAE\nStyle:\n- Tiny uppercase sans-serif\n- White\n- Minimal branding\n- Center aligned\n\n# PHOTOGRAPHY STYLE\n- Ultra-realistic editorial fashion photography\n- Luxury clothing campaign\n- Lifestyle portrait\n- Modern Pinterest aesthetic\n- Scandinavian minimalism\n- High-end magazine cover\n- Natural golden-hour lighting\n- Soft cinematic color grading\n- Hyper-realistic skin texture\n- Fine fabric details\n- 85mm portrait lens\n- Shallow depth of field\n- HDR photography\n- Filmic contrast\n- Subtle film grain\n- Premium Instagram editorial\n- Clean luxury composition\n- Award-winning commercial photography\n- 8K ultra-high resolution\n\nAspect Ratio: 4:5 (Instagram Post)",
     "requiresUpload": true,
     "aspectRatio": "4:5",
-    "image": "/images/gemini/enjoy-your-own-company.png",
-    "cardImage": "/images/gemini/enjoy-your-own-company.png",
-    "detailImage": "/images/gemini/enjoy-your-own-company.png"
+    "image": "/images/gemini/enjoy-your-own-company.webp",
+    "cardImage": "/images/gemini/enjoy-your-own-company.webp",
+    "detailImage": "/images/gemini/enjoy-your-own-company.webp"
   },
   {
     "id": "ip-new-clean-6",
@@ -177,9 +177,9 @@ export const imagePrompts = [
     "prompt": "young South Indian man with authentic facial features, naturally thick medium-length wavy black hair with abundant volume, clean warm brown skin, a faint beard, and a calm thoughtful expression. He is looking toward the right side of the frame rather than at the camera, conveying peace, reflection, and emotional freedom.\n\n# He wears:\n* Oversized emerald-green graphic T-shirt with large vintage collegiate lettering reading \"OXFORD\"\n- Dark olive relaxed-fit jogger pants\n- White low-top sneakers\n- Thin silver chain necklace\n\nHis posture is relaxed with one shoulder resting lightly against the vehicle while both hands are loosely clasped in front of him.\n\nThe background features a vibrant green tea plantation bordered by neatly trimmed hedges stretching across the middle ground. Behind the plantation stands a dense forest of tall trees partially covered by soft morning mist. The sky is bright white with subtle pale blue gradients, creating a high-key atmospheric look with abundant negative space.\n\nLighting is soft diffused natural daylight filtered through fog, producing gentle shadows, muted contrast, and fresh cinematic color grading. The overall mood is peaceful, calm, refreshing, and emotionally uplifting.\n\n# TYPOGRAPHY LAYOUT\nPosition the typography in the upper-center of the frame with generous negative space.\n\nText:\nLet\nit go\n\nTypography Style:\n- Elegant modern hand-lettered brush calligraphy\n- Deep teal-green color (#2F7F73)\n- Thick expressive brush strokes\n- Handwritten script\n- Organic paint texture\n- Slight ink variations\n- Large decorative \"go\" with artistic looping flourishes\n- Minimalist luxury editorial composition\n- No outline\n- No shadow\n\n# PHOTOGRAPHY STYLE\n- Ultra-realistic lifestyle photography\n- Luxury automotive campaign\n- Travel editorial\n- Cinematic countryside portrait\n- Premium Instagram aesthetic\n- Hyper-realistic natural colors\n- Soft atmospheric haze\n- HDR photography\n- Professional color grading\n- Crisp automotive reflections\n- Realistic clothing textures\n- Documentary photography style\n- Natural environmental lighting\n- 35mm lens\n- Deep depth of field\n- Fine film grain\n- Award-winning travel photography\n- High dynamic range\n- 8K ultra-high resolution\n- Masterpiece quality\n\nAspect Ratio: 4:5 (Instagram Post)",
     "requiresUpload": true,
     "aspectRatio": "4:5",
-    "image": "/images/gemini/let-it-go-tea-plantation.png",
-    "cardImage": "/images/gemini/let-it-go-tea-plantation.png",
-    "detailImage": "/images/gemini/let-it-go-tea-plantation.png"
+    "image": "/images/gemini/let-it-go-tea-plantation.webp",
+    "cardImage": "/images/gemini/let-it-go-tea-plantation.webp",
+    "detailImage": "/images/gemini/let-it-go-tea-plantation.webp"
   },
   {
     "id": "ip-new-clean-7",
@@ -190,9 +190,9 @@ export const imagePrompts = [
     "prompt": "tilted slightly backward with his chin raised, looking straight toward the camera with a calm, fearless, confident expression.\n\nHe wears an oversized solid black pullover hoodie with realistic heavyweight cotton fabric, soft folds, drawstrings, and no logos or branding. His body blends naturally into the black background, with only the illuminated edges separating him from the darkness.\n\nStrong cinematic rim lighting from behind outlines his hair, shoulders, and hoodie with a crisp white glow, creating a dramatic halo effect around the silhouette while the front lighting remains soft and low-key. Hyper-realistic skin texture, subtle facial highlights, premium color grading, and deep shadows.\n\nOn the left side of the composition, place bold motivational typography arranged vertically with generous spacing:\n\n# NEVER\nGIVE\nup\n\nTypography style:\n- Large condensed bold sans-serif font\n- Matte metallic mustard-gold color (#8C6A00)\n- Clean editorial alignment\n- \"NEVER\" largest\n- \"GIVE\" slightly smaller\n- \"up\" smallest and lowercase\n- No outline\n- No glow\n- Flat luxury print appearance\n\nComposition:\n- Subject positioned in the lower-right third\n- Typography balanced on the left\n- Hanging bulb in the upper-right",
     "requiresUpload": true,
     "aspectRatio": "4:5",
-    "image": "/images/gemini/never-give-up-hoodie.png",
-    "cardImage": "/images/gemini/never-give-up-hoodie.png",
-    "detailImage": "/images/gemini/never-give-up-hoodie.png"
+    "image": "/images/gemini/never-give-up-hoodie.webp",
+    "cardImage": "/images/gemini/never-give-up-hoodie.webp",
+    "detailImage": "/images/gemini/never-give-up-hoodie.webp"
   },
   {
     "id": "ip-new-clean-8",
@@ -203,9 +203,9 @@ export const imagePrompts = [
     "prompt": "Ultra-realistic cinematic black and white portrait of a young man with curly tousled hair wearing black sunglasses and a dark suit. Crisp lighting, rich contrast, documentary film aesthetic, 8k resolution, Leica 50mm f1.4 lens.",
     "requiresUpload": true,
     "aspectRatio": "16:9",
-    "image": "/images/gemini/cinematic-monochrome-portrait.png",
-    "cardImage": "/images/gemini/cinematic-monochrome-portrait.png",
-    "detailImage": "/images/gemini/cinematic-monochrome-portrait.png"
+    "image": "/images/gemini/cinematic-monochrome-portrait.webp",
+    "cardImage": "/images/gemini/cinematic-monochrome-portrait.webp",
+    "detailImage": "/images/gemini/cinematic-monochrome-portrait.webp"
   },
   {
     "id": "ip-new-clean-9",
@@ -216,9 +216,9 @@ export const imagePrompts = [
     "prompt": "Cinematic photo series (triptych layout) of a young man with curly hair on a lonely rainy mountain road. The left panel shows a close-up portrait with sunglasses. The center panel shows him walking down the wet asphalt in a white linen shirt and grey trousers. The right panel shows him sitting casually next to a classic motorcycle. Lush green pine trees in the background, misty rain, cinematic teal and orange color grading, wet pavement reflections. 8k, hyper-realistic fashion editorial.",
     "requiresUpload": true,
     "aspectRatio": "16:9",
-    "image": "/images/gemini/rainy-mountain-road-triptych.png",
-    "cardImage": "/images/gemini/rainy-mountain-road-triptych.png",
-    "detailImage": "/images/gemini/rainy-mountain-road-triptych.png"
+    "image": "/images/gemini/rainy-mountain-road-triptych.webp",
+    "cardImage": "/images/gemini/rainy-mountain-road-triptych.webp",
+    "detailImage": "/images/gemini/rainy-mountain-road-triptych.webp"
   },
   {
     "id": "ip-new-clean-10",
@@ -229,9 +229,9 @@ export const imagePrompts = [
     "prompt": "THE GIANT SNEAKERS: two classic running shoes in white, gray and ORANGE-RED with visible air cushioning units in the midsole, FLOATING IN THE SKY LIKE HELIUM BALLOONS at ASYMMETRIC positions and different heights — one higher on the right seen in foreshortening showing its outsole, the other lower on the left seen in profile. This asymmetry is what suggests genuine free floating rather than rigid composition.\n\nTHE LACES: long white ribbon-like laces trailing from both shoes and CONVERGING TO A SINGLE POINT where the subject's hand grips them. This convergence point is the narrative anchor of the entire image — it is what explains how he is held aloft.\n\nMAIN SUBJECT: a tiny figure of a young man (face of the reference person), roughly one eighth the scale of a sneaker, HANGING BY ONE ARM from the gathered laces, body loose and legs spread apart in midair in a swinging posture.\n\nHe wears an all-black outfit — a black hoodie, black track trousers and a black cap — reading as a clean silhouette against the bright sky, with white sneakers as the only break.\n\nTHE SKYLINE: a modern city of office towers, residential high-rises, construction cranes and pockets of green between the buildings, slightly desaturated and darker so it recedes into the background.\n\nLIGHTING: natural diffused daylight on a clear day, with gentle BACKLIGHT rimming the sneakers against the sky and very soft shadows. Lighting consistency between the shoes, the figure and the city is what holds the montage together.\n\nPalette: dominant pale blue sky with white clouds and white shoe uppers, the ORANGE-RED of the sneakers as the only saturated accent and a direct complement to the blue, with the black figure and gray cityscape as tonal counterweight.\n\nShot on 85mm angled slightly upward, deep depth of field, plane compression making the city feel closer than it is. Medium saturation, medium contrast, no grain, no logos, no brand names, 8k.",
     "requiresUpload": true,
     "aspectRatio": "4:5",
-    "image": "/images/gemini/giant-sneakers-floating.png",
-    "cardImage": "/images/gemini/giant-sneakers-floating.png",
-    "detailImage": "/images/gemini/giant-sneakers-floating.png"
+    "image": "/images/gemini/giant-sneakers-floating.webp",
+    "cardImage": "/images/gemini/giant-sneakers-floating.webp",
+    "detailImage": "/images/gemini/giant-sneakers-floating.webp"
   },
   {
     "id": "ip-new-clean-11",
@@ -242,9 +242,9 @@ export const imagePrompts = [
     "prompt": "A realistic monochrome street portrait captured in a cinematic style. A young man with curly hair and a short beard sits on a classic Royal Enfield motorcycle in a side profile view. He wears a button-up shirt with rolled-up sleeves and dark jeans. The setting is a bustling city street at night during heavy rain. Streetlights and car headlights create dramatic bokeh and bright reflections on the wet asphalt and the polished chrome of the motorcycle tank. High contrast, film noir aesthetic, cinematic lighting, 8k resolution, Leica Summilux lens.",
     "requiresUpload": true,
     "aspectRatio": "16:9",
-    "image": "/images/gemini/monochrome-motorcycle-rain.png",
-    "cardImage": "/images/gemini/monochrome-motorcycle-rain.png",
-    "detailImage": "/images/gemini/monochrome-motorcycle-rain.png"
+    "image": "/images/gemini/monochrome-motorcycle-rain.webp",
+    "cardImage": "/images/gemini/monochrome-motorcycle-rain.webp",
+    "detailImage": "/images/gemini/monochrome-motorcycle-rain.webp"
   },
   {
     "id": "ip-new-clean-12",
@@ -255,9 +255,9 @@ export const imagePrompts = [
     "prompt": "THROUGH the interface bar from top to bottom. This object is what unifies the two planes: without it they would read as two stacked photos; with it, the image becomes one continuous space where the interface is a physical object floating in between.\n\nTHE NARRATIVE: one gives, the other receives — or one tempts, the other gives in.\n\nOUTFIT, IDENTICAL ON BOTH FIGURES: an oversized burgundy rugby polo with horizontal cream stripes and embroidered lettering on the chest, a white t-shirt underneath, wide-leg heavy black trousers, and chunky black leather boots. Dark curly hair, silver rings, a wristwatch.\n\nTHE INTERFACE BAR: a semi-opaque white social media UI strip with heart, comment and share icons with counters, small \"liked by\" avatars, a username line, a caption line and a location line, rendered with authentic app typography and spacing.\n\nSETTING: a London Georgian townhouse facade — a slate bluegray paneled door, black iron railings, pale stone steps.\n\nLIGHTING: soft diffused overcast daylight, flat with no dominant direction and very soft shadows — this flat light is what makes the duplication composite integrate cleanly.\n\nPalette: dominant burgundy of the polos against the slate blue-gray door and black trousers, with the cream stripes and stone steps providing the light tones, and the red heart icon in the interface rhyming with the burgundy to unify the whole frame.\n\nShot on 35-50mm at chest height, deep depth of field with everything sharp, 8k.",
     "requiresUpload": true,
     "aspectRatio": "3:4",
-    "image": "/images/gemini/interface-bar-duplication.png",
-    "cardImage": "/images/gemini/interface-bar-duplication.png",
-    "detailImage": "/images/gemini/interface-bar-duplication.png"
+    "image": "/images/gemini/interface-bar-duplication.webp",
+    "cardImage": "/images/gemini/interface-bar-duplication.webp",
+    "detailImage": "/images/gemini/interface-bar-duplication.webp"
   },
   {
     "id": "ip-new-clean-13",
@@ -268,9 +268,9 @@ export const imagePrompts = [
     "prompt": "MAIN SUBJECT: a young man (face of the reference person) JUMPING mid-air in the exact center of the corridor, one leg bent back and his body slightly turned, mouth open in a shout of surprise, arms held out from his body in a defensive reactive posture — he is being besieged.\n\nOUTFIT: a red flat-brim baseball cap, silver wraparound sunglasses, an oversized white t-shirt with a small red circular chest logo, very wide white cargo trousers with deep creases and red graphic details at the hem, and red canvas high-top sneakers.\n\nMAIN EFFECT — THE HANDS: eight or nine ARMS of deliberately different scales bursting through the side walls of the corridor, each emerging from a hole with cracked and fractured concrete edges and radial cracks propagating outward from the breach — enormous hands in the foreground at the upper left and mid right, smaller hands deeper down the corridor. All have fingers spread wide, reaching and grasping. Several wear silver jewelry — rings, bracelets, a watch. THREE of the hands hold RED HIGH-TOP SNEAKERS identical to the subject's, offering or displaying them. The ambiguity of whether the hands are chasing him, offering him something or claiming him is what makes the image unsettling rather than merely eye-catching.\n\nSETTING: a narrow exterior passage of modern residential architecture — smooth white stucco walls, a dark wood ceiling with recessed spotlights switched on, large-format gray floor tiles with visible joints, a staircase on the left in the background, and a dark zone at the end of the corridor acting as a black vanishing point.\n\nLIGHTING: soft diffused natural daylight entering from the front and above, supplemented by the ceiling spotlights, soft shadows, with lighting consistency maintained between the inserted arms and the real walls.\n\nPalette: dominant WHITE — walls, outfit, pale floor — with SATURATED RED as the only accent appearing exclusively on the cap, sneakers and chest logo, plus the warm skin tones of the arms; a two-color palette pushed to the extreme, turning the image into effective advertising without looking like it.\n\nhyper-realistic composite, viral Instagram aesthetic, deliberately unpolished finish.",
     "requiresUpload": true,
     "aspectRatio": "3:4",
-    "image": "/images/gemini/emerging-hands-sneakers.png",
-    "cardImage": "/images/gemini/emerging-hands-sneakers.png",
-    "detailImage": "/images/gemini/emerging-hands-sneakers.png"
+    "image": "/images/gemini/emerging-hands-sneakers.webp",
+    "cardImage": "/images/gemini/emerging-hands-sneakers.webp",
+    "detailImage": "/images/gemini/emerging-hands-sneakers.webp"
   },
   {
     "id": "ip-new-clean-14",
@@ -281,9 +281,9 @@ export const imagePrompts = [
     "prompt": "COMPOSITION: strictly symmetrical on the vertical axis, the subject centered in front of a residential doorway. The image runs TWO SIMULTANEOUS SCALES of the same man.\n\nGIANT HEAD AND HANDS: his head and both hands rendered at arm's-length selfie scale, occupying the upper third and the lateral edges of the frame. Black sleeved arms enter diagonally from the lower left and lower right corners, converging toward the center and forming an inverted V frame. His giant head is held between both palms, hands pressing against his cheeks and ears. He wears a black flat-brim baseball cap with white two-line lettering on the front, thick black rectangular acetate sunglasses, and has a few days of stubble. His MOUTH IS WIDE OPEN in an exaggerated shout of shock and astonishment, chin dropped — this comic shock is the emotional engine of the image.\n\nMINIATURE BODY: the same man's body at roughly 1/4 the scale of the head, standing on the sidewalk directly below. His neck ending just under the giant jaw so that the large head and small body align as a single bobblehead-like figure. He wears an oversized black zipup jacket, a gray knit sweater showing at the collar, ultra-wide black jeans with a silver wallet chain hanging at the hip, high white socks, and silver-gray retro running sneakers.\n\nSETTING: a Georgian townhouse facade — a slate blue-gray paneled front door with a classical pediment above, a brass letterbox and center knob, a metal house number to the right, black iron railings on both sides, cream stucco walls, and gray stone paving slabs.\n\nLIGHTING: soft diffused overcast daylight, flat with no dominant direction, very faint shadows — this neutral light is what makes the montage believable, since there are no directional shadows to expose the mismatch between the two scales.\n\nPalette: dominant cool neutrals — black outfit and sunglasses, slate blue-gray door, cream wall, gray paving — with minimal accents.",
     "requiresUpload": true,
     "aspectRatio": "3:4",
-    "image": "/images/gemini/surreal-selfie-scale.png",
-    "cardImage": "/images/gemini/surreal-selfie-scale.png",
-    "detailImage": "/images/gemini/surreal-selfie-scale.png"
+    "image": "/images/gemini/surreal-selfie-scale.webp",
+    "cardImage": "/images/gemini/surreal-selfie-scale.webp",
+    "detailImage": "/images/gemini/surreal-selfie-scale.webp"
   },
   {
     "id": "ip-new-clean-15",
@@ -294,8 +294,8 @@ export const imagePrompts = [
     "prompt": "Streetwear fashion photograph with augmented reality overlays, vertical 3:4, hyper-realistic, viral Instagram aesthetic.\n\nCOMPOSITION: three vertical columns — a floating music player widget on the left, a pixelated figure at the lower left, and the real subject on the right.\n\nMAIN SUBJECT: a young man (face of the reference person) in profile, leaning back against a white concrete pillar with his head tilted back and up resting on the wall, eyes closed in absorbed listening — he is inside the music. One hand in his pocket, the other holding a green soda can.\n\nOUTFIT: black over-ear headphones, an oversized boxy gray SHERPA FLEECE half-zip pullover with a thick stand-up collar and dropped shoulders in soft plush teddy texture, wide-leg light gray acid-wash CARGO trousers with multiple flap pockets on the thighs and hips and a heavy structured drape stacking over the shoes, and chunky white minimalist platform sneakers with a smooth seamless upper. Short dark curly hair with a taper fade and a full dark beard, small silver earring.\n\nTHE MUSIC WIDGET: a floating translucent FROSTED GLASS panel with an iOS-style blur, containing an album cover artwork, a track title with an explicit content tag, an artist name, a progress bar with timestamps, playback controls (rewind, pause, forward), a volume slider and an audio device indicator. The panel casts a subtle shadow and catches soft reflections, integrating it into the real space.\n\nTHE PIXELATED FIGURE: a VOXEL / 3D pixel-art version of the same man, about 1/4 scale, standing on the floor looking toward the real subject — an exact replica of his outfit (gray fleece pullover, headphones, light gray cargo trousers, white chunky sneakers) holding the same green can, rendered with deliberately jagged edges and visible blocks; the contrast between his low resolution and the photorealism of the environment is the entire joke.\n\nSETTING: a covered parking garage — a white concrete pillar, red fire suppression pipes running along the ceiling, polished concrete floor with reflections, and a white SUV partially visible on the left. The anonymous utilitarian architecture is intentional, making the digital elements pop.\n\nLIGHTING: flat diffused indirect parking-garage light with no dominant direction, very soft shadows under the feet, with the widget and the pixel figure lit consistently with the environment to hold the integration. Keep clear tonal separation between the gray fleece and the white pillar behind it — a subtle rim of shadow along his silhouette so the figure never blends into the wall.\n\nPalette: dominant grays and off-whites — the fleece, the acid-wash cargos, the pillar and the concrete — with black headphones as the only dark mass, and the only saturated accents being red on the album artwork echoing the red ceiling pipes, and the green of the can; this chromatic economy is what makes the album cover land as a visual bomb.\n\nShot on 35–50mm at chest height, deep depth of field, vertical phone-capture format, 8k.",
     "requiresUpload": true,
     "aspectRatio": "3:4",
-    "image": "/images/gemini/streetwear-ar-music-player.png",
-    "cardImage": "/images/gemini/streetwear-ar-music-player.png",
-    "detailImage": "/images/gemini/streetwear-ar-music-player.png"
+    "image": "/images/gemini/streetwear-ar-music-player.webp",
+    "cardImage": "/images/gemini/streetwear-ar-music-player.webp",
+    "detailImage": "/images/gemini/streetwear-ar-music-player.webp"
   }
 ];
