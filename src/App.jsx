@@ -8,6 +8,7 @@ import WorkflowPromptDetailPage from "./pages/WorkflowPromptDetailPage";
 import ImagePromptsPage from "./pages/ImagePromptsPage";
 import ImagePromptDetailPage from "./pages/ImagePromptDetailPage";
 import MyKitPage from "./pages/MyKitPage";
+import NotFoundPage from "./pages/NotFoundPage";
 import { workflowPrompts } from "./data/workflowPrompts";
 
 const App = () => {
@@ -35,6 +36,7 @@ const App = () => {
 
         <Route path="/my-kit" element={<MyKitPage />} />
 
+        <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>
   );

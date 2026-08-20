@@ -5,6 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Hero from "../components/Hero";
 import DesignPromptCard from "../components/DesignPromptCard";
+import Seo from "../components/Seo";
 import { designPrompts } from "../data/designPrompts";
 import { workflowPrompts } from "../data/workflowPrompts";
 import { imagePrompts } from "../data/imagePrompts";
@@ -110,8 +111,54 @@ const HomePage = () => {
     { scope: mainRef }
   );
 
+  const homeStructuredData = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "name": "Scaffold",
+        "url": "https://scaffold.swarshinde.dev",
+        "description": "Curated prompts for AI IDEs and image generation.",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://scaffold.swarshinde.dev/design-prompts?search={search_term_string}",
+          "query-input": "required name=search_term_string"
+        }
+      },
+      {
+        "@type": "Organization",
+        "name": "Scaffold",
+        "url": "https://scaffold.swarshinde.dev",
+        "logo": "https://scaffold.swarshinde.dev/favicon.svg",
+        "sameAs": []
+      },
+      {
+        "@type": "SiteNavigationElement",
+        "name": "Design Prompts",
+        "url": "https://scaffold.swarshinde.dev/design-prompts"
+      },
+      {
+        "@type": "SiteNavigationElement",
+        "name": "Workflow Prompts",
+        "url": "https://scaffold.swarshinde.dev/workflow-prompts"
+      },
+      {
+        "@type": "SiteNavigationElement",
+        "name": "Image Prompts",
+        "url": "https://scaffold.swarshinde.dev/image-prompts"
+      }
+    ]
+  };
+
   return (
     <main ref={mainRef}>
+      <Seo 
+        title="Scaffold — Curated Prompts for AI IDEs"
+        description="Copy production-grade design system prompts, workflow prompts, and Gemini image prompts. Built for AI IDEs, coding agents, and fast shipping."
+        canonical="/"
+        ogType="website"
+        structuredData={homeStructuredData}
+      />
       <Hero />
 
       {/* ─── Marquee Strip ────────────────────────────────────────── */}

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { designPrompts } from "../data/designPrompts";
 import DesignPromptCard from "../components/DesignPromptCard";
 import BackButton from "../components/BackButton";
+import Seo from "../components/Seo";
 
 const DesignPromptsPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -22,6 +23,11 @@ const DesignPromptsPage = () => {
 
   return (
     <section style={{ paddingTop: "var(--space-page-top)", paddingBottom: "96px" }}>
+      <Seo 
+        title="Design System Prompts — Scaffold"
+        description="Browse curated design-system prompts for AI codegen. Copy complete visual identities with tokens, typography, components, and motion."
+        canonical="/design-prompts"
+      />
       {/* Page Header */}
       <div style={{ marginBottom: "48px" }}>
         <BackButton fallbackTo="/" />

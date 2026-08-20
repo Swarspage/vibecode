@@ -3,6 +3,7 @@ import { NavLink, Outlet } from "react-router-dom";
 import { workflowPrompts } from "../data/workflowPrompts";
 import BackButton from "../components/BackButton";
 import BookmarkButton from "../components/BookmarkButton";
+import Seo from "../components/Seo";
 
 const categories = [
   { id: "orient", label: "Orient" },
@@ -42,6 +43,11 @@ const WorkflowPromptsPage = () => {
 
   return (
     <section style={{ paddingTop: "var(--space-page-top)", paddingBottom: "96px" }}>
+      <Seo 
+        title="Workflow Prompts — Scaffold"
+        description="Production workflow prompts for reading, debugging, refactoring, shipping, and reviewing real codebases with an AI IDE."
+        canonical="/workflow-prompts"
+      />
       {/* Page Header */}
       <div>
         <BackButton fallbackTo="/" />

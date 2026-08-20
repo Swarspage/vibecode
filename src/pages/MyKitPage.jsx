@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { getKit, removeFromKit } from "../utils/kit";
 import { designPrompts } from "../data/designPrompts";
 import { workflowPrompts } from "../data/workflowPrompts";
+import Seo from "../components/Seo";
 
 const MyKitPage = () => {
   const [kit, setKit] = useState([]);
@@ -68,6 +69,7 @@ const MyKitPage = () => {
   if (kit.length === 0) {
     return (
       <section style={{ paddingTop: "var(--space-page-top)", paddingBottom: "96px" }}>
+        <Seo title="My Kit — Scaffold" description="Your saved Scaffold prompts, ready to copy or export." canonical="/my-kit" />
         <div style={{ textAlign: "center", backgroundColor: "var(--color-surface)", border: "1px solid var(--color-border)", borderRadius: "var(--radius-md)", padding: "64px 24px" }}>
           <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--color-muted)" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" style={{ margin: "0 auto 16px auto" }}>
             <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"></path>
@@ -86,6 +88,7 @@ const MyKitPage = () => {
 
   return (
     <section style={{ paddingTop: "var(--space-page-top)", paddingBottom: "96px" }}>
+      <Seo title="My Kit — Scaffold" description="Your saved Scaffold prompts, ready to copy or export." canonical="/my-kit" />
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "40px", flexWrap: "wrap", gap: "16px" }}>
         <div>
           <h1 style={{ fontFamily: "var(--font-sans)", fontSize: "clamp(1.75rem, 4vw, 2.75rem)", fontWeight: 800, color: "var(--color-fg)", letterSpacing: "-0.03em" }}>

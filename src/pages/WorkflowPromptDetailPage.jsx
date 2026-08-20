@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { workflowPrompts } from "../data/workflowPrompts";
 import BackButton from "../components/BackButton";
 import BookmarkButton from "../components/BookmarkButton";
+import Seo from "../components/Seo";
 
 const categoryLabels = {
   orient: "Orient",
@@ -23,6 +24,7 @@ const WorkflowPromptDetailPage = () => {
   if (!prompt) {
     return (
       <section style={{ paddingTop: "0", paddingBottom: "96px" }}>
+        <Seo title="Not Found — Scaffold" description="Prompt not found." canonical={`/workflow-prompts/${slug}`} />
         <div style={{ marginBottom: "16px" }}>
           <span
             style={{
@@ -53,6 +55,52 @@ const WorkflowPromptDetailPage = () => {
     );
   }
 
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "TechArticle",
+        "headline": `${prompt.title} Workflow Prompt`,
+        "description": prompt.summary,
+        "url": `https://scaffold.swarshinde.dev/workflow-prompts/${prompt.slug}`,
+        "datePublished": "2026-08-18",
+        "dateModified": "2026-08-18",
+        "author": {
+          "@type": "Organization",
+          "name": "Scaffold"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "Scaffold",
+          "url": "https://scaffold.swarshinde.dev"
+        }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://scaffold.swarshinde.dev/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Workflow Prompts",
+            "item": "https://scaffold.swarshinde.dev/workflow-prompts"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": `${prompt.title} Workflow Prompt`,
+            "item": `https://scaffold.swarshinde.dev/workflow-prompts/${prompt.slug}`
+          }
+        ]
+      }
+    ]
+  };
+
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(prompt.prompt);
@@ -71,6 +119,13 @@ const WorkflowPromptDetailPage = () => {
 
   return (
     <section style={{ paddingTop: "0", paddingBottom: "96px" }}>
+      <Seo 
+        title={`${prompt.title} Workflow Prompt — Scaffold`}
+        description={prompt.summary}
+        canonical={`/workflow-prompts/${prompt.slug}`}
+        ogType="article"
+        structuredData={structuredData}
+      />
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-12 items-start">
         {/* Main Content Column */}
         <div>

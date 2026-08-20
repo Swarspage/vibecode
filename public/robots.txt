@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://scaffold.swarshinde.dev/sitemap.xml

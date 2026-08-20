@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { imagePrompts } from "../data/imagePrompts";
 import BackButton from "../components/BackButton";
+import Seo from "../components/Seo";
 
 const categories = [
   { id: "trending-portraits", label: "Trending Portraits" },
@@ -293,6 +294,11 @@ const ImagePromptsPage = () => {
     <section
       style={{ paddingTop: "var(--space-page-top)", paddingBottom: "96px" }}
     >
+      <Seo 
+        title="Gemini Image Prompts — Scaffold"
+        description="Copy-paste Gemini image generation prompts for portraits, photo editing, restoration, seasonal scenes, and cinematic effects."
+        canonical="/image-prompts"
+      />
       {/* ── Page Header ──────────────────────────────────────────── */}
       <div style={{ marginBottom: "40px" }}>
         <BackButton fallbackTo="/" />

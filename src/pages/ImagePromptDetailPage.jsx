@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { imagePrompts } from "../data/imagePrompts";
 import BackButton from "../components/BackButton";
+import Seo from "../components/Seo";
 
 const categoryLabels = {
   "trending-portraits": "Trending Portraits",
@@ -25,6 +26,7 @@ const ImagePromptDetailPage = () => {
       <section
         style={{ paddingTop: "var(--space-page-top)", paddingBottom: "96px" }}
       >
+        <Seo title="Not Found — Scaffold" description="Prompt not found." canonical={`/image-prompts/${slug}`} />
         <div style={{ marginBottom: "16px" }}>
           <span
             style={{
@@ -70,11 +72,64 @@ const ImagePromptDetailPage = () => {
   const categoryLabel =
     categoryLabels[prompt.category] ?? prompt.category;
 
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Article",
+        "headline": `${prompt.title} Image Prompt`,
+        "description": prompt.summary,
+        "url": `https://scaffold.swarshinde.dev/image-prompts/${prompt.slug}`,
+        "datePublished": "2026-08-18",
+        "dateModified": "2026-08-18",
+        "author": {
+          "@type": "Organization",
+          "name": "Scaffold"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "Scaffold",
+          "url": "https://scaffold.swarshinde.dev"
+        }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://scaffold.swarshinde.dev/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Image Prompts",
+            "item": "https://scaffold.swarshinde.dev/image-prompts"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": `${prompt.title} Image Prompt`,
+            "item": `https://scaffold.swarshinde.dev/image-prompts/${prompt.slug}`
+          }
+        ]
+      }
+    ]
+  };
+
   /* ── Page ────────────────────────────────────────────────────────── */
   return (
     <section
       style={{ paddingTop: "var(--space-page-top)", paddingBottom: "96px" }}
     >
+      <Seo 
+        title={`${prompt.title} Image Prompt — Scaffold`}
+        description={prompt.summary}
+        canonical={`/image-prompts/${prompt.slug}`}
+        ogType="article"
+        structuredData={structuredData}
+      />
       {/* Back link */}
       <div style={{ marginBottom: "32px" }}>
         <BackButton fallbackTo="/image-prompts" />
