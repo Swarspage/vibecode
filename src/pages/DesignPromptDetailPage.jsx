@@ -3,12 +3,12 @@ import { useParams, Link } from "react-router-dom";
 import { designPrompts } from "../data/designPrompts";
 import BackButton from "../components/BackButton";
 import BookmarkButton from "../components/BookmarkButton";
+import DynamicPrompt from "../components/DynamicPrompt";
 import Seo from "../components/Seo";
+import { trackRecentlyViewed } from "../utils/recentlyViewed";
 
 const DesignPromptDetailPage = () => {
   const { slug } = useParams();
-  const [copied, setCopied] = useState(false);
-  const [copyError, setCopyError] = useState(false);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [previewLoaded, setPreviewLoaded] = useState(false);
 
@@ -17,6 +17,17 @@ const DesignPromptDetailPage = () => {
   useEffect(() => {
     setPreviewLoaded(false);
   }, [prompt?.previewUrl]);
+
+  useEffect(() => {
+    if (prompt) {
+      trackRecentlyViewed({
+        type: "design",
+        slug: prompt.slug,
+        title: prompt.name,
+        link: `/design-prompts/${prompt.slug}`,
+      });
+    }
+  }, [prompt?.slug]);
 
   useEffect(() => {
     if (isPreviewOpen) {
@@ -113,23 +124,12 @@ const DesignPromptDetailPage = () => {
     ]
   };
 
-  const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(prompt.prompt);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1500);
-    } catch {
-      setCopyError(true);
-      setTimeout(() => setCopyError(false), 1500);
-    }
-  };
-
   const paletteEntries = Object.entries(prompt.palette);
   const typographyEntries = Object.entries(prompt.typography);
 
   return (
     <section style={{ paddingTop: "var(--space-page-top)", paddingBottom: "96px" }}>
-      <Seo 
+      <Seo
         title={`${prompt.name} Design Prompt — Scaffold`}
         description={prompt.summary}
         canonical={`/design-prompts/${prompt.slug}`}
@@ -369,82 +369,7 @@ const DesignPromptDetailPage = () => {
       </div>
 
       {/* Prompt Section */}
-      <div>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: "12px",
-          }}
-        >
-          <h2
-            style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: "12px",
-              color: "var(--color-accent)",
-              letterSpacing: "0.1em",
-              textTransform: "uppercase",
-            }}
-          >
-            Prompt
-          </h2>
-          <button
-            onClick={handleCopy}
-            className={
-              copied || copyError
-                ? "dp-copy-btn"
-                : "dp-copy-btn dp-copy-base"
-            }
-            style={{
-              minWidth: "120px",
-              height: "44px",
-              fontFamily: "var(--font-mono)",
-              fontSize: "12px",
-              backgroundColor: "var(--color-surface)",
-              borderRadius: "var(--radius-sm)",
-              cursor: "pointer",
-              ...(copied && {
-                border: "1px solid var(--color-accent)",
-                color: "var(--color-accent)",
-              }),
-              ...(copyError && {
-                border: "1px solid var(--color-border)",
-                color: "var(--color-muted)",
-              }),
-            }}
-          >
-            {copied ? "Copied" : copyError ? "Copy failed" : "Copy Prompt"}
-          </button>
-          {/* aria-live region — visible to screen readers, hidden visually */}
-          <span
-            aria-live="polite"
-            aria-atomic="true"
-            className="sr-only"
-          >
-            {copied ? "Copied to clipboard" : ""}
-          </span>
-        </div>
-        <pre
-          style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: "12px",
-            lineHeight: 1.7,
-            color: "var(--color-fg)",
-            background: "var(--color-surface)",
-            border: "1px solid var(--color-border)",
-            borderRadius: "var(--radius-sm)",
-            padding: "24px",
-            whiteSpace: "pre-wrap",
-            wordBreak: "break-word",
-            maxHeight: "600px",
-            overflowY: "auto",
-            marginTop: "16px",
-          }}
-        >
-          {prompt.prompt}
-        </pre>
-      </div>
+      <DynamicPrompt promptText={prompt.prompt} />
 
       {/* Expanded Preview Modal */}
       {isPreviewOpen && (
@@ -499,7 +424,7 @@ const DesignPromptDetailPage = () => {
               aria-label="Close preview"
             >
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M1 1L13 13M1 13L13 1" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M1 1L13 13M1 13L13 1" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </button>
           </div>

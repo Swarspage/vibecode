@@ -142,6 +142,41 @@ const Nav = () => {
                 Kit {kitCount > 0 && `(${kitCount})`}
               </NavLink>
             </li>
+            <li>
+              <button
+                onClick={() => window.dispatchEvent(new Event('open-global-search'))}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  background: "var(--color-surface)",
+                  border: "1px solid var(--color-border)",
+                  borderRadius: "var(--radius-sm)",
+                  padding: "4px 8px",
+                  cursor: "pointer",
+                  fontFamily: "var(--font-sans)",
+                  fontSize: "12px",
+                  color: "var(--color-muted)",
+                  marginLeft: "12px",
+                }}
+                aria-label="Search"
+                title="Search (Ctrl+K)"
+              >
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <span>Search...</span>
+                <span style={{ 
+                  fontFamily: "var(--font-mono)", 
+                  fontSize: "9px", 
+                  backgroundColor: "var(--color-bg)", 
+                  padding: "1px 4px", 
+                  borderRadius: "4px", 
+                  border: "1px solid var(--color-border)",
+                }}>Ctrl K</span>
+              </button>
+            </li>
           </ul>
         </nav>
 
@@ -212,6 +247,16 @@ const Nav = () => {
           >
             Kit {kitCount > 0 && `(${kitCount})`}
           </NavLink>
+          <button
+            onClick={() => {
+              setTimeout(() => setMenuOpen(false), 50);
+              window.dispatchEvent(new Event('open-global-search'));
+            }}
+            className="nav-mobile-link"
+            style={{ textAlign: "left", cursor: "pointer", background: "none", border: "none", width: "100%" }}
+          >
+            Search
+          </button>
         </nav>
       )}
     </header>

@@ -1,18 +1,41 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { getKit, removeFromKit } from "../utils/kit";
+import { getRecentlyViewed } from "../utils/recentlyViewed";
 import { designPrompts } from "../data/designPrompts";
 import { workflowPrompts } from "../data/workflowPrompts";
+import { imagePrompts } from "../data/imagePrompts";
 import Seo from "../components/Seo";
+
+const typeConfig = {
+  design:   { label: "Design System", link: (slug) => `/design-prompts/${slug}` },
+  workflow: { label: "Workflow",       link: (slug) => `/workflow-prompts/${slug}` },
+  image:    { label: "Image Prompt",   link: (slug) => `/image-prompts/${slug}` },
+};
+
+const recentTypeConfig = {
+  design:   { label: "Design",   color: "var(--color-accent)" },
+  workflow: { label: "Workflow", color: "var(--color-accent)" },
+  image:    { label: "Image",    color: "var(--color-accent)" },
+};
 
 const MyKitPage = () => {
   const [kit, setKit] = useState([]);
+  const [recentlyViewed, setRecentlyViewed] = useState([]);
 
   useEffect(() => {
     setKit(getKit());
-    const handleUpdate = () => setKit(getKit());
+    setRecentlyViewed(getRecentlyViewed());
+    const handleUpdate = () => {
+      setKit(getKit());
+      setRecentlyViewed(getRecentlyViewed());
+    };
     window.addEventListener("kit-updated", handleUpdate);
-    return () => window.removeEventListener("kit-updated", handleUpdate);
+    window.addEventListener("focus", handleUpdate);
+    return () => {
+      window.removeEventListener("kit-updated", handleUpdate);
+      window.removeEventListener("focus", handleUpdate);
+    };
   }, []);
 
   const handleRemove = (type, slug) => {
@@ -21,22 +44,25 @@ const MyKitPage = () => {
 
   const getFullText = () => {
     let result = "";
-    
-    const designs = kit.filter(k => k.type === "design");
+
+    const designs = kit.filter((k) => k.type === "design");
     for (const d of designs) {
-      const full = designPrompts.find(p => p.slug === d.slug);
-      if (full) {
-        result += `--- ${full.name} (Design System) ---\n\n${full.prompt}\n\n`;
-      }
+      const full = designPrompts.find((p) => p.slug === d.slug);
+      if (full) result += `--- ${full.name} (Design System) ---\n\n${full.prompt}\n\n`;
     }
 
-    const workflows = kit.filter(k => k.type === "workflow");
+    const workflows = kit.filter((k) => k.type === "workflow");
     for (const w of workflows) {
-      const full = workflowPrompts.find(p => p.slug === w.slug);
-      if (full) {
-        result += `--- ${full.title} (Workflow) ---\n\n${full.prompt}\n\n`;
-      }
+      const full = workflowPrompts.find((p) => p.slug === w.slug);
+      if (full) result += `--- ${full.title} (Workflow) ---\n\n${full.prompt}\n\n`;
     }
+
+    const images = kit.filter((k) => k.type === "image");
+    for (const img of images) {
+      const full = imagePrompts.find((p) => p.slug === img.slug);
+      if (full) result += `--- ${full.title} (Image Prompt) ---\n\n${full.prompt}\n\n`;
+    }
+
     return result.trim();
   };
 
@@ -46,7 +72,7 @@ const MyKitPage = () => {
       if (!text) return;
       await navigator.clipboard.writeText(text);
       alert("Copied all prompts to clipboard!");
-    } catch (e) {
+    } catch {
       alert("Failed to copy");
     }
   };
@@ -66,128 +92,305 @@ const MyKitPage = () => {
     URL.revokeObjectURL(url);
   };
 
-  if (kit.length === 0) {
-    return (
-      <section style={{ paddingTop: "var(--space-page-top)", paddingBottom: "96px" }}>
-        <Seo title="My Kit — Scaffold" description="Your saved Scaffold prompts, ready to copy or export." canonical="/my-kit" />
-        <div style={{ textAlign: "center", backgroundColor: "var(--color-surface)", border: "1px solid var(--color-border)", borderRadius: "var(--radius-md)", padding: "64px 24px" }}>
-          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--color-muted)" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" style={{ margin: "0 auto 16px auto" }}>
-            <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"></path>
-          </svg>
-          <h1 style={{ fontFamily: "var(--font-sans)", fontSize: "2rem", fontWeight: 800, color: "var(--color-fg)", marginBottom: "16px", letterSpacing: "-0.03em" }}>Your Kit is Empty</h1>
-          <p style={{ fontFamily: "var(--font-body)", color: "var(--color-muted)", marginBottom: "32px" }}>
-            Browse <Link to="/design-prompts" style={{ color: "var(--color-accent)", textDecoration: "none" }}>Design Prompts</Link> and <Link to="/workflow-prompts" style={{ color: "var(--color-accent)", textDecoration: "none" }}>Workflow Prompts</Link> to start building your toolkit.
-          </p>
-        </div>
-      </section>
-    );
-  }
+  const designs = kit.filter((k) => k.type === "design");
+  const workflows = kit.filter((k) => k.type === "workflow");
+  const images = kit.filter((k) => k.type === "image");
 
-  const designs = kit.filter(k => k.type === "design");
-  const workflows = kit.filter(k => k.type === "workflow");
+  const renderKitRow = (item) => {
+    const config = typeConfig[item.type];
+    if (!config) return null;
+    return (
+      <div
+        key={`${item.type}-${item.slug}`}
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          padding: "16px",
+          backgroundColor: "var(--color-surface)",
+          border: "1px solid var(--color-border)",
+          borderRadius: "var(--radius-sm)",
+        }}
+      >
+        <Link
+          to={config.link(item.slug)}
+          style={{
+            fontFamily: "var(--font-sans)",
+            fontSize: "16px",
+            fontWeight: 600,
+            color: "var(--color-fg)",
+            textDecoration: "none",
+          }}
+        >
+          {item.title || item.name}
+        </Link>
+        <button
+          onClick={() => handleRemove(item.type, item.slug)}
+          aria-label="Remove from kit"
+          style={{
+            background: "transparent",
+            border: "none",
+            color: "var(--color-muted)",
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M18 6 6 18" /><path d="m6 6 12 12" />
+          </svg>
+        </button>
+      </div>
+    );
+  };
 
   return (
     <section style={{ paddingTop: "var(--space-page-top)", paddingBottom: "96px" }}>
-      <Seo title="My Kit — Scaffold" description="Your saved Scaffold prompts, ready to copy or export." canonical="/my-kit" />
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "40px", flexWrap: "wrap", gap: "16px" }}>
-        <div>
-          <h1 style={{ fontFamily: "var(--font-sans)", fontSize: "clamp(1.75rem, 4vw, 2.75rem)", fontWeight: 800, color: "var(--color-fg)", letterSpacing: "-0.03em" }}>
-            My Kit
+      <Seo
+        title="My Kit — Scaffold"
+        description="Your saved Scaffold prompts, ready to copy or export."
+        canonical="/my-kit"
+      />
+
+      {/* Recently Viewed */}
+      {recentlyViewed.length > 0 && (
+        <div style={{ marginBottom: "56px" }}>
+          <h2
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: "14px",
+              color: "var(--color-accent)",
+              textTransform: "uppercase",
+              letterSpacing: "0.1em",
+              marginBottom: "16px",
+              paddingBottom: "12px",
+              borderBottom: "1px solid var(--color-border)",
+            }}
+          >
+            Recently Viewed
+          </h2>
+          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+            {recentlyViewed.map((item) => {
+              const config = recentTypeConfig[item.type];
+              return (
+                <Link
+                  key={`recent-${item.type}-${item.slug}`}
+                  to={item.link}
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    padding: "12px 16px",
+                    backgroundColor: "var(--color-surface)",
+                    border: "1px solid var(--color-border)",
+                    borderRadius: "var(--radius-sm)",
+                    textDecoration: "none",
+                    transition: "border-color 0.15s ease",
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.borderColor = "var(--color-muted)")}
+                  onMouseLeave={(e) => (e.currentTarget.style.borderColor = "var(--color-border)")}
+                >
+                  <span
+                    style={{
+                      fontFamily: "var(--font-sans)",
+                      fontSize: "14px",
+                      color: "var(--color-fg)",
+                      fontWeight: 500,
+                    }}
+                  >
+                    {item.title}
+                  </span>
+                  <span
+                    style={{
+                      fontFamily: "var(--font-mono)",
+                      fontSize: "10px",
+                      textTransform: "uppercase",
+                      letterSpacing: "0.06em",
+                      color: config?.color ?? "var(--color-accent)",
+                      border: "1px solid var(--color-border)",
+                      padding: "2px 8px",
+                      borderRadius: "4px",
+                      marginLeft: "12px",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {config?.label ?? item.type}
+                  </span>
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* Kit Header */}
+      {kit.length === 0 ? (
+        <div
+          style={{
+            textAlign: "center",
+            backgroundColor: "var(--color-surface)",
+            border: "1px solid var(--color-border)",
+            borderRadius: "var(--radius-md)",
+            padding: "64px 24px",
+          }}
+        >
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--color-muted)" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" style={{ margin: "0 auto 16px auto" }}>
+            <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z" />
+          </svg>
+          <h1
+            style={{
+              fontFamily: "var(--font-sans)",
+              fontSize: "2rem",
+              fontWeight: 800,
+              color: "var(--color-fg)",
+              marginBottom: "16px",
+              letterSpacing: "-0.03em",
+            }}
+          >
+            Your Kit is Empty
           </h1>
-          <p style={{ fontFamily: "var(--font-body)", color: "var(--color-muted)", marginTop: "8px" }}>
-            Your saved prompts, ready to copy or export.
+          <p style={{ fontFamily: "var(--font-body)", color: "var(--color-muted)", marginBottom: "32px" }}>
+            Browse{" "}
+            <Link to="/design-prompts" style={{ color: "var(--color-accent)", textDecoration: "none" }}>Design Prompts</Link>,{" "}
+            <Link to="/workflow-prompts" style={{ color: "var(--color-accent)", textDecoration: "none" }}>Workflow Prompts</Link>, and{" "}
+            <Link to="/image-prompts" style={{ color: "var(--color-accent)", textDecoration: "none" }}>Image Prompts</Link>{" "}
+            to start building your toolkit.
           </p>
         </div>
-        <div style={{ display: "flex", gap: "12px" }}>
-          <button
-            onClick={handleCopyAll}
-            className="dp-copy-btn dp-copy-base"
+      ) : (
+        <>
+          <div
             style={{
-              minWidth: "120px",
-              height: "44px",
-              fontFamily: "var(--font-mono)",
-              fontSize: "12px",
-              backgroundColor: "var(--color-surface)",
-              color: "var(--color-fg)",
-              border: "1px solid var(--color-border)",
-              borderRadius: "var(--radius-sm)",
-              cursor: "pointer",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "flex-end",
+              marginBottom: "40px",
+              flexWrap: "wrap",
+              gap: "16px",
             }}
           >
-            Copy All
-          </button>
-          <button
-            onClick={handleExport}
-            style={{
-              padding: "0 24px",
-              height: "44px",
-              fontFamily: "var(--font-mono)",
-              fontSize: "12px",
-              backgroundColor: "var(--color-accent)",
-              color: "var(--color-bg)",
-              border: "none",
-              borderRadius: "var(--radius-sm)",
-              cursor: "pointer",
-            }}
-          >
-            Export as .md
-          </button>
-        </div>
-      </div>
-
-      <div style={{ display: "flex", flexDirection: "column", gap: "48px" }}>
-        {designs.length > 0 && (
-          <div>
-            <h2 style={{ fontFamily: "var(--font-mono)", fontSize: "14px", color: "var(--color-accent)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: "24px", paddingBottom: "12px", borderBottom: "1px solid var(--color-border)" }}>
-              Design Systems
-            </h2>
-            <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-              {designs.map(item => (
-                <div key={`design-${item.slug}`} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px", backgroundColor: "var(--color-surface)", border: "1px solid var(--color-border)", borderRadius: "var(--radius-sm)" }}>
-                  <Link to={`/design-prompts/${item.slug}`} style={{ fontFamily: "var(--font-sans)", fontSize: "16px", fontWeight: 600, color: "var(--color-fg)", textDecoration: "none" }}>
-                    {item.title || item.name}
-                  </Link>
-                  <button
-                    onClick={() => handleRemove(item.type, item.slug)}
-                    aria-label="Remove from kit"
-                    style={{ background: "transparent", border: "none", color: "var(--color-muted)", cursor: "pointer", display: "flex", alignItems: "center" }}
-                  >
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
-                    </svg>
-                  </button>
-                </div>
-              ))}
+            <div>
+              <h1
+                style={{
+                  fontFamily: "var(--font-sans)",
+                  fontSize: "clamp(1.75rem, 4vw, 2.75rem)",
+                  fontWeight: 800,
+                  color: "var(--color-fg)",
+                  letterSpacing: "-0.03em",
+                }}
+              >
+                My Kit
+              </h1>
+              <p style={{ fontFamily: "var(--font-body)", color: "var(--color-muted)", marginTop: "8px" }}>
+                {kit.length} saved prompt{kit.length !== 1 ? "s" : ""}, ready to copy or export.
+              </p>
+            </div>
+            <div style={{ display: "flex", gap: "12px" }}>
+              <button
+                onClick={handleCopyAll}
+                className="dp-copy-btn dp-copy-base"
+                style={{
+                  minWidth: "120px",
+                  height: "44px",
+                  fontFamily: "var(--font-mono)",
+                  fontSize: "12px",
+                  backgroundColor: "var(--color-surface)",
+                  color: "var(--color-fg)",
+                  border: "1px solid var(--color-border)",
+                  borderRadius: "var(--radius-sm)",
+                  cursor: "pointer",
+                }}
+              >
+                Copy All
+              </button>
+              <button
+                onClick={handleExport}
+                style={{
+                  padding: "0 24px",
+                  height: "44px",
+                  fontFamily: "var(--font-mono)",
+                  fontSize: "12px",
+                  backgroundColor: "var(--color-accent)",
+                  color: "var(--color-bg)",
+                  border: "none",
+                  borderRadius: "var(--radius-sm)",
+                  cursor: "pointer",
+                }}
+              >
+                Export as .md
+              </button>
             </div>
           </div>
-        )}
 
-        {workflows.length > 0 && (
-          <div>
-            <h2 style={{ fontFamily: "var(--font-mono)", fontSize: "14px", color: "var(--color-accent)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: "24px", paddingBottom: "12px", borderBottom: "1px solid var(--color-border)" }}>
-              Workflows
-            </h2>
-            <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-              {workflows.map(item => (
-                <div key={`workflow-${item.slug}`} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px", backgroundColor: "var(--color-surface)", border: "1px solid var(--color-border)", borderRadius: "var(--radius-sm)" }}>
-                  <Link to={`/workflow-prompts/${item.slug}`} style={{ fontFamily: "var(--font-sans)", fontSize: "16px", fontWeight: 600, color: "var(--color-fg)", textDecoration: "none" }}>
-                    {item.title || item.name}
-                  </Link>
-                  <button
-                    onClick={() => handleRemove(item.type, item.slug)}
-                    aria-label="Remove from kit"
-                    style={{ background: "transparent", border: "none", color: "var(--color-muted)", cursor: "pointer", display: "flex", alignItems: "center" }}
-                  >
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
-                    </svg>
-                  </button>
+          <div style={{ display: "flex", flexDirection: "column", gap: "48px" }}>
+            {designs.length > 0 && (
+              <div>
+                <h2
+                  style={{
+                    fontFamily: "var(--font-mono)",
+                    fontSize: "14px",
+                    color: "var(--color-accent)",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.1em",
+                    marginBottom: "16px",
+                    paddingBottom: "12px",
+                    borderBottom: "1px solid var(--color-border)",
+                  }}
+                >
+                  Design Systems ({designs.length})
+                </h2>
+                <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                  {designs.map(renderKitRow)}
                 </div>
-              ))}
-            </div>
+              </div>
+            )}
+
+            {workflows.length > 0 && (
+              <div>
+                <h2
+                  style={{
+                    fontFamily: "var(--font-mono)",
+                    fontSize: "14px",
+                    color: "var(--color-accent)",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.1em",
+                    marginBottom: "16px",
+                    paddingBottom: "12px",
+                    borderBottom: "1px solid var(--color-border)",
+                  }}
+                >
+                  Workflows ({workflows.length})
+                </h2>
+                <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                  {workflows.map(renderKitRow)}
+                </div>
+              </div>
+            )}
+
+            {images.length > 0 && (
+              <div>
+                <h2
+                  style={{
+                    fontFamily: "var(--font-mono)",
+                    fontSize: "14px",
+                    color: "var(--color-accent)",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.1em",
+                    marginBottom: "16px",
+                    paddingBottom: "12px",
+                    borderBottom: "1px solid var(--color-border)",
+                  }}
+                >
+                  Image Prompts ({images.length})
+                </h2>
+                <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                  {images.map(renderKitRow)}
+                </div>
+              </div>
+            )}
           </div>
-        )}
-      </div>
+        </>
+      )}
     </section>
   );
 };

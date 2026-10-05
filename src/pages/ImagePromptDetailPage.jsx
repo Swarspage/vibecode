@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { imagePrompts } from "../data/imagePrompts";
 import BackButton from "../components/BackButton";
+import DynamicPrompt from "../components/DynamicPrompt";
 import Seo from "../components/Seo";
+import { trackRecentlyViewed } from "../utils/recentlyViewed";
 
 const categoryLabels = {
   "trending-portraits": "Trending Portraits",
@@ -15,10 +17,19 @@ const categoryLabels = {
 
 const ImagePromptDetailPage = () => {
   const { slug } = useParams();
-  const [copied, setCopied] = useState(false);
-  const [copyError, setCopyError] = useState(false);
 
   const prompt = imagePrompts.find((p) => p.slug === slug);
+
+  useEffect(() => {
+    if (prompt) {
+      trackRecentlyViewed({
+        type: "image",
+        slug: prompt.slug,
+        title: prompt.title,
+        link: `/image-prompts/${prompt.slug}`,
+      });
+    }
+  }, [prompt?.slug]);
 
   /* ── Not found ───────────────────────────────────────────────────── */
   if (!prompt) {
@@ -56,18 +67,6 @@ const ImagePromptDetailPage = () => {
       </section>
     );
   }
-
-  /* ── Copy handler ────────────────────────────────────────────────── */
-  const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(prompt.prompt);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1500);
-    } catch {
-      setCopyError(true);
-      setTimeout(() => setCopyError(false), 1500);
-    }
-  };
 
   const categoryLabel =
     categoryLabels[prompt.category] ?? prompt.category;
@@ -123,7 +122,7 @@ const ImagePromptDetailPage = () => {
     <section
       style={{ paddingTop: "var(--space-page-top)", paddingBottom: "96px" }}
     >
-      <Seo 
+      <Seo
         title={`${prompt.title} Image Prompt — Scaffold`}
         description={prompt.summary}
         canonical={`/image-prompts/${prompt.slug}`}
@@ -332,85 +331,7 @@ const ImagePromptDetailPage = () => {
       )}
 
       {/* ── Prompt section ─────────────────────────────────────────── */}
-      <div>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: "12px",
-          }}
-        >
-          <h2
-            style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: "12px",
-              color: "var(--color-accent)",
-              letterSpacing: "0.1em",
-              textTransform: "uppercase",
-            }}
-          >
-            Prompt
-          </h2>
-
-          <div style={{ display: "flex", gap: "8px" }}>
-            {/* The useless external copy buttons were removed */}
-
-            <button
-              id={`copy-detail-${prompt.id}`}
-              onClick={handleCopy}
-              className={
-                copied || copyError ? "dp-copy-btn" : "dp-copy-btn dp-copy-base"
-              }
-              style={{
-                minWidth: "120px",
-                height: "44px",
-                fontFamily: "var(--font-mono)",
-                fontSize: "12px",
-                backgroundColor: "var(--color-surface)",
-                borderRadius: "var(--radius-sm)",
-                cursor: "pointer",
-                ...(copied && {
-                  border: "1px solid var(--color-accent)",
-                  color: "var(--color-accent)",
-                }),
-                ...(copyError && {
-                  border: "1px solid var(--color-border)",
-                  color: "var(--color-muted)",
-                }),
-              }}
-              aria-label="Copy prompt to clipboard"
-            >
-              {copied ? "Copied" : copyError ? "Copy failed" : "Copy Prompt"}
-            </button>
-          </div>
-
-          {/* Screen-reader live region */}
-          <span aria-live="polite" aria-atomic="true" className="sr-only">
-            {copied ? "Copied to clipboard" : ""}
-          </span>
-        </div>
-
-        <pre
-          style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: "12px",
-            lineHeight: 1.7,
-            color: "var(--color-fg)",
-            background: "var(--color-surface)",
-            border: "1px solid var(--color-border)",
-            borderRadius: "var(--radius-sm)",
-            padding: "24px",
-            whiteSpace: "pre-wrap",
-            wordBreak: "break-word",
-            maxHeight: "600px",
-            overflowY: "auto",
-            marginTop: "0",
-          }}
-        >
-          {prompt.prompt}
-        </pre>
-      </div>
+      <DynamicPrompt promptText={prompt.prompt} />
     </section>
   );
 };

@@ -10,12 +10,14 @@ import ImagePromptDetailPage from "./pages/ImagePromptDetailPage";
 import PublicApisPage from "./pages/PublicApisPage";
 import MyKitPage from "./pages/MyKitPage";
 import NotFoundPage from "./pages/NotFoundPage";
-import { workflowPrompts } from "./data/workflowPrompts";
+import GlobalSearch from "./components/GlobalSearch";
 
 const App = () => {
   return (
-    <Routes>
-      <Route element={<Layout />}>
+    <>
+      <GlobalSearch />
+      <Routes>
+        <Route element={<Layout />}>
         <Route path="/" element={<HomePage />} />
 
         {/* Design Prompts: flat two-page pattern (gallery + standalone detail) */}
@@ -24,10 +26,7 @@ const App = () => {
 
         {/* Workflow Prompts: docs pattern with sidebar + nested detail outlet */}
         <Route path="/workflow-prompts" element={<WorkflowPromptsPage />}>
-          <Route
-            index
-            element={<Navigate to={workflowPrompts[0].slug} replace />}
-          />
+          <Route index element={<Navigate to="exploring-new-codebase" replace />} />
           <Route path=":slug" element={<WorkflowPromptDetailPage />} />
         </Route>
 
@@ -43,6 +42,7 @@ const App = () => {
         <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>
+    </>
   );
 };
 
