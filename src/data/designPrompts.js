@@ -31,6 +31,7 @@ import organicNaturalPrompt from "./prompts/Organic Natural.md?raw";
 import maximalismDopaminePrompt from "./prompts/Maximalism Dopamine.md?raw";
 import retro90sPrompt from "./prompts/Retro 90s Nostalgia.md?raw";
 import aurelPrompt from "./prompts/Aurel Quiet Luxury Wealth.md?raw";
+import aurelLightPrompt from "./prompts/Aurel Quiet Luxury Wealth Light.md?raw";
 
 export const designPrompts = [
   {
@@ -695,5 +696,27 @@ export const designPrompts = [
     },
     previewUrl: "/previews/aurel.html",
     prompt: aurelPrompt
+  },
+  {
+    id: "aurel-quiet-luxury-wealth-light",
+    name: "Aurel / Quiet Luxury Wealth (Light)",
+    slug: "aurel-quiet-luxury-wealth-light",
+    summary: "Warm ivory paper, deep warm ink, and burnished champagne for single-family office platforms in daylight.",
+    tags: ["light", "luxury", "wealth", "serif", "institutional", "metallic"],
+    palette: {
+      background: "#F7F4EE",
+      foreground: "#1C1A17",
+      muted: "#FBFAF7",
+      accent: "#B28A4C",
+      border: "rgba(28,26,23,0.08)"
+    },
+    typography: {
+      heading: "Instrument Serif",
+      body: "Inter",
+      ui: "Inter",
+      mono: "JetBrains Mono"
+    },
+    previewUrl: "/previews/aurel-light.html",
+    prompt: aurelLightPrompt
   }
 ];

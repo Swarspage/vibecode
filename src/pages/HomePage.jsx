@@ -146,6 +146,11 @@ const HomePage = () => {
         "@type": "SiteNavigationElement",
         "name": "Image Prompts",
         "url": "https://scaffold.swarshinde.dev/image-prompts"
+      },
+      {
+        "@type": "SiteNavigationElement",
+        "name": "Public APIs",
+        "url": "https://scaffold.swarshinde.dev/public-apis"
       }
     ]
   };

@@ -122,6 +122,17 @@ const Nav = () => {
             </li>
             <li>
               <NavLink
+                to="/public-apis"
+                id="nav-public-apis"
+                className={({ isActive }) =>
+                  isActive ? "nav-link active" : "nav-link"
+                }
+              >
+                Public APIs
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
                 to="/my-kit"
                 id="nav-my-kit"
                 className={({ isActive }) =>
@@ -182,6 +193,15 @@ const Nav = () => {
             onClick={closeMenu}
           >
             Image Prompts
+          </NavLink>
+          <NavLink
+            to="/public-apis"
+            className={({ isActive }) =>
+              isActive ? "nav-mobile-link active" : "nav-mobile-link"
+            }
+            onClick={closeMenu}
+          >
+            Public APIs
           </NavLink>
           <NavLink
             to="/my-kit"
