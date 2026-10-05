@@ -170,6 +170,7 @@ const DesignPromptDetailPage = () => {
             slug={prompt.slug}
             title={prompt.name}
             style={{ flexShrink: 0 }}
+            enableShortcut={true}
           />
         </div>
         <p

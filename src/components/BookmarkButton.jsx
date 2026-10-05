@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { isInKit, addToKit, removeFromKit } from "../utils/kit";
 
-const BookmarkButton = ({ type, slug, title, className = "", style = {} }) => {
+const BookmarkButton = ({ type, slug, title, className = "", style = {}, enableShortcut = false }) => {
   const [bookmarked, setBookmarked] = useState(() => isInKit(type, slug));
 
   useEffect(() => {
@@ -13,8 +13,10 @@ const BookmarkButton = ({ type, slug, title, className = "", style = {} }) => {
   }, [type, slug]);
 
   const toggleBookmark = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
 
     if (bookmarked) {
       removeFromKit(type, slug);
@@ -24,6 +26,30 @@ const BookmarkButton = ({ type, slug, title, className = "", style = {} }) => {
       setBookmarked(true);
     }
   };
+
+  useEffect(() => {
+    if (!enableShortcut) return;
+
+    const handleKeyDown = (e) => {
+      // Ignore if typing in an input, textarea, or contenteditable
+      if (
+        e.target.tagName === "INPUT" ||
+        e.target.tagName === "TEXTAREA" ||
+        e.target.isContentEditable
+      ) {
+        return;
+      }
+      
+      // Toggle on 'b' or 'B'
+      if (e.key.toLowerCase() === "b") {
+        e.preventDefault();
+        toggleBookmark();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [enableShortcut, bookmarked, type, slug, title]);
 
   return (
     <button

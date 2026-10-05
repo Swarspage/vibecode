@@ -163,6 +163,7 @@ const WorkflowPromptDetailPage = () => {
                 slug={prompt.slug}
                 title={prompt.title}
                 style={{ flexShrink: 0 }}
+                enableShortcut={true}
               />
             </div>
             <p

@@ -92,6 +92,42 @@ const MyKitPage = () => {
     URL.revokeObjectURL(url);
   };
 
+  const handleExportJson = () => {
+    if (kit.length === 0) return;
+    
+    const exportData = {
+      designs: [],
+      workflows: [],
+      images: []
+    };
+
+    kit.filter((k) => k.type === "design").forEach((d) => {
+      const full = designPrompts.find((p) => p.slug === d.slug);
+      if (full) exportData.designs.push(full);
+    });
+
+    kit.filter((k) => k.type === "workflow").forEach((w) => {
+      const full = workflowPrompts.find((p) => p.slug === w.slug);
+      if (full) exportData.workflows.push(full);
+    });
+
+    kit.filter((k) => k.type === "image").forEach((img) => {
+      const full = imagePrompts.find((p) => p.slug === img.slug);
+      if (full) exportData.images.push(full);
+    });
+
+    const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    const dateStr = new Date().toISOString().split("T")[0];
+    a.download = `scaffold-kit-${dateStr}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
   const designs = kit.filter((k) => k.type === "design");
   const workflows = kit.filter((k) => k.type === "workflow");
   const images = kit.filter((k) => k.type === "image");
@@ -318,6 +354,22 @@ const MyKitPage = () => {
                 }}
               >
                 Export as .md
+              </button>
+              <button
+                onClick={handleExportJson}
+                style={{
+                  padding: "0 24px",
+                  height: "44px",
+                  fontFamily: "var(--font-mono)",
+                  fontSize: "12px",
+                  backgroundColor: "var(--color-accent)",
+                  color: "var(--color-bg)",
+                  border: "none",
+                  borderRadius: "var(--radius-sm)",
+                  cursor: "pointer",
+                }}
+              >
+                Export as .json
               </button>
             </div>
           </div>

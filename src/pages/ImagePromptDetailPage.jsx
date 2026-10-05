@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { imagePrompts } from "../data/imagePrompts";
 import BackButton from "../components/BackButton";
+import BookmarkButton from "../components/BookmarkButton";
 import DynamicPrompt from "../components/DynamicPrompt";
 import Seo from "../components/Seo";
 import { trackRecentlyViewed } from "../utils/recentlyViewed";
@@ -150,19 +151,27 @@ const ImagePromptDetailPage = () => {
           </span>
         </div>
 
-        <h1
-          style={{
-            fontFamily: "var(--font-sans)",
-            fontSize: "clamp(1.75rem, 4vw, 2.75rem)",
-            fontWeight: 800,
-            letterSpacing: "-0.03em",
-            color: "var(--color-fg)",
-            lineHeight: 1.1,
-            marginBottom: "16px",
-          }}
-        >
-          {prompt.title}
-        </h1>
+        <div style={{ display: "flex", alignItems: "center", gap: "16px", marginBottom: "16px" }}>
+          <h1
+            style={{
+              fontFamily: "var(--font-sans)",
+              fontSize: "clamp(1.75rem, 4vw, 2.75rem)",
+              fontWeight: 800,
+              letterSpacing: "-0.03em",
+              color: "var(--color-fg)",
+              lineHeight: 1.1,
+            }}
+          >
+            {prompt.title}
+          </h1>
+          <BookmarkButton
+            type="image"
+            slug={prompt.slug}
+            title={prompt.title}
+            style={{ flexShrink: 0 }}
+            enableShortcut={true}
+          />
+        </div>
 
         <p
           style={{
