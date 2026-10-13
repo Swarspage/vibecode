@@ -3,12 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { designPrompts } from "../data/designPrompts";
 import { workflowPrompts } from "../data/workflowPrompts";
 import { imagePrompts } from "../data/imagePrompts";
-import { publicApis } from "../data/publicApis";
 
 const GlobalSearch = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [loadedApis, setLoadedApis] = useState([]);
   const inputRef = useRef(null);
   const navigate = useNavigate();
 
@@ -41,17 +41,24 @@ const GlobalSearch = () => {
       setQuery("");
       setSelectedIndex(0);
       document.body.style.overflow = "hidden";
+
+      // Dynamically load heavy publicApis dataset on-demand
+      if (loadedApis.length === 0) {
+        import("../data/publicApis").then((mod) => {
+          setLoadedApis(mod.publicApis);
+        });
+      }
     } else {
       document.body.style.overflow = "";
     }
-  }, [isOpen]);
+  }, [isOpen, loadedApis.length]);
 
   // Consolidate data
   const allItems = [
     ...designPrompts.map(p => ({ ...p, type: 'Design Prompt', link: `/design-prompts/${p.slug}` })),
     ...workflowPrompts.map(p => ({ ...p, name: p.title, type: 'Workflow Prompt', link: `/workflow-prompts/${p.slug}` })),
     ...imagePrompts.map(p => ({ ...p, name: p.title, type: 'Image Prompt', link: `/image-prompts/${p.slug}` })),
-    ...publicApis.map(p => ({ ...p, type: 'Public API', link: p.url, external: true }))
+    ...loadedApis.map(p => ({ ...p, type: 'Public API', link: p.url, external: true }))
   ];
 
   const filteredItems = query.trim() === "" ? [] : allItems.filter(item => {

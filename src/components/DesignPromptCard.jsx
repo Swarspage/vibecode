@@ -5,12 +5,52 @@ import BookmarkButton from "./BookmarkButton";
 const DesignPromptCard = ({ prompt }) => {
   const [copied, setCopied] = useState(false);
   const [iframeLoaded, setIframeLoaded] = useState(false);
+  const [shouldLoadIframe, setShouldLoadIframe] = useState(false);
+  const hoverTimeoutRef = useRef(null);
   const cardPreviewFrameRef = useRef(null);
   const [viewportScale, setViewportScale] = useState(0.25);
 
   useEffect(() => {
     setIframeLoaded(false);
   }, [prompt.previewUrl]);
+
+  const handleMouseEnter = () => {
+    if (!shouldLoadIframe) {
+      hoverTimeoutRef.current = setTimeout(() => {
+        setShouldLoadIframe(true);
+      }, 150);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    if (hoverTimeoutRef.current) {
+      clearTimeout(hoverTimeoutRef.current);
+    }
+  };
+
+  useEffect(() => {
+    if (shouldLoadIframe || !prompt.previewUrl) return;
+    const el = cardPreviewFrameRef.current;
+    if (!el || typeof IntersectionObserver === "undefined") return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            const timer = setTimeout(() => {
+              setShouldLoadIframe(true);
+            }, 250);
+            observer.disconnect();
+            return () => clearTimeout(timer);
+          }
+        }
+      },
+      { rootMargin: "60px" }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [shouldLoadIframe, prompt.previewUrl]);
 
   useLayoutEffect(() => {
     const el = cardPreviewFrameRef.current;
@@ -67,6 +107,8 @@ const DesignPromptCard = ({ prompt }) => {
         position: "relative",
       }}
       className="dp-card-base dp-card"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
       {prompt.isNew && (
         <div
@@ -108,18 +150,20 @@ const DesignPromptCard = ({ prompt }) => {
             ref={cardPreviewFrameRef}
             className={`card-preview-frame${iframeLoaded ? " is-ready" : " is-loading"}`}
           >
-            <div
-              className="card-preview-viewport"
-              style={{ transform: `scale(${viewportScale})` }}
-            >
-              <iframe
-                src={prompt.previewUrl}
-                loading="lazy"
-                title={`${prompt.name} card preview`}
-                tabIndex={-1}
-                onLoad={() => setIframeLoaded(true)}
-              />
-            </div>
+            {shouldLoadIframe && (
+              <div
+                className="card-preview-viewport"
+                style={{ transform: `scale(${viewportScale})` }}
+              >
+                <iframe
+                  src={prompt.previewUrl}
+                  loading="lazy"
+                  title={`${prompt.name} card preview`}
+                  tabIndex={-1}
+                  onLoad={() => setIframeLoaded(true)}
+                />
+              </div>
+            )}
 
             <div className="preview-skeleton preview-skeleton-glow" aria-hidden="true">
               <div className="preview-skeleton-shimmer preview-skeleton-title" />
