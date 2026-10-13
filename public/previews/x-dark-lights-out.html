@@ -1,0 +1,1635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>X (Dark, “Lights Out”) — Design System Preview</title>
+  
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #000000;
+      --bg-elevated: #16181C;
+      --bg-search: #202327;
+      --text: #E7E9EA;
+      --text-muted: #71767B;
+      --border: #2F3336;
+      --accent: #1D9BF0;
+      --accent-hover: #1A8CD8;
+      --accent-ghost: rgba(29, 155, 240, 0.1);
+      --like: #F91880;
+      --like-ghost: rgba(249, 24, 128, 0.1);
+      --repost: #00BA7C;
+      --repost-ghost: rgba(0, 186, 124, 0.1);
+      --danger: #F4212E;
+      --hover-row: rgba(231, 233, 234, 0.03);
+      --hover-ghost: rgba(231, 233, 234, 0.1);
+      --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-stack);
+      font-size: 15px;
+      line-height: 1.333;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* APP SHELL */
+    .app-container {
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+      max-width: 1265px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* LEFT NAVIGATION (275px) */
+    .nav-col {
+      width: 275px;
+      padding: 0 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      user-select: none;
+      flex-shrink: 0;
+    }
+
+    .nav-top {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .nav-logo-wrap {
+      padding: 10px 12px;
+      margin-top: 2px;
+      margin-bottom: 2px;
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+      border-radius: 9999px;
+      cursor: pointer;
+      transition: background-color 200ms ease-in-out;
+    }
+    .nav-logo-wrap:hover {
+      background-color: var(--hover-ghost);
+    }
+    .nav-logo {
+      width: 28px;
+      height: 28px;
+      fill: var(--text);
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      height: 50px;
+      padding: 0 16px;
+      border-radius: 9999px;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 20px;
+      font-weight: 400;
+      transition: background-color 200ms ease-in-out;
+      width: fit-content;
+      cursor: pointer;
+    }
+    .nav-item:hover {
+      background-color: var(--hover-ghost);
+    }
+    .nav-item.active {
+      font-weight: 700;
+    }
+    .nav-item svg {
+      width: 26px;
+      height: 26px;
+      stroke-width: 2px;
+      flex-shrink: 0;
+    }
+
+    .btn-post-primary {
+      background-color: var(--accent);
+      color: #FFFFFF;
+      font-weight: 700;
+      font-size: 17px;
+      height: 52px;
+      width: 90%;
+      border-radius: 9999px;
+      border: none;
+      margin-top: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 200ms ease-in-out;
+    }
+    .btn-post-primary:hover {
+      background-color: var(--accent-hover);
+    }
+    .btn-post-primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* USER PROFILE PILL */
+    .nav-profile-pill {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px;
+      margin-bottom: 12px;
+      border-radius: 9999px;
+      cursor: pointer;
+      transition: background-color 200ms ease-in-out;
+    }
+    .nav-profile-pill:hover {
+      background-color: var(--hover-ghost);
+    }
+    .profile-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+    .avatar-sm {
+      width: 40px;
+      height: 40px;
+      border-radius: 9999px;
+      object-fit: cover;
+      flex-shrink: 0;
+      background: #25282C;
+    }
+    .profile-names {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.25;
+      min-width: 0;
+    }
+    .profile-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .profile-handle {
+      font-size: 13px;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* MAIN COLUMN (600px) */
+    .main-col {
+      width: 600px;
+      min-height: 100vh;
+      border-left: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+    }
+
+    /* STICKY HEADER */
+    .sticky-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background-color: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+    }
+    .header-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .header-icon-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 9999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      transition: background-color 200ms ease-in-out;
+    }
+    .header-icon-btn:hover {
+      background-color: var(--hover-ghost);
+    }
+
+    /* TABS */
+    .tabs-bar {
+      display: flex;
+      height: 53px;
+    }
+    .tab-btn {
+      flex: 1;
+      height: 100%;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      transition: background-color 200ms ease-in-out;
+    }
+    .tab-btn:hover {
+      background-color: rgba(255, 255, 255, 0.03);
+    }
+    .tab-btn.active {
+      color: var(--text);
+      font-weight: 700;
+    }
+    .tab-label {
+      position: relative;
+      height: 100%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .tab-btn.active .tab-indicator {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background-color: var(--accent);
+      border-radius: 9999px;
+    }
+
+    /* COMPOSER */
+    .composer {
+      display: flex;
+      gap: 12px;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .composer-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 9999px;
+      object-fit: cover;
+      background: #25282C;
+      flex-shrink: 0;
+    }
+    .composer-right {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .composer-textarea {
+      width: 100%;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--text);
+      font-family: var(--font-stack);
+      font-size: 20px;
+      line-height: 1.35;
+      resize: none;
+      min-height: 54px;
+      padding: 6px 0;
+    }
+    .composer-textarea::placeholder {
+      color: var(--text-muted);
+    }
+    .composer-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 12px;
+      border-top: 1px solid rgba(47, 51, 54, 0.6);
+      margin-top: 8px;
+    }
+    .composer-tools {
+      display: flex;
+      gap: 4px;
+    }
+    .composer-action-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 9999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      transition: background-color 200ms ease-in-out, transform 150ms ease;
+    }
+    .composer-action-btn:hover {
+      background-color: var(--accent-ghost);
+    }
+    .composer-action-btn:active {
+      transform: scale(0.95);
+    }
+    .btn-post-sm {
+      background-color: var(--accent);
+      color: #FFFFFF;
+      font-weight: 700;
+      font-size: 15px;
+      height: 36px;
+      padding: 0 16px;
+      border-radius: 9999px;
+      border: none;
+      cursor: pointer;
+      transition: background-color 200ms ease-in-out;
+    }
+    .btn-post-sm:hover:not(:disabled) {
+      background-color: var(--accent-hover);
+    }
+    .btn-post-sm:disabled {
+      opacity: 0.5;
+      cursor: default;
+    }
+
+    /* FEED POSTS */
+    .feed-post {
+      display: flex;
+      gap: 12px;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      transition: background-color 200ms ease-in-out;
+    }
+    .feed-post:hover {
+      background-color: var(--hover-row);
+    }
+    .post-avatar-wrap {
+      flex-shrink: 0;
+    }
+    .post-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 9999px;
+      object-fit: cover;
+      background: #25282C;
+      display: block;
+    }
+    .post-main {
+      flex: 1;
+      min-width: 0;
+    }
+    .post-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2px;
+    }
+    .post-user-info {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 15px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .post-name {
+      font-weight: 700;
+      color: var(--text);
+    }
+    .post-name:hover {
+      text-decoration: underline;
+    }
+    .post-verified {
+      width: 18px;
+      height: 18px;
+      fill: var(--accent);
+      flex-shrink: 0;
+    }
+    .post-handle {
+      color: var(--text-muted);
+    }
+    .post-dot {
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+    .post-time {
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+    .post-more-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 9999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      transition: all 200ms ease-in-out;
+      margin: -6px -6px 0 0;
+    }
+    .post-more-btn:hover {
+      color: var(--accent);
+      background-color: var(--accent-ghost);
+    }
+
+    .post-content {
+      color: var(--text);
+      font-size: 15px;
+      line-height: 20px;
+      margin-bottom: 12px;
+      word-break: break-word;
+    }
+    .post-content a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .post-content a:hover {
+      text-decoration: underline;
+    }
+
+    /* MEDIA CONTAINER */
+    .post-media-card {
+      margin-top: 12px;
+      margin-bottom: 12px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+      background-color: #0A0A0C;
+    }
+    .media-card-link {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+    }
+    .media-hero-img {
+      width: 100%;
+      height: 260px;
+      object-fit: cover;
+      display: block;
+    }
+    .media-meta-box {
+      padding: 12px 14px;
+      background-color: #050505;
+      border-top: 1px solid var(--border);
+    }
+    .media-domain {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 16px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .media-title {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text);
+      line-height: 20px;
+      margin-top: 2px;
+    }
+    .media-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 16px;
+      margin-top: 2px;
+    }
+
+    /* ACTION BAR */
+    .post-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 425px;
+      margin-top: 4px;
+      user-select: none;
+    }
+    .action-group {
+      display: inline-flex;
+      align-items: center;
+      color: var(--text-muted);
+      font-size: 13px;
+      gap: 4px;
+      cursor: pointer;
+      background: transparent;
+      border: none;
+      transition: color 200ms ease-in-out;
+    }
+    .action-icon-circle {
+      width: 34px;
+      height: 34px;
+      border-radius: 9999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 200ms ease-in-out, transform 150ms ease;
+    }
+    .action-group:active .action-icon-circle {
+      transform: scale(0.92);
+    }
+    .action-icon-circle svg {
+      width: 18px;
+      height: 18px;
+      stroke-width: 1.75;
+    }
+
+    /* SEMANTIC ACTION HOVERS */
+    .action-reply:hover {
+      color: var(--accent);
+    }
+    .action-reply:hover .action-icon-circle {
+      background-color: var(--accent-ghost);
+    }
+
+    .action-repost:hover, .action-repost.reposted {
+      color: var(--repost);
+    }
+    .action-repost:hover .action-icon-circle {
+      background-color: var(--repost-ghost);
+    }
+
+    .action-like:hover {
+      color: var(--like);
+    }
+    .action-like:hover .action-icon-circle {
+      background-color: var(--like-ghost);
+    }
+    .action-like.liked {
+      color: var(--like);
+    }
+    .action-like.liked svg {
+      fill: var(--like);
+      stroke: var(--like);
+    }
+
+    /* HEART BURST ANIMATION */
+    @keyframes heartBurst {
+      0% { transform: scale(1); }
+      30% { transform: scale(1.4); }
+      60% { transform: scale(0.9); }
+      100% { transform: scale(1); }
+    }
+    .animate-heart-burst svg {
+      animation: heartBurst 400ms cubic-bezier(0.17, 0.89, 0.32, 1.49);
+    }
+
+    .action-view:hover, .action-bookmark:hover {
+      color: var(--accent);
+    }
+    .action-view:hover .action-icon-circle,
+    .action-bookmark:hover .action-icon-circle {
+      background-color: var(--accent-ghost);
+    }
+
+    /* RIGHT SIDEBAR (350px) */
+    .sidebar-col {
+      width: 350px;
+      padding: 0 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-left: 24px;
+      flex-shrink: 0;
+    }
+
+    /* SEARCH BAR */
+    .search-wrap {
+      position: sticky;
+      top: 0;
+      background-color: var(--bg);
+      padding: 6px 0;
+      z-index: 10;
+    }
+    .search-box {
+      background-color: var(--bg-search);
+      border-radius: 9999px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      gap: 12px;
+      border: 1px solid transparent;
+      transition: all 200ms ease-in-out;
+    }
+    .search-box:focus-within {
+      background-color: var(--bg);
+      border-color: var(--accent);
+    }
+    .search-box svg {
+      width: 18px;
+      height: 18px;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+    .search-input {
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--text);
+      font-size: 15px;
+      width: 100%;
+    }
+    .search-input::placeholder {
+      color: var(--text-muted);
+    }
+
+    /* SIDEBAR CARD MODULES */
+    .sidebar-card {
+      background-color: var(--bg-elevated);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .card-header {
+      padding: 12px 16px;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .sidebar-row {
+      padding: 12px 16px;
+      cursor: pointer;
+      transition: background-color 200ms ease-in-out;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    .sidebar-row:hover {
+      background-color: var(--hover-ghost);
+    }
+    .row-meta {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 16px;
+    }
+    .row-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+      margin-top: 2px;
+      line-height: 20px;
+    }
+    .row-posts {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* PREMIUM CARD */
+    .premium-card {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .premium-title {
+      font-size: 20px;
+      font-weight: 700;
+    }
+    .premium-desc {
+      font-size: 15px;
+      line-height: 20px;
+      color: var(--text);
+    }
+
+    /* BUTTONS */
+    .btn-white-pill {
+      background-color: #EFF3F4;
+      color: #000000;
+      font-weight: 700;
+      font-size: 15px;
+      height: 36px;
+      padding: 0 16px;
+      border-radius: 9999px;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 200ms ease-in-out;
+      width: fit-content;
+    }
+    .btn-white-pill:hover {
+      background-color: #D7DBDC;
+    }
+    .btn-white-pill:active {
+      background-color: #C8CCCD;
+    }
+
+    .btn-outline-pill {
+      border: 1px solid #536471;
+      color: var(--text);
+      background: transparent;
+      font-weight: 700;
+      font-size: 14px;
+      height: 32px;
+      padding: 0 14px;
+      border-radius: 9999px;
+      cursor: pointer;
+      transition: all 200ms ease-in-out;
+    }
+    .btn-outline-pill:hover {
+      border-color: #670B13;
+      color: #F4212E;
+      background-color: rgba(244, 33, 46, 0.1);
+    }
+
+    /* WHO TO FOLLOW ROW */
+    .follow-user-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .follow-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .card-footer-link {
+      display: block;
+      padding: 16px;
+      color: var(--accent);
+      font-size: 15px;
+      text-decoration: none;
+      transition: background-color 200ms ease-in-out;
+    }
+    .card-footer-link:hover {
+      background-color: var(--hover-ghost);
+    }
+
+    /* SIDEBAR FOOTER */
+    .sidebar-footer {
+      padding: 12px 16px 24px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px 10px;
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 16px;
+    }
+    .sidebar-footer a {
+      color: var(--text-muted);
+      text-decoration: none;
+    }
+    .sidebar-footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* WHITE GLOW POPOVER */
+    .white-glow-popover {
+      position: absolute;
+      bottom: 80px;
+      left: 12px;
+      width: 280px;
+      background-color: #000000;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      padding: 8px 0;
+      z-index: 100;
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.2), 0 0 3px 1px rgba(255, 255, 255, 0.15);
+      animation: popoverFadeIn 150ms cubic-bezier(0.16, 1, 0.3, 1);
+      display: none;
+    }
+    @keyframes popoverFadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .popover-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      color: var(--text);
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 150ms ease;
+    }
+    .popover-item:hover {
+      background-color: var(--hover-ghost);
+    }
+    .popover-divider {
+      height: 1px;
+      background-color: var(--border);
+      margin: 6px 0;
+    }
+
+    /* MOBILE BOTTOM BAR */
+    .mobile-bottom-nav {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 54px;
+      background-color: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-top: 1px solid var(--border);
+      z-index: 50;
+      align-items: center;
+      justify-content: space-around;
+    }
+    .mobile-nav-btn {
+      color: var(--text);
+      background: transparent;
+      border: none;
+      padding: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .mobile-nav-btn.active svg {
+      stroke-width: 2.5;
+    }
+
+    /* RESPONSIVE BREAKPOINTS (According to prompt specification) */
+    /* 1. Below 1280px: Sidebar hides */
+    @media (max-width: 1280px) {
+      .sidebar-col {
+        display: none;
+      }
+      .app-container {
+        justify-content: flex-start;
+      }
+    }
+
+    /* 2. Below 1000px: Nav collapses to 88px icons only */
+    @media (max-width: 1000px) {
+      .nav-col {
+        width: 88px;
+        align-items: center;
+        padding: 0 4px;
+      }
+      .nav-item {
+        width: 50px;
+        height: 50px;
+        padding: 0;
+        justify-content: center;
+      }
+      .nav-item span {
+        display: none;
+      }
+      .btn-post-primary {
+        width: 50px;
+        height: 50px;
+        border-radius: 9999px;
+        padding: 0;
+        margin-inline: auto;
+      }
+      .btn-post-primary span {
+        display: none;
+      }
+      .btn-post-primary svg {
+        display: block !important;
+      }
+      .nav-profile-pill {
+        width: 50px;
+        height: 50px;
+        padding: 0;
+        justify-content: center;
+      }
+      .profile-names, .nav-profile-pill > svg {
+        display: none;
+      }
+    }
+
+    /* 3. Below 500px: Nav becomes bottom bar, main column goes full width */
+    @media (max-width: 500px) {
+      .nav-col {
+        display: none;
+      }
+      .main-col {
+        width: 100%;
+        border-left: none;
+        border-right: none;
+        padding-bottom: 60px;
+      }
+      .mobile-bottom-nav {
+        display: flex;
+      }
+      .composer {
+        padding: 12px;
+      }
+      .composer-textarea {
+        font-size: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+
+    <!-- LEFT NAVIGATION COLUMN (275px, Collapsible) -->
+    <aside class="nav-col">
+      <div class="nav-top">
+        <!-- Logo -->
+        <a href="#feed" class="nav-logo-wrap" title="X">
+          <svg class="nav-logo" viewBox="0 0 24 24" aria-label="X">
+            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+          </svg>
+        </a>
+
+        <!-- Nav Links -->
+        <a href="#feed" class="nav-item active" id="nav-home">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+          </svg>
+          <span>Home</span>
+        </a>
+
+        <a href="#explore" class="nav-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+          </svg>
+          <span>Explore</span>
+        </a>
+
+        <a href="#notifications" class="nav-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
+          </svg>
+          <span>Notifications</span>
+        </a>
+
+        <a href="#messages" class="nav-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
+          </svg>
+          <span>Messages</span>
+        </a>
+
+        <a href="#grok" class="nav-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z" />
+          </svg>
+          <span>Grok</span>
+        </a>
+
+        <a href="#bookmarks" class="nav-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" />
+          </svg>
+          <span>Bookmarks</span>
+        </a>
+
+        <a href="#profile" class="nav-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+          </svg>
+          <span>Profile</span>
+        </a>
+
+        <div class="nav-item" id="more-menu-btn" role="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm5.625 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm5.625 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+          </svg>
+          <span>More</span>
+        </div>
+
+        <!-- Primary CTA Post button -->
+        <button class="btn-post-primary" id="btn-desktop-post">
+          <span>Post</span>
+          <svg style="display:none; width:22px; height:22px; fill:currentColor;" viewBox="0 0 24 24">
+            <path d="M2.5 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8-8-3.582-8-8zm9-4h-2v3h-3v2h3v3h2v-3h3v-2h-3v-3z" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- User Profile Pill in nav footer -->
+      <div class="nav-profile-pill" id="nav-profile-toggle">
+        <div class="profile-info">
+          <img class="avatar-sm" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" alt="Avatar" />
+          <div class="profile-names">
+            <span class="profile-name">Alex Rivera</span>
+            <span class="profile-handle">@alexrivera</span>
+          </div>
+        </div>
+        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" fill="none">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm6 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm6 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+        </svg>
+      </div>
+
+      <!-- White Glow Popover (Complies with 2. Tokens: shadow-[0_0_15px_rgba(255,255,255,0.2),0_0_3px_1px_rgba(255,255,255,0.15)]) -->
+      <div class="white-glow-popover" id="nav-popover">
+        <div class="popover-item">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4.5v15m7.5-7.5h-15"/></svg>
+          <span>Add an existing account</span>
+        </div>
+        <div class="popover-divider"></div>
+        <div class="popover-item" style="color: var(--danger);">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15M12 9l-3 3m0 0 3 3m-3-3h12.75"/></svg>
+          <span>Log out @alexrivera</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- CENTER MAIN COLUMN (600px) -->
+    <main class="main-col">
+      <!-- Sticky Translucent Header -->
+      <div class="sticky-header">
+        <div class="header-top">
+          <span class="header-title">Home</span>
+          <button class="header-icon-btn" title="Timeline Settings">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Tabs with 4px active blue indicator -->
+        <div class="tabs-bar">
+          <button class="tab-btn active" id="tab-for-you" onclick="switchTab('for-you')">
+            <div class="tab-label">
+              <span>For you</span>
+              <div class="tab-indicator"></div>
+            </div>
+          </button>
+          <button class="tab-btn" id="tab-following" onclick="switchTab('following')">
+            <div class="tab-label">
+              <span>Following</span>
+              <div class="tab-indicator" style="display:none;"></div>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <!-- Post Composer -->
+      <section class="composer">
+        <img class="composer-avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" alt="Your Avatar" />
+        <div class="composer-right">
+          <textarea class="composer-textarea" id="composer-input" placeholder="What is happening?!" rows="2"></textarea>
+          
+          <div class="composer-footer">
+            <div class="composer-tools">
+              <!-- Media -->
+              <button class="composer-action-btn" title="Media">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"/></svg>
+              </button>
+              <!-- GIF -->
+              <button class="composer-action-btn" title="GIF">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="4"/><path d="M8 12h2m-2-3h2.5M8 15h2.5M14 9v6m3-6v6"/></svg>
+              </button>
+              <!-- Poll -->
+              <button class="composer-action-btn" title="Poll">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12"/></svg>
+              </button>
+              <!-- Emoji -->
+              <button class="composer-action-btn" title="Emoji">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path d="M15.182 15.182a4.5 4.5 0 0 1-6.364 0M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0ZM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75s.168-.75.375-.75.375.336.375.75Zm5.25 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75Z"/></svg>
+              </button>
+              <!-- Schedule -->
+              <button class="composer-action-btn" title="Schedule">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24"><path d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5"/></svg>
+              </button>
+            </div>
+
+            <button class="btn-post-sm" id="btn-submit-post" disabled onclick="submitNewPost()">Post</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- FEED LIST (Single scrolling column of uniform rows) -->
+      <div id="feed-list">
+
+        <!-- POST 1: Tech / Design System Post with Media Embed -->
+        <article class="feed-post" data-post-id="1">
+          <div class="post-avatar-wrap">
+            <img class="post-avatar" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80" alt="Marcus Vance" />
+          </div>
+          <div class="post-main">
+            <div class="post-header">
+              <div class="post-user-info">
+                <span class="post-name">Marcus Vance</span>
+                <svg class="post-verified" viewBox="0 0 24 24">
+                  <path d="M22.5 12.5c0-1.58-.875-2.95-2.148-3.6.154-.435.238-.905.238-1.4 0-2.21-1.79-4-4-4-.495 0-.965.084-1.4.238C14.55 2.475 13.18 1.6 11.6 1.6c-1.58 0-2.95.875-3.6 2.148-.435-.154-.905-.238-1.4-.238-2.21 0-4 1.79-4 4 0 .495.084.965.238 1.4C1.575 9.55.7 10.92.7 12.5c0 1.58.875 2.95 2.148 3.6-.154.435-.238.905-.238 1.4 0 2.21 1.79 4 4 4 .495 0 .965-.084 1.4-.238 1.05 1.273 2.42 2.148 4 2.148 1.58 0 2.95-.875 3.6-2.148.435.154.905.238 1.4.238 2.21 0 4-1.79 4-4 0-.495-.084-.965-.238-1.4 1.273-1.05 2.148-2.42 2.148-4zm-12.7 4.2-4.5-4.5 1.4-1.4 3.1 3.1 7.1-7.1 1.4 1.4-8.5 8.5z"/>
+                </svg>
+                <span class="post-handle">@marcusvance</span>
+                <span class="post-dot">·</span>
+                <span class="post-time">18m</span>
+              </div>
+              <button class="post-more-btn" title="More">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm6 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm6 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"/></svg>
+              </button>
+            </div>
+
+            <div class="post-content">
+              Lights Out dark mode isn't just dark gray with high opacity. It's an unapologetic, pure <span style="color:#1D9BF0">#000000</span> void where content is the only decoration. 1px hairline dividers (#2F3336), pill CTAs, and semantic color tints only on interaction. This is pure utilitarian density.
+            </div>
+
+            <!-- Media Container (rounded-2xl border border-[#2F3336]) -->
+            <div class="post-media-card">
+              <a href="#" class="media-card-link">
+                <img class="media-hero-img" src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&auto=format&fit=crop&q=80" alt="Lights Out Design System Architecture" />
+                <div class="media-meta-box">
+                  <span class="media-domain">
+                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244"/></svg>
+                    lightsout.design
+                  </span>
+                  <div class="media-title">Mastering the Lights Out Design Philosophy: Pure Black &amp; Dense Hierarchy</div>
+                  <div class="media-desc">Discover the principles of monochrome surfaces, pill buttons, and feed-first interface engineering.</div>
+                </div>
+              </a>
+            </div>
+
+            <!-- Action Bar (Reply, Repost, Like with 400ms burst, View, Bookmark/Share) -->
+            <div class="post-actions">
+              <button class="action-group action-reply" onclick="handleReply(event, 1)">
+                <div class="action-icon-circle">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 0 1-.923 1.785A5.969 5.969 0 0 0 6 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337Z"/></svg>
+                </div>
+                <span class="action-count">48</span>
+              </button>
+
+              <button class="action-group action-repost" onclick="toggleRepost(event, this)">
+                <div class="action-icon-circle">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 0 0-3.7-3.7 48.678 48.678 0 0 0-7.324 0 4.006 4.006 0 0 0-3.7 3.7c-.017.22-.032.441-.046.662M4.5 12c0 1.232.046 2.453.138 3.662a4.006 4.006 0 0 0 3.7 3.7 48.656 48.656 0 0 0 7.324 0 4.006 4.006 0 0 0 3.7-3.7c.017-.22.032-.441.046-.662M7.5 4.5 4.5 7.5m0 0 3 3m-3-3h10.5m-1.5 12 3-3m0 0-3-3m3 3H6"/></svg>
+                </div>
+                <span class="action-count">142</span>
+              </button>
+
+              <button class="action-group action-like" onclick="toggleLike(event, this)">
+                <div class="action-icon-circle">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"/></svg>
+                </div>
+                <span class="action-count">892</span>
+              </button>
+
+              <button class="action-group action-view">
+                <div class="action-icon-circle">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z"/></svg>
+                </div>
+                <span class="action-count">24.5K</span>
+              </button>
+
+              <button class="action-group action-bookmark" onclick="toggleBookmark(event, this)">
+                <div class="action-icon-circle">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z"/></svg>
+                </div>
+              </button>
+            </div>
+          </div>
+        </article>
+
+        <!-- POST 2: Engineering Punchy Text Post -->
+        <article class="feed-post" data-post-id="2">
+          <div class="post-avatar-wrap">
+            <img class="post-avatar" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&auto=format&fit=crop&q=80" alt="Elena Rostova" />
+          </div>
+          <div class="post-main">
+            <div class="post-header">
+              <div class="post-user-info">
+                <span class="post-name">Elena Rostova</span>
+                <svg class="post-verified" viewBox="0 0 24 24">
+                  <path d="M22.5 12.5c0-1.58-.875-2.95-2.148-3.6.154-.435.238-.905.238-1.4 0-2.21-1.79-4-4-4-.495 0-.965.084-1.4.238C14.55 2.475 13.18 1.6 11.6 1.6c-1.58 0-2.95.875-3.6 2.148-.435-.154-.905-.238-1.4-.238-2.21 0-4 1.79-4 4 0 .495.084.965.238 1.4C1.575 9.55.7 10.92.7 12.5c0 1.58.875 2.95 2.148 3.6-.154.435-.238.905-.238 1.4 0 2.21 1.79 4 4 4 .495 0 .965-.084 1.4-.238 1.05 1.273 2.42 2.148 4 2.148 1.58 0 2.95-.875 3.6-2.148.435.154.905.238 1.4.238 2.21 0 4-1.79 4-4 0-.495-.084-.965-.238-1.4 1.273-1.05 2.148-2.42 2.148-4zm-12.7 4.2-4.5-4.5 1.4-1.4 3.1 3.1 7.1-7.1 1.4 1.4-8.5 8.5z"/>
+                </svg>
+                <span class="post-handle">@erostova</span>
+                <span class="post-dot">·</span>
+                <span class="post-time">2h</span>
+              </div>
+              <button class="post-more-btn" title="More">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm6 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm6 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"/></svg>
+              </button>
+            </div>
+
+            <div class="post-content">
+              Rule #1 of high-performance feed UIs: Stop over-engineering nested cards with 12 layers of box-shadows. A hairline 1px border (#2F3336) and a 3% white hover wash performs 10x smoother on 120Hz displays.
+            </div>
+
+            <div class="post-actions">
+              <button class="action-group action-reply" onclick="handleReply(event, 2)">
+                <div class="action-icon-circle">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 0 1-.923 1.785A5.969 5.969 0 0 0 6 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337Z"/></svg>
+                </div>
+                <span class="action-count">19</span>
+              </button>
+
+              <button class="action-group action-repost" onclick="toggleRepost(event, this)">
+                <div class="action-icon-circle">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 0 0-3.7-3.7 48.678 48.678 0 0 0-7.324 0 4.006 4.006 0 0 0-3.7 3.7c-.017.22-.032.441-.046.662M4.5 12c0 1.232.046 2.453.138 3.662a4.006 4.006 0 0 0 3.7 3.7 48.656 48.656 0 0 0 7.324 0 4.006 4.006 0 0 0 3.7-3.7c.017-.22.032-.441.046-.662M7.5 4.5 4.5 7.5m0 0 3 3m-3-3h10.5m-1.5 12 3-3m0 0-3-3m3 3H6"/></svg>
+                </div>
+                <span class="action-count">83</span>
+              </button>
+
+              <button class="action-group action-like" onclick="toggleLike(event, this)">
+                <div class="action-icon-circle">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"/></svg>
+                </div>
+                <span class="action-count">614</span>
+              </button>
+
+              <button class="action-group action-view">
+                <div class="action-icon-circle">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z"/></svg>
+                </div>
+                <span class="action-count">18.2K</span>
+              </button>
+
+              <button class="action-group action-bookmark" onclick="toggleBookmark(event, this)">
+                <div class="action-icon-circle">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z"/></svg>
+                </div>
+              </button>
+            </div>
+          </div>
+        </article>
+
+        <!-- POST 3: Community & Updates Post -->
+        <article class="feed-post" data-post-id="3">
+          <div class="post-avatar-wrap">
+            <img class="post-avatar" src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&auto=format&fit=crop&q=80" alt="Sarah Lin" />
+          </div>
+          <div class="post-main">
+            <div class="post-header">
+              <div class="post-user-info">
+                <span class="post-name">Sarah Lin</span>
+                <span class="post-handle">@sarahdesign</span>
+                <span class="post-dot">·</span>
+                <span class="post-time">5h</span>
+              </div>
+              <button class="post-more-btn" title="More">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm6 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm6 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"/></svg>
+              </button>
+            </div>
+
+            <div class="post-content">
+              Notice how the primary CTA (Sign up, Follow) is always a high-contrast white pill on pure black, never blue. Blue is strictly reserved for interactive links and active indicators. The hierarchy feels balanced immediately.
+            </div>
+
+            <div class="post-actions">
+              <button class="action-group action-reply" onclick="handleReply(event, 3)">
+                <div class="action-icon-circle">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 0 1-.923 1.785A5.969 5.969 0 0 0 6 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337Z"/></svg>
+                </div>
+                <span class="action-count">6</span>
+              </button>
+
+              <button class="action-group action-repost" onclick="toggleRepost(event, this)">
+                <div class="action-icon-circle">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 0 0-3.7-3.7 48.678 48.678 0 0 0-7.324 0 4.006 4.006 0 0 0-3.7 3.7c-.017.22-.032.441-.046.662M4.5 12c0 1.232.046 2.453.138 3.662a4.006 4.006 0 0 0 3.7 3.7 48.656 48.656 0 0 0 7.324 0 4.006 4.006 0 0 0 3.7-3.7c.017-.22.032-.441.046-.662M7.5 4.5 4.5 7.5m0 0 3 3m-3-3h10.5m-1.5 12 3-3m0 0-3-3m3 3H6"/></svg>
+                </div>
+                <span class="action-count">31</span>
+              </button>
+
+              <button class="action-group action-like" onclick="toggleLike(event, this)">
+                <div class="action-icon-circle">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"/></svg>
+                </div>
+                <span class="action-count">210</span>
+              </button>
+
+              <button class="action-group action-view">
+                <div class="action-icon-circle">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z"/></svg>
+                </div>
+                <span class="action-count">9.4K</span>
+              </button>
+
+              <button class="action-group action-bookmark" onclick="toggleBookmark(event, this)">
+                <div class="action-icon-circle">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z"/></svg>
+                </div>
+              </button>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </main>
+
+    <!-- RIGHT SIDEBAR (350px, Collapsible < 1280px) -->
+    <aside class="sidebar-col">
+      <!-- Search Input -->
+      <div class="search-wrap">
+        <div class="search-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+          </svg>
+          <input type="text" class="search-input" placeholder="Search" />
+        </div>
+      </div>
+
+      <!-- Subscribe to Premium Card -->
+      <div class="sidebar-card premium-card">
+        <div class="premium-title">Subscribe to Premium</div>
+        <div class="premium-desc">Subscribe to unlock new features and if eligible, receive a share of ads revenue.</div>
+        <button class="btn-white-pill">Subscribe</button>
+      </div>
+
+      <!-- "What's happening" Card -->
+      <div class="sidebar-card">
+        <div class="card-header">What’s happening</div>
+
+        <div class="sidebar-row">
+          <div>
+            <div class="row-meta">Technology · Trending</div>
+            <div class="row-title">#DesignSystems</div>
+            <div class="row-posts">34.2K posts</div>
+          </div>
+          <button class="header-icon-btn" style="color:var(--text-muted); width:28px; height:28px;">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm6 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm6 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"/></svg>
+          </button>
+        </div>
+
+        <div class="sidebar-row">
+          <div>
+            <div class="row-meta">Artificial Intelligence · Trending</div>
+            <div class="row-title">Autonomous Agents</div>
+            <div class="row-posts">118.5K posts</div>
+          </div>
+          <button class="header-icon-btn" style="color:var(--text-muted); width:28px; height:28px;">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm6 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm6 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"/></svg>
+          </button>
+        </div>
+
+        <div class="sidebar-row">
+          <div>
+            <div class="row-meta">Web Development · Trending</div>
+            <div class="row-title">React 19 &amp; Vite 8</div>
+            <div class="row-posts">52.8K posts</div>
+          </div>
+          <button class="header-icon-btn" style="color:var(--text-muted); width:28px; height:28px;">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm6 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm6 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"/></svg>
+          </button>
+        </div>
+
+        <a href="#more-trends" class="card-footer-link">Show more</a>
+      </div>
+
+      <!-- "Who to follow" Card -->
+      <div class="sidebar-card">
+        <div class="card-header">Who to follow</div>
+
+        <div class="sidebar-row follow-user-row">
+          <div class="follow-left">
+            <img class="avatar-sm" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" alt="Vercel" />
+            <div class="profile-names">
+              <span class="profile-name">Vercel</span>
+              <span class="profile-handle">@vercel</span>
+            </div>
+          </div>
+          <button class="btn-white-pill" onclick="toggleFollow(this)">Follow</button>
+        </div>
+
+        <div class="sidebar-row follow-user-row">
+          <div class="follow-left">
+            <img class="avatar-sm" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80" alt="Guillermo Rauch" />
+            <div class="profile-names">
+              <span class="profile-name">Guillermo Rauch</span>
+              <span class="profile-handle">@rauchg</span>
+            </div>
+          </div>
+          <button class="btn-white-pill" onclick="toggleFollow(this)">Follow</button>
+        </div>
+
+        <div class="sidebar-row follow-user-row">
+          <div class="follow-left">
+            <img class="avatar-sm" src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&auto=format&fit=crop&q=80" alt="Linear" />
+            <div class="profile-names">
+              <span class="profile-name">Linear</span>
+              <span class="profile-handle">@linear</span>
+            </div>
+          </div>
+          <button class="btn-white-pill" onclick="toggleFollow(this)">Follow</button>
+        </div>
+
+        <a href="#more-follow" class="card-footer-link">Show more</a>
+      </div>
+
+      <!-- Hairline Minimal Footer -->
+      <div class="sidebar-footer">
+        <a href="#">Terms of Service</a>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Cookie Policy</a>
+        <a href="#">Accessibility</a>
+        <a href="#">Ads info</a>
+        <span>© 2026 X Corp.</span>
+      </div>
+    </aside>
+
+  </div>
+
+  <!-- MOBILE BOTTOM BAR (< 500px) -->
+  <nav class="mobile-bottom-nav">
+    <button class="mobile-nav-btn active" title="Home">
+      <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/></svg>
+    </button>
+    <button class="mobile-nav-btn" title="Explore">
+      <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"/></svg>
+    </button>
+    <button class="mobile-nav-btn" title="Grok">
+      <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09Z"/></svg>
+    </button>
+    <button class="mobile-nav-btn" title="Notifications">
+      <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0"/></svg>
+    </button>
+    <button class="mobile-nav-btn" title="Messages">
+      <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75"/></svg>
+    </button>
+  </nav>
+
+  <!-- INTERACTIVE SCRIPTS -->
+  <script>
+    // Tab switching
+    function switchTab(tab) {
+      const forYou = document.getElementById('tab-for-you');
+      const following = document.getElementById('tab-following');
+      const forYouInd = forYou.querySelector('.tab-indicator');
+      const followingInd = following.querySelector('.tab-indicator');
+
+      if (tab === 'for-you') {
+        forYou.classList.add('active');
+        following.classList.remove('active');
+        forYouInd.style.display = 'block';
+        followingInd.style.display = 'none';
+      } else {
+        following.classList.add('active');
+        forYou.classList.remove('active');
+        followingInd.style.display = 'block';
+        forYouInd.style.display = 'none';
+      }
+    }
+
+    // Composer input handling
+    const composerInput = document.getElementById('composer-input');
+    const submitBtn = document.getElementById('btn-submit-post');
+    const desktopPostBtn = document.getElementById('btn-desktop-post');
+
+    composerInput.addEventListener('input', () => {
+      submitBtn.disabled = composerInput.value.trim().length === 0;
+    });
+
+    desktopPostBtn.addEventListener('click', () => {
+      composerInput.focus();
+    });
+
+    function submitNewPost() {
+      const text = composerInput.value.trim();
+      if (!text) return;
+
+      const feedList = document.getElementById('feed-list');
+      const newArticle = document.createElement('article');
+      newArticle.className = 'feed-post';
+      newArticle.innerHTML = `
+        <div class="post-avatar-wrap">
+          <img class="post-avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" alt="Alex Rivera" />
+        </div>
+        <div class="post-main">
+          <div class="post-header">
+            <div class="post-user-info">
+              <span class="post-name">Alex Rivera</span>
+              <svg class="post-verified" viewBox="0 0 24 24">
+                <path d="M22.5 12.5c0-1.58-.875-2.95-2.148-3.6.154-.435.238-.905.238-1.4 0-2.21-1.79-4-4-4-.495 0-.965.084-1.4.238C14.55 2.475 13.18 1.6 11.6 1.6c-1.58 0-2.95.875-3.6 2.148-.435-.154-.905-.238-1.4-.238-2.21 0-4 1.79-4 4 0 .495.084.965.238 1.4C1.575 9.55.7 10.92.7 12.5c0 1.58.875 2.95 2.148 3.6-.154.435-.238.905-.238 1.4 0 2.21 1.79 4 4 4 .495 0 .965-.084 1.4-.238 1.05 1.273 2.42 2.148 4 2.148 1.58 0 2.95-.875 3.6-2.148.435.154.905.238 1.4.238 2.21 0 4-1.79 4-4 0-.495-.084-.965-.238-1.4 1.273-1.05 2.148-2.42 2.148-4zm-12.7 4.2-4.5-4.5 1.4-1.4 3.1 3.1 7.1-7.1 1.4 1.4-8.5 8.5z"/>
+              </svg>
+              <span class="post-handle">@alexrivera</span>
+              <span class="post-dot">·</span>
+              <span class="post-time">Just now</span>
+            </div>
+            <button class="post-more-btn" title="More">
+              <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm6 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm6 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"/></svg>
+            </button>
+          </div>
+          <div class="post-content">${escapeHTML(text)}</div>
+          <div class="post-actions">
+            <button class="action-group action-reply" onclick="handleReply(event)">
+              <div class="action-icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 0 1-.923 1.785A5.969 5.969 0 0 0 6 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337Z"/></svg></div>
+              <span class="action-count">0</span>
+            </button>
+            <button class="action-group action-repost" onclick="toggleRepost(event, this)">
+              <div class="action-icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 0 0-3.7-3.7 48.678 48.678 0 0 0-7.324 0 4.006 4.006 0 0 0-3.7 3.7c-.017.22-.032.441-.046.662M4.5 12c0 1.232.046 2.453.138 3.662a4.006 4.006 0 0 0 3.7 3.7 48.656 48.656 0 0 0 7.324 0 4.006 4.006 0 0 0 3.7-3.7c.017-.22.032-.441.046-.662M7.5 4.5 4.5 7.5m0 0 3 3m-3-3h10.5m-1.5 12 3-3m0 0-3-3m3 3H6"/></svg></div>
+              <span class="action-count">0</span>
+            </button>
+            <button class="action-group action-like" onclick="toggleLike(event, this)">
+              <div class="action-icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"/></svg></div>
+              <span class="action-count">0</span>
+            </button>
+            <button class="action-group action-view">
+              <div class="action-icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z"/></svg></div>
+              <span class="action-count">1</span>
+            </button>
+            <button class="action-group action-bookmark" onclick="toggleBookmark(event, this)">
+              <div class="action-icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z"/></svg></div>
+            </button>
+          </div>
+        </div>
+      `;
+      feedList.prepend(newArticle);
+      composerInput.value = '';
+      submitBtn.disabled = true;
+    }
+
+    function escapeHTML(str) {
+      return str.replace(/[&<>'"]/g, 
+        tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+      );
+    }
+
+    // Toggle Like with 400ms heart burst animation
+    function toggleLike(e, btn) {
+      e.stopPropagation();
+      const countSpan = btn.querySelector('.action-count');
+      let count = parseInt(countSpan.textContent.replace('K', '000'), 10) || 0;
+      
+      const isLiked = btn.classList.contains('liked');
+      if (isLiked) {
+        btn.classList.remove('liked');
+        btn.classList.remove('animate-heart-burst');
+        countSpan.textContent = count > 0 ? (count - 1).toLocaleString() : '0';
+      } else {
+        btn.classList.add('liked');
+        btn.classList.add('animate-heart-burst');
+        countSpan.textContent = (count + 1).toLocaleString();
+        setTimeout(() => btn.classList.remove('animate-heart-burst'), 450);
+      }
+    }
+
+    // Toggle Repost
+    function toggleRepost(e, btn) {
+      e.stopPropagation();
+      const countSpan = btn.querySelector('.action-count');
+      let count = parseInt(countSpan.textContent, 10) || 0;
+      const isReposted = btn.classList.contains('reposted');
+      if (isReposted) {
+        btn.classList.remove('reposted');
+        countSpan.textContent = count > 0 ? (count - 1) : 0;
+      } else {
+        btn.classList.add('reposted');
+        countSpan.textContent = count + 1;
+      }
+    }
+
+    // Toggle Follow button
+    function toggleFollow(btn) {
+      if (btn.classList.contains('btn-white-pill')) {
+        btn.classList.remove('btn-white-pill');
+        btn.classList.add('btn-outline-pill');
+        btn.textContent = 'Following';
+      } else {
+        btn.classList.remove('btn-outline-pill');
+        btn.classList.add('btn-white-pill');
+        btn.textContent = 'Follow';
+      }
+    }
+
+    function toggleBookmark(e, btn) {
+      e.stopPropagation();
+      btn.classList.toggle('bookmarked');
+      if (btn.classList.contains('bookmarked')) {
+        btn.style.color = 'var(--accent)';
+      } else {
+        btn.style.color = '';
+      }
+    }
+
+    function handleReply(e) {
+      e.stopPropagation();
+      composerInput.focus();
+    }
+
+    // White Glow Popover toggle
+    const profileToggle = document.getElementById('nav-profile-toggle');
+    const popover = document.getElementById('nav-popover');
+    profileToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isShown = popover.style.display === 'block';
+      popover.style.display = isShown ? 'none' : 'block';
+    });
+
+    document.addEventListener('click', () => {
+      popover.style.display = 'none';
+    });
+  </script>
+</body>
+</html>

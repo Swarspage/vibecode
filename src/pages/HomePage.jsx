@@ -12,8 +12,14 @@ import { imagePrompts } from "../data/imagePrompts";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
-// First 3 design systems for the preview row
-const designPreview = designPrompts.slice(0, 3);
+// First 3 design systems for the preview row (prioritizing newly added systems)
+const designPreview = [...designPrompts]
+  .sort((a, b) => {
+    if (a.isNew && !b.isNew) return -1;
+    if (!a.isNew && b.isNew) return 1;
+    return 0;
+  })
+  .slice(0, 3);
 
 // First 6 image prompts
 const imagePreview = imagePrompts.slice(0, 6);

@@ -14,8 +14,8 @@ function getSlugs(filePath) {
   return slugs;
 }
 
-const designSlugs = getSlugs("src/data/designPrompts.js");
-const workflowSlugs = getSlugs("src/data/workflowPrompts.js");
+const designSlugs = getSlugs("src/data/design-prompts/designPrompts.js");
+const workflowSlugs = getSlugs("src/data/workflow-prompts/workflowPrompts.js");
 const imageSlugs = getSlugs("src/data/imagePrompts.js");
 
 const urls = [

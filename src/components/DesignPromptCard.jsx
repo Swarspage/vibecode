@@ -68,6 +68,21 @@ const DesignPromptCard = ({ prompt }) => {
       }}
       className="dp-card-base dp-card"
     >
+      {prompt.isNew && (
+        <div
+          className="badge-new"
+          style={{
+            position: "absolute",
+            top: "12px",
+            left: "12px",
+            zIndex: 10,
+          }}
+        >
+          <span className="badge-new-dot" />
+          <span>Newly Added</span>
+        </div>
+      )}
+
       <div style={{ position: "absolute", top: "12px", right: "12px", zIndex: 10 }}>
         <BookmarkButton
           type="design"

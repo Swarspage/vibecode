@@ -6,20 +6,26 @@ import Seo from "../components/Seo";
 
 const DesignPromptsPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
-
   const query = searchQuery.trim().toLowerCase();
-  const filteredPrompts = designPrompts.filter((prompt) => {
-    if (!query) return true;
-    
-    // Combine every single property into one giant searchable string
-    const haystack = Object.values(prompt)
-      .map(val => (val == null ? "" : String(val).toLowerCase()))
-      .join(" ");
+
+  const filteredPrompts = designPrompts
+    .filter((prompt) => {
+      if (!query) return true;
       
-    // Split query by spaces and ensure EVERY word exists in the haystack (order independent)
-    const searchTerms = query.split(/\s+/).filter(Boolean);
-    return searchTerms.every(term => haystack.includes(term));
-  });
+      // Combine every single property into one giant searchable string
+      const haystack = Object.values(prompt)
+        .map(val => (val == null ? "" : String(val).toLowerCase()))
+        .join(" ");
+        
+      // Split query by spaces and ensure EVERY word exists in the haystack (order independent)
+      const searchTerms = query.split(/\s+/).filter(Boolean);
+      return searchTerms.every(term => haystack.includes(term));
+    })
+    .sort((a, b) => {
+      if (a.isNew && !b.isNew) return -1;
+      if (!a.isNew && b.isNew) return 1;
+      return 0;
+    });
 
   return (
     <section style={{ paddingTop: "var(--space-page-top)", paddingBottom: "96px" }}>

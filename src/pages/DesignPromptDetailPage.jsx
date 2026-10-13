@@ -139,7 +139,7 @@ const DesignPromptDetailPage = () => {
       {/* Top Area */}
       <div style={{ marginBottom: "48px" }}>
         <BackButton fallbackTo="/design-prompts" />
-        <div style={{ marginBottom: "12px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
           <span
             style={{
               fontFamily: "var(--font-mono)",
@@ -151,6 +151,12 @@ const DesignPromptDetailPage = () => {
           >
             Design System Prompt
           </span>
+          {prompt.isNew && (
+            <span className="badge-new">
+              <span className="badge-new-dot" />
+              Newly Added
+            </span>
+          )}
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "16px", marginBottom: "16px" }}>
           <h1

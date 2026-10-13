@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Obsidian Studio (3D) — Design System Preview</title>
+
+  <!-- Google Fonts: Inter, Inter Tight, JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
+
+  <!-- Three.js from CDN for interactive 3D hero object -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #07070A;
+      --surface: #0E0E14;
+      --glass: rgba(255, 255, 255, 0.04);
+      --glass-hover: rgba(255, 255, 255, 0.07);
+      --border: rgba(255, 255, 255, 0.08);
+      --border-top: rgba(255, 255, 255, 0.14);
+      --text: #F4F4F6;
+      --muted: #8A8A99;
+      --accent: #7C5CFF;       /* violet, primary */
+      --accent-hover: #8B6EFF;
+      --accent-2: #3DD6F5;     /* cyan, secondary glow only */
+      --warm: #FFB86B;         /* rim light, tiny highlights */
+      
+      --font-display: 'Inter Tight', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      
+      --shadow-panel: 0 24px 60px -20px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.14);
+      --shadow-glow: 0 0 40px -8px #7C5CFF;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    /* AMBIENT LIGHT BLOBS (radial glows at 15-25% opacity, never linear) */
+    .ambient-glow {
+      position: fixed;
+      pointer-events: none;
+      z-index: 0;
+      border-radius: 50%;
+      filter: blur(140px);
+    }
+    .glow-violet {
+      width: 700px;
+      height: 700px;
+      background: radial-gradient(circle, rgba(124, 92, 255, 0.18) 0%, transparent 70%);
+      top: -150px;
+      right: 5%;
+    }
+    .glow-cyan {
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(61, 214, 245, 0.12) 0%, transparent 70%);
+      top: 40%;
+      left: -150px;
+    }
+    .glow-warm {
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(255, 184, 107, 0.08) 0%, transparent 70%);
+      bottom: 5%;
+      right: 15%;
+    }
+
+    /* 3D BACKGROUND CANVAS */
+    #hero-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: -10;
+      pointer-events: none;
+    }
+
+    /* FLOATING PILL NAV (fixed top-4 left-1/2 -translate-x-1/2 z-50 h-14) */
+    .floating-nav {
+      position: fixed;
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 50;
+      height: 56px;
+      padding: 0 12px;
+      border-radius: 9999px;
+      border: 1px solid var(--border);
+      background: rgba(7, 7, 10, 0.6);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.14);
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-left: 8px;
+      text-decoration: none;
+      color: var(--text);
+    }
+    .brand-prism {
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(124, 92, 255, 0.4) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      box-shadow: 0 0 15px rgba(124, 92, 255, 0.4);
+      transform: rotate(45deg);
+    }
+    .brand-title {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 15px;
+      letter-spacing: -0.02em;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      list-style: none;
+    }
+    .nav-link {
+      font-family: var(--font-body);
+      font-size: 14px;
+      color: var(--muted);
+      text-decoration: none;
+      padding: 8px 14px;
+      border-radius: 9999px;
+      transition: all 200ms ease;
+    }
+    .nav-link:hover {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.05);
+    }
+    .nav-link.active {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* BUTTONS */
+    .btn-primary {
+      height: 48px;
+      padding: 0 24px;
+      border-radius: 9999px;
+      background-color: var(--accent);
+      color: #FFFFFF;
+      font-family: var(--font-body);
+      font-weight: 500;
+      font-size: 15px;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-decoration: none;
+      box-shadow: 0 0 40px -8px #7C5CFF, inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      transition: all 200ms ease-out;
+    }
+    .btn-primary:hover {
+      background-color: var(--accent-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 0 50px -4px #7C5CFF, inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    }
+    .btn-primary:active {
+      transform: translateY(0) scale(0.98);
+    }
+    .btn-primary:focus-visible {
+      outline: 2px solid var(--accent-2);
+      outline-offset: 2px;
+    }
+
+    .btn-secondary {
+      height: 48px;
+      padding: 0 24px;
+      border-radius: 9999px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background-color: rgba(255, 255, 255, 0.04);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-weight: 500;
+      font-size: 15px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-decoration: none;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      transition: all 200ms ease;
+    }
+    .btn-secondary:hover {
+      background-color: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.25);
+      transform: translateY(-1px);
+    }
+    .btn-secondary:active {
+      transform: scale(0.98);
+    }
+
+    /* CHIP / LABEL */
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      height: 28px;
+      padding: 0 12px;
+      border-radius: 9999px;
+      border: 1px solid var(--border);
+      background: var(--glass);
+      backdrop-filter: blur(8px);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--muted);
+      width: fit-content;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    }
+    .chip-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: var(--accent);
+      box-shadow: 0 0 8px var(--accent);
+    }
+
+    /* LAYOUT CONTAINERS */
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 32px;
+      position: relative;
+      z-index: 10;
+    }
+
+    /* HERO SECTION */
+    .hero-section {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding-top: 120px;
+      padding-bottom: 80px;
+      position: relative;
+    }
+    .hero-content {
+      max-width: 640px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 7vw, 5.5rem);
+      font-weight: 600;
+      tracking: -0.04em;
+      letter-spacing: -0.04em;
+      line-height: 0.95;
+      color: var(--text);
+    }
+    .hero-body {
+      font-size: clamp(1rem, 2vw, 1.125rem);
+      line-height: 1.75;
+      color: var(--muted);
+    }
+    .hero-ctas {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    /* 3D TILT CARDS GRID */
+    .section-py {
+      padding: 120px 0;
+    }
+    .section-header {
+      margin-bottom: 64px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .section-h2 {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      line-height: 1.1;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .col-span-2 {
+      grid-column: span 2;
+    }
+
+    /* 3D TILT CARD WRAPPER */
+    .tilt-card-wrapper {
+      perspective: 1000px;
+    }
+    .tilt-card {
+      position: relative;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: var(--glass);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      padding: 32px;
+      box-shadow: var(--shadow-panel);
+      transform-style: preserve-3d;
+      transition: transform 300ms ease-out, background-color 200ms ease;
+      will-change: transform;
+      height: 100%;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 320px;
+      cursor: pointer;
+    }
+    .tilt-card:hover {
+      background: var(--glass-hover);
+    }
+
+    /* SPECULAR GLARE OVERLAY */
+    .specular-glare {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      border-radius: 16px;
+      background: radial-gradient(circle 300px at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255, 255, 255, 0.08), transparent 80%);
+      opacity: 0;
+      transition: opacity 300ms ease;
+    }
+    .tilt-card:hover .specular-glare {
+      opacity: 1;
+    }
+
+    /* CARD INNER DEPTH LAYERS */
+    .card-icon-wrap {
+      transform: translateZ(50px);
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      margin-bottom: 24px;
+      transition: color 200ms ease;
+    }
+    .tilt-card:hover .card-icon-wrap {
+      color: var(--text);
+      border-color: rgba(124, 92, 255, 0.4);
+      box-shadow: 0 0 20px -4px rgba(124, 92, 255, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    }
+
+    .card-body-content {
+      transform: translateZ(30px);
+    }
+    .card-title {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+    .card-desc {
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--muted);
+    }
+
+    /* CARD STAT GRAPHIC */
+    .card-stat-box {
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+    }
+    .stat-number {
+      font-family: var(--font-display);
+      font-size: 36px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -0.03em;
+    }
+    .stat-unit {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+    }
+
+    /* INTERACTIVE STUDIO CONTROLLER PANEL */
+    .studio-panel {
+      position: relative;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: var(--glass);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      padding: 40px;
+      box-shadow: var(--shadow-panel);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: center;
+      margin-top: 40px;
+    }
+    .studio-input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .studio-input {
+      height: 48px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      padding: 0 16px;
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 15px;
+      outline: none;
+      transition: all 200ms ease;
+    }
+    .studio-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(124, 92, 255, 0.2);
+    }
+    .studio-input::placeholder {
+      color: var(--muted);
+    }
+
+    /* LIGHT TOGGLE CHIPS */
+    .light-controls {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .light-btn {
+      height: 36px;
+      padding: 0 16px;
+      border-radius: 9999px;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 200ms ease;
+    }
+    .light-btn.active {
+      color: var(--text);
+      border-color: rgba(255, 255, 255, 0.25);
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 0 20px -5px var(--btn-glow, #7C5CFF);
+    }
+
+    /* FOOTER */
+    .studio-footer {
+      border-top: 1px solid var(--border);
+      padding: 48px 0;
+      margin-top: 80px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 1024px) {
+      .feature-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .col-span-2 {
+        grid-column: span 1;
+      }
+      .studio-panel {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+    }
+    @media (max-width: 768px) {
+      .floating-nav {
+        width: calc(100% - 32px);
+        justify-content: space-between;
+      }
+      .nav-links {
+        display: none;
+      }
+      .feature-grid {
+        grid-template-columns: 1fr;
+      }
+      .hero-content {
+        max-width: 100%;
+      }
+      .container {
+        padding: 0 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- AMBIENT RADIAL LIGHT SOURCES (15-25% opacity) -->
+  <div class="ambient-glow glow-violet"></div>
+  <div class="ambient-glow glow-cyan"></div>
+  <div class="ambient-glow glow-warm"></div>
+
+  <!-- THREE.JS 3D HERO CANVAS (Background product shot object) -->
+  <canvas id="hero-canvas" aria-hidden="true"></canvas>
+
+  <!-- FLOATING PILL NAVIGATION -->
+  <nav class="floating-nav">
+    <a href="#hero" class="nav-brand">
+      <div class="brand-prism"></div>
+      <span class="brand-title">Obsidian Studio</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#features" class="nav-link active">Capabilities</a></li>
+      <li><a href="#lighting" class="nav-link">Studio Light</a></li>
+      <li><a href="#depth" class="nav-link">Depth Physics</a></li>
+    </ul>
+    <a href="#demo" class="btn-primary" style="height: 38px; padding: 0 16px; font-size: 13px;">
+      Explore Scene
+    </a>
+  </nav>
+
+  <!-- HERO SECTION -->
+  <header class="hero-section container" id="hero">
+    <div class="hero-content">
+      <div class="chip">
+        <span class="chip-dot"></span>
+        Spatial Studio &middot; 3D Depth
+      </div>
+      <h1 class="hero-title">
+        Light as material. Depth as interface.
+      </h1>
+      <p class="hero-body">
+        A dark cinematic studio where content floats as frosted glass slabs at different spatial depths. Illuminated by precise three-point studio lighting with pointer-reactive physics.
+      </p>
+      <div class="hero-ctas">
+        <a href="#features" class="btn-primary">
+          Interact with Scene
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5"/></svg>
+        </a>
+        <a href="#lighting" class="btn-secondary">
+          Configure Three-Point Light
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- FEATURES SECTION: 3D TILT CARDS -->
+  <section class="section-py container" id="features">
+    <div class="section-header">
+      <div class="chip">
+        <span class="chip-dot" style="background-color: var(--accent-2); box-shadow: 0 0 8px var(--accent-2);"></span>
+        Real Depth Layering
+      </div>
+      <h2 class="section-h2">Pointer-reactive spatial surfaces.</h2>
+      <p style="color: var(--muted); max-width: 580px; font-size: 17px;">
+        Move your cursor across each panel. The cards respond with 3D perspective tilt, depth-offset typography at translateZ, and specular glare tracking.
+      </p>
+    </div>
+
+    <div class="feature-grid">
+
+      <!-- Card 1 (Span 2) -->
+      <div class="tilt-card-wrapper col-span-2">
+        <div class="tilt-card" data-tilt>
+          <div class="specular-glare"></div>
+          <div>
+            <div class="card-icon-wrap">
+              <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m21 7.5-9-5.25L3 7.5m18 0-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9"/></svg>
+            </div>
+            <div class="card-body-content">
+              <h3 class="card-title">Specular Refraction &amp; Transmission</h3>
+              <p class="card-desc">
+                High-refraction frosted slabs with 1px top-edge physical highlights (<code style="color:var(--text); font-family:var(--font-mono)">inset 0 1px 0 rgba(255,255,255,0.14)</code>). Layers glide independently along the Z-axis for tangible tactile weight.
+              </p>
+            </div>
+          </div>
+          <div class="card-stat-box">
+            <span class="stat-number">1.50</span>
+            <span class="stat-unit">Index of Refraction (IOR)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="tilt-card-wrapper">
+        <div class="tilt-card" data-tilt>
+          <div class="specular-glare"></div>
+          <div>
+            <div class="card-icon-wrap">
+              <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z"/></svg>
+            </div>
+            <div class="card-body-content">
+              <h3 class="card-title">Three-Point Key Lights</h3>
+              <p class="card-desc">
+                Violet key light (#7C5CFF), cyan rim light (#3DD6F5), and warm specular highlights (#FFB86B) cast realistic radiance across obsidian materials.
+              </p>
+            </div>
+          </div>
+          <div class="card-stat-box">
+            <span class="stat-number">300°</span>
+            <span class="stat-unit">Studio Rig Rotation</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="tilt-card-wrapper">
+        <div class="tilt-card" data-tilt>
+          <div class="specular-glare"></div>
+          <div>
+            <div class="card-icon-wrap">
+              <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z"/></svg>
+            </div>
+            <div class="card-body-content">
+              <h3 class="card-title">Lerped Pointer Physics</h3>
+              <p class="card-desc">
+                Mouse movement drives smooth continuous damping with a 0.08 lerp factor, preventing rigid snapping and simulating heavy studio glass inertia.
+              </p>
+            </div>
+          </div>
+          <div class="card-stat-box">
+            <span class="stat-number">±8°</span>
+            <span class="stat-unit">Max Dynamic Tilt</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 4 (Span 2) -->
+      <div class="tilt-card-wrapper col-span-2">
+        <div class="tilt-card" data-tilt>
+          <div class="specular-glare"></div>
+          <div>
+            <div class="card-icon-wrap">
+              <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6a7.5 7.5 0 1 0 7.5 7.5h-7.5V6Z"/><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0 0 13.5 3v7.5Z"/></svg>
+            </div>
+            <div class="card-body-content">
+              <h3 class="card-title">60 FPS Hardware Performance Budget</h3>
+              <p class="card-desc">
+                Engineered for immediate responsiveness. Glass transmission degrades gracefully to physical roughness on lower-power devices, with instant fallbacks and zero layout shift.
+              </p>
+            </div>
+          </div>
+          <div class="card-stat-box">
+            <span class="stat-number">60</span>
+            <span class="stat-unit">Frames Per Second Cap</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- STUDIO INTERACTIVE CONTROLLER -->
+    <div class="studio-panel" id="lighting">
+      <div>
+        <div class="chip" style="margin-bottom: 16px;">
+          <span class="chip-dot" style="background-color: var(--warm); box-shadow: 0 0 8px var(--warm);"></span>
+          Interactive Studio Control
+        </div>
+        <h3 style="font-family: var(--font-display); font-size: 28px; font-weight: 600; color: var(--text); margin-bottom: 12px; letter-spacing: -0.02em;">
+          Tune Studio Lighting
+        </h3>
+        <p style="color: var(--muted); font-size: 15px; margin-bottom: 24px; line-height: 1.6;">
+          Toggle light sources to see the real-time transmission and specular reflections respond across the 3D obsidian hero element.
+        </p>
+
+        <div class="light-controls">
+          <button class="light-btn active" data-light="violet" style="--btn-glow: #7C5CFF;" onclick="toggleStudioLight('violet', this)">
+            <span style="width: 8px; height: 8px; border-radius: 50%; background: #7C5CFF;"></span>
+            Violet Key
+          </button>
+          <button class="light-btn active" data-light="cyan" style="--btn-glow: #3DD6F5;" onclick="toggleStudioLight('cyan', this)">
+            <span style="width: 8px; height: 8px; border-radius: 50%; background: #3DD6F5;"></span>
+            Cyan Rim
+          </button>
+          <button class="light-btn active" data-light="warm" style="--btn-glow: #FFB86B;" onclick="toggleStudioLight('warm', this)">
+            <span style="width: 8px; height: 8px; border-radius: 50%; background: #FFB86B;"></span>
+            Warm Specular
+          </button>
+        </div>
+      </div>
+
+      <div class="studio-input-group">
+        <label style="font-family: var(--font-mono); font-size: 12px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted);">
+          Studio Prompt Input
+        </label>
+        <input type="text" class="studio-input" placeholder="Enter custom lighting coordinate (e.g. 35° azimuth)..." />
+        <div style="display: flex; gap: 12px;">
+          <button class="btn-primary" style="flex: 1;" onclick="pulseGlow()">Apply Light Shift</button>
+          <button class="btn-secondary" onclick="resetStudioLights()">Reset</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="studio-footer">
+      <span>Obsidian Studio (3D) &middot; Design System Specification</span>
+      <span style="font-family: var(--font-mono); font-size: 12px; color: var(--muted);">#07070A &middot; #7C5CFF &middot; #3DD6F5</span>
+    </footer>
+  </section>
+
+  <!-- JAVASCRIPT: THREE.JS HERO OBJECT & POINTER 3D TILT -->
+  <script>
+    /* ─── THREE.JS 3D HERO CANVAS ─── */
+    let scene, camera, renderer, mesh, group;
+    let keyLight, rimLight, warmLight;
+    let mouseX = 0, mouseY = 0;
+    let targetX = 0, targetY = 0;
+
+    function initThree() {
+      const canvas = document.getElementById('hero-canvas');
+      if (!canvas || typeof THREE === 'undefined') return;
+
+      scene = new THREE.Scene();
+      camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.1, 100);
+      camera.position.set(2, 0, 7.5);
+
+      renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: 'high-performance' });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75));
+
+      group = new THREE.Group();
+      scene.add(group);
+
+      // Hero 3D Form: Translucent Obsidian Gem Facet
+      const geometry = new THREE.IcosahedronGeometry(1.65, 0);
+      const innerGeom = new THREE.OctahedronGeometry(1.2, 0);
+
+      // Glass Obsidian Material
+      const material = new THREE.MeshPhysicalMaterial({
+        color: 0x12101E,
+        metalness: 0.15,
+        roughness: 0.08,
+        transmission: 0.85,
+        thickness: 1.2,
+        ior: 1.52,
+        reflectivity: 0.9,
+        clearcoat: 1.0,
+        clearcoatRoughness: 0.05,
+        transparent: true,
+        opacity: 0.92,
+        flatShading: true
+      });
+
+      const wireMaterial = new THREE.MeshBasicMaterial({
+        color: 0x7C5CFF,
+        wireframe: true,
+        transparent: true,
+        opacity: 0.15
+      });
+
+      mesh = new THREE.Mesh(geometry, material);
+      const wireMesh = new THREE.Mesh(geometry, wireMaterial);
+      const innerMesh = new THREE.Mesh(innerGeom, new THREE.MeshBasicMaterial({
+        color: 0x3DD6F5,
+        wireframe: true,
+        transparent: true,
+        opacity: 0.25
+      }));
+
+      group.add(mesh);
+      group.add(wireMesh);
+      group.add(innerMesh);
+      group.position.set(window.innerWidth > 900 ? 1.8 : 0, 0, 0);
+
+      // Three-point Lighting System
+      // 1. Violet Key Light
+      keyLight = new THREE.PointLight(0x7C5CFF, 3.5, 30);
+      keyLight.position.set(5, 4, 4);
+      scene.add(keyLight);
+
+      // 2. Cyan Rim Light
+      rimLight = new THREE.PointLight(0x3DD6F5, 2.5, 30);
+      rimLight.position.set(-6, -2, -3);
+      scene.add(rimLight);
+
+      // 3. Warm Specular Light
+      warmLight = new THREE.DirectionalLight(0xFFB86B, 1.2);
+      warmLight.position.set(2, -4, 5);
+      scene.add(warmLight);
+
+      // Ambient Fill
+      scene.add(new THREE.AmbientLight(0x0E0E14, 1.5));
+
+      window.addEventListener('resize', onWindowResize);
+      document.addEventListener('mousemove', onMouseMove);
+      animate();
+    }
+
+    function onWindowResize() {
+      if (!camera || !renderer) return;
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      if (group) {
+        group.position.x = window.innerWidth > 900 ? 1.8 : 0;
+      }
+    }
+
+    function onMouseMove(e) {
+      mouseX = (e.clientX / window.innerWidth) * 2 - 1;
+      mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+
+      // Smooth Lerped Rotation
+      targetX += (mouseX - targetX) * 0.05;
+      targetY += (mouseY - targetY) * 0.05;
+
+      if (group) {
+        group.rotation.y += 0.003;
+        group.rotation.x = targetY * 0.35;
+        group.rotation.z = -targetX * 0.35;
+        // Idle Float
+        group.position.y = Math.sin(Date.now() * 0.001) * 0.12;
+      }
+
+      if (renderer && scene && camera) {
+        renderer.render(scene, camera);
+      }
+    }
+
+    // Toggle Studio Lights from UI
+    function toggleStudioLight(type, btn) {
+      btn.classList.toggle('active');
+      const isActive = btn.classList.contains('active');
+
+      if (type === 'violet' && keyLight) {
+        keyLight.intensity = isActive ? 3.5 : 0;
+      } else if (type === 'cyan' && rimLight) {
+        rimLight.intensity = isActive ? 2.5 : 0;
+      } else if (type === 'warm' && warmLight) {
+        warmLight.intensity = isActive ? 1.2 : 0;
+      }
+    }
+
+    function pulseGlow() {
+      if (keyLight) {
+        keyLight.intensity = 7;
+        setTimeout(() => { if (keyLight) keyLight.intensity = 3.5; }, 400);
+      }
+    }
+
+    function resetStudioLights() {
+      document.querySelectorAll('.light-btn').forEach(btn => btn.classList.add('active'));
+      if (keyLight) keyLight.intensity = 3.5;
+      if (rimLight) rimLight.intensity = 2.5;
+      if (warmLight) warmLight.intensity = 1.2;
+    }
+
+    /* ─── 3D POINTER TILT PHYSICS FOR CARDS ─── */
+    const tiltCards = document.querySelectorAll('[data-tilt]');
+
+    tiltCards.forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+
+        const rotateX = ((y - centerY) / centerY) * -8;
+        const rotateY = ((x - centerX) / centerX) * 8;
+
+        card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        card.style.setProperty('--mouse-x', `${(x / rect.width) * 100}%`);
+        card.style.setProperty('--mouse-y', `${(y / rect.height) * 100}%`);
+      });
+
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = 'rotateX(0deg) rotateY(0deg)';
+      });
+    });
+
+    // Start 3D canvas on DOM ready
+    window.addEventListener('DOMContentLoaded', initThree);
+  </script>
+</body>
+</html>

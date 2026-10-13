@@ -1,0 +1,1 @@
+export { designPrompts } from "./designPrompts";

@@ -181,6 +181,16 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://scaffold.swarshinde.dev/design-prompts/x-dark-lights-out</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://scaffold.swarshinde.dev/design-prompts/obsidian-studio-3d</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://scaffold.swarshinde.dev/workflow-prompts/exploring-new-codebase</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
