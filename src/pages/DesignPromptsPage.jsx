@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import { designPrompts } from "../data/designPrompts";
 import DesignPromptCard from "../components/DesignPromptCard";
@@ -7,78 +7,357 @@ import Seo from "../components/Seo";
 
 const ITEMS_PER_PAGE = 12;
 
+// Clean vector iconography matching the Scaffold theme
+const MoonIcon = () => (
+  <svg
+    width="12"
+    height="12"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+    style={{ flexShrink: 0 }}
+  >
+    <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+  </svg>
+);
+
+const SunIcon = () => (
+  <svg
+    width="12"
+    height="12"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+    style={{ flexShrink: 0 }}
+  >
+    <circle cx="12" cy="12" r="4" />
+    <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
+  </svg>
+);
+
+const ResetIcon = () => (
+  <svg
+    width="11"
+    height="11"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2.2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+    style={{ flexShrink: 0 }}
+  >
+    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+    <path d="M3 3v5h5" />
+  </svg>
+);
+
+// Curated high-signal theme options
+const THEME_FILTERS = [
+  { id: "all", shortLabel: "All", fullSuffix: " Themes" },
+  { id: "dark", shortLabel: "Dark", fullSuffix: " Mode", Icon: MoonIcon },
+  { id: "light", shortLabel: "Light", fullSuffix: " Mode", Icon: SunIcon },
+];
+
+// Curated high-signal aesthetic archetypes
+const VIBE_FILTERS = [
+  { id: "all", label: "All Styles" },
+  { id: "minimal", label: "Minimal & Clean" },
+  { id: "editorial", label: "Editorial & Serif" },
+  { id: "tactile", label: "Tactile & Retro" },
+  { id: "3d", label: "3D & Spatial" },
+  { id: "bold", label: "Bold & Expressive" },
+];
+
+// Determine if a prompt belongs to 'dark' or 'light'
+const getPromptTheme = (prompt) => {
+  const tags = prompt.tags || [];
+  if (tags.includes("dark") || tags.includes("lights-out")) return "dark";
+  if (tags.includes("light")) return "light";
+
+  const bg = (prompt.palette?.background || "").toLowerCase().trim();
+  if (bg.startsWith("#")) {
+    const hex = bg.replace("#", "");
+    if (hex.length === 6) {
+      const r = parseInt(hex.substring(0, 2), 16);
+      const g = parseInt(hex.substring(2, 4), 16);
+      const b = parseInt(hex.substring(4, 6), 16);
+      const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+      return brightness < 128 ? "dark" : "light";
+    }
+  }
+  return "dark";
+};
+
+// Check if a prompt belongs to a specific vibe archetype
+const matchesPromptVibe = (prompt, vibeId) => {
+  if (vibeId === "all") return true;
+  const tags = (prompt.tags || []).map((t) => t.toLowerCase());
+  const heading = (prompt.typography?.heading || "").toLowerCase();
+
+  switch (vibeId) {
+    case "minimal":
+      return tags.some((t) =>
+        [
+          "minimal",
+          "minimalist",
+          "monochrome",
+          "utilitarian",
+          "clean",
+          "saas",
+          "corporate",
+          "terminal",
+          "flat",
+          "hairline",
+          "modern",
+          "linear",
+          "material",
+          "precision",
+        ].includes(t)
+      );
+    case "editorial":
+      return (
+        tags.some((t) =>
+          ["editorial", "serif", "luxury", "wealth", "academic", "institutional", "art deco"].includes(t)
+        ) ||
+        heading.includes("serif") ||
+        heading.includes("garamond")
+      );
+    case "tactile":
+      return tags.some((t) =>
+        [
+          "hardware",
+          "tactile",
+          "receipt",
+          "thermal",
+          "skeuomorphism",
+          "neumorphism",
+          "retro",
+          "90s",
+          "bauhaus",
+          "print",
+        ].includes(t)
+      );
+    case "3d":
+      return tags.some((t) =>
+        [
+          "3d",
+          "spatial",
+          "claymorphism",
+          "cyberpunk",
+          "glitch",
+          "defi",
+          "crypto",
+          "vaporwave",
+          "frosted-glass",
+        ].includes(t)
+      );
+    case "bold":
+      return tags.some((t) =>
+        [
+          "bold",
+          "kinetic",
+          "maximalist",
+          "brutalist",
+          "neo-brutalism",
+          "playful",
+          "hand-drawn",
+          "loud",
+          "marquee",
+        ].includes(t)
+      );
+    default:
+      return true;
+  }
+};
+
 const DesignPromptsPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [searchQuery, setSearchQuery] = useState("");
   const gridTopRef = useRef(null);
 
-  const initialPage = parseInt(searchParams.get("page") || "1", 10) || 1;
-  const [currentPage, setCurrentPage] = useState(initialPage);
+  // Read initial states from URL query params
+  const [searchQuery, setSearchQuery] = useState(searchParams.get("q") || "");
+  const [activeTheme, setActiveTheme] = useState(searchParams.get("theme") || "all");
+  const [activeVibe, setActiveVibe] = useState(searchParams.get("vibe") || "all");
+  const [onlyNew, setOnlyNew] = useState(searchParams.get("new") === "true");
+  const [currentPage, setCurrentPage] = useState(
+    parseInt(searchParams.get("page") || "1", 10) || 1
+  );
+
+  // Sync state from URL on back/forward navigation
+  useEffect(() => {
+    const qFromUrl = searchParams.get("q") || "";
+    const themeFromUrl = searchParams.get("theme") || "all";
+    const vibeFromUrl = searchParams.get("vibe") || "all";
+    const newFromUrl = searchParams.get("new") === "true";
+    const pageFromUrl = parseInt(searchParams.get("page") || "1", 10) || 1;
+
+    setSearchQuery(qFromUrl);
+    setActiveTheme(themeFromUrl);
+    setActiveVibe(vibeFromUrl);
+    setOnlyNew(newFromUrl);
+    setCurrentPage(pageFromUrl);
+  }, [searchParams]);
+
+  // Push filter state changes to URL
+  const updateUrlParams = (updates) => {
+    const nextQ = "q" in updates ? updates.q : searchQuery;
+    const nextTheme = "theme" in updates ? updates.theme : activeTheme;
+    const nextVibe = "vibe" in updates ? updates.vibe : activeVibe;
+    const nextNew = "new" in updates ? updates.new : onlyNew;
+    const nextPage = "page" in updates ? updates.page : 1;
+
+    const params = {};
+    if (nextQ.trim()) params.q = nextQ.trim();
+    if (nextTheme !== "all") params.theme = nextTheme;
+    if (nextVibe !== "all") params.vibe = nextVibe;
+    if (nextNew) params.new = "true";
+    if (nextPage > 1) params.page = String(nextPage);
+
+    setSearchParams(params);
+  };
 
   const query = searchQuery.trim().toLowerCase();
 
-  const filteredPrompts = designPrompts
-    .filter((prompt) => {
-      if (!query) return true;
-      
-      // Combine every single property into one giant searchable string
-      const haystack = Object.values(prompt)
-        .map(val => (val == null ? "" : String(val).toLowerCase()))
-        .join(" ");
-        
-      // Split query by spaces and ensure EVERY word exists in the haystack (order independent)
-      const searchTerms = query.split(/\s+/).filter(Boolean);
-      return searchTerms.every(term => haystack.includes(term));
-    })
-    .sort((a, b) => {
-      if (a.isNew && !b.isNew) return -1;
-      if (!a.isNew && b.isNew) return 1;
-      return 0;
-    });
+  // Multi-dimensional filtering logic
+  const filteredPrompts = useMemo(() => {
+    return designPrompts
+      .filter((prompt) => {
+        // Keyword Search
+        if (query) {
+          const haystack = Object.values(prompt)
+            .map((val) => (val == null ? "" : String(val).toLowerCase()))
+            .join(" ");
+          const searchTerms = query.split(/\s+/).filter(Boolean);
+          if (!searchTerms.every((term) => haystack.includes(term))) return false;
+        }
 
-  // Calculate pagination
+        // Theme filter (Dark / Light)
+        if (activeTheme !== "all" && getPromptTheme(prompt) !== activeTheme) {
+          return false;
+        }
+
+        // Vibe archetype filter
+        if (activeVibe !== "all" && !matchesPromptVibe(prompt, activeVibe)) {
+          return false;
+        }
+
+        // Newly added filter
+        if (onlyNew && !prompt.isNew) {
+          return false;
+        }
+
+        return true;
+      })
+      .sort((a, b) => {
+        if (a.isNew && !b.isNew) return -1;
+        if (!a.isNew && b.isNew) return 1;
+        return 0;
+      });
+  }, [query, activeTheme, activeVibe, onlyNew]);
+
+  // Compute category counts for badge indicators
+  const themeCounts = useMemo(() => {
+    return {
+      all: designPrompts.length,
+      dark: designPrompts.filter((p) => getPromptTheme(p) === "dark").length,
+      light: designPrompts.filter((p) => getPromptTheme(p) === "light").length,
+    };
+  }, []);
+
+  const vibeCounts = useMemo(() => {
+    const counts = { all: designPrompts.length };
+    VIBE_FILTERS.forEach((v) => {
+      if (v.id !== "all") {
+        counts[v.id] = designPrompts.filter((p) => matchesPromptVibe(p, v.id)).length;
+      }
+    });
+    return counts;
+  }, []);
+
+  const newCount = useMemo(() => {
+    return designPrompts.filter((p) => p.isNew).length;
+  }, []);
+
+  // Pagination calculation
   const totalPages = Math.max(1, Math.ceil(filteredPrompts.length / ITEMS_PER_PAGE));
   const safePage = Math.min(Math.max(1, currentPage), totalPages);
   const startIndex = (safePage - 1) * ITEMS_PER_PAGE;
   const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, filteredPrompts.length);
   const paginatedPrompts = filteredPrompts.slice(startIndex, endIndex);
 
-  // Reset to page 1 on search change
+  // Check if any non-default filter is active
+  const hasActiveFilters =
+    searchQuery.trim().length > 0 ||
+    activeTheme !== "all" ||
+    activeVibe !== "all" ||
+    onlyNew;
+
+  // Handlers
   const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value);
+    const val = e.target.value;
+    setSearchQuery(val);
     setCurrentPage(1);
-    setSearchParams(e.target.value ? { q: e.target.value } : {});
+    updateUrlParams({ q: val, page: 1 });
+  };
+
+  const handleThemeChange = (themeId) => {
+    setActiveTheme(themeId);
+    setCurrentPage(1);
+    updateUrlParams({ theme: themeId, page: 1 });
+  };
+
+  const handleVibeChange = (vibeId) => {
+    setActiveVibe(vibeId);
+    setCurrentPage(1);
+    updateUrlParams({ vibe: vibeId, page: 1 });
+  };
+
+  const handleToggleNew = () => {
+    const nextVal = !onlyNew;
+    setOnlyNew(nextVal);
+    setCurrentPage(1);
+    updateUrlParams({ new: nextVal, page: 1 });
+  };
+
+  const handleClearFilters = () => {
+    setSearchQuery("");
+    setActiveTheme("all");
+    setActiveVibe("all");
+    setOnlyNew(false);
+    setCurrentPage(1);
+    setSearchParams({});
   };
 
   const handlePageChange = (newPage) => {
     if (newPage < 1 || newPage > totalPages || newPage === safePage) return;
     setCurrentPage(newPage);
-    
-    const nextParams = {};
-    if (searchQuery.trim()) nextParams.q = searchQuery.trim();
-    if (newPage > 1) nextParams.page = String(newPage);
-    setSearchParams(nextParams);
+    updateUrlParams({ page: newPage });
 
-    // Smooth scroll back to top of grid
     if (gridTopRef.current) {
       gridTopRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   };
 
-  useEffect(() => {
-    const pageFromUrl = parseInt(searchParams.get("page") || "1", 10) || 1;
-    setCurrentPage(pageFromUrl);
-  }, [searchParams]);
-
   return (
     <section style={{ paddingTop: "var(--space-page-top)", paddingBottom: "96px" }}>
-      <Seo 
+      <Seo
         title="Design System Prompts — Scaffold"
         description="Browse curated design-system prompts for AI codegen. Copy complete visual identities with tokens, typography, components, and motion."
         canonical="/design-prompts"
       />
+
       {/* Page Header */}
-      <div style={{ marginBottom: "48px" }} ref={gridTopRef}>
+      <div style={{ marginBottom: "32px" }} ref={gridTopRef}>
         <BackButton fallbackTo="/" />
         <h1
           style={{
@@ -116,29 +395,150 @@ const DesignPromptsPage = () => {
             textTransform: "uppercase",
           }}
         >
-          {searchQuery.trim()
-            ? `${filteredPrompts.length} / ${designPrompts.length} systems`
+          {hasActiveFilters
+            ? `${filteredPrompts.length} / ${designPrompts.length} systems (filtered)`
             : `${designPrompts.length} systems total`}
         </span>
       </div>
 
-      {/* Search */}
-      <div style={{ marginTop: "24px" }}>
+      {/* Search Input */}
+      <div style={{ position: "relative" }}>
         <input
           type="search"
           className="search-input"
-          placeholder="Search by name, summary, or tag"
+          placeholder="Search by name, summary, tokens, or keywords..."
           aria-label="Search design prompts"
           value={searchQuery}
           onChange={handleSearchChange}
         />
       </div>
 
-      {/* Card Grid */}
+      {/* Curated High-Signal Filters Toolbar */}
+      <div className="dp-filters-toolbar">
+        {/* Row 1: Theme Mode Pills + Meta Controls */}
+        <div className="dp-filters-primary-row">
+          {/* Theme Segmented Control */}
+          <div className="filter-pill-group" role="group" aria-label="Filter by theme mode">
+            {THEME_FILTERS.map((theme) => {
+              const isActive = activeTheme === theme.id;
+              const IconComponent = theme.Icon;
+              return (
+                <button
+                  key={theme.id}
+                  type="button"
+                  className={`filter-pill${isActive ? " active" : ""}`}
+                  onClick={() => handleThemeChange(theme.id)}
+                  aria-pressed={isActive}
+                >
+                  {IconComponent && <IconComponent />}
+                  <span>
+                    {theme.shortLabel}
+                    <span className="hide-on-mobile">{theme.fullSuffix}</span>
+                  </span>
+                  <span className="filter-chip-badge">({themeCounts[theme.id]})</span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Row 1 Meta Controls: Newly Added + Reset */}
+          <div className="dp-filters-meta-row">
+            <button
+              type="button"
+              className={`filter-chip${onlyNew ? " active" : ""}`}
+              onClick={handleToggleNew}
+              aria-pressed={onlyNew}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "6px",
+                padding: "6px 12px",
+                fontSize: "11px",
+              }}
+            >
+              <span
+                className="badge-new-dot"
+                style={{ width: "6px", height: "6px", flexShrink: 0 }}
+                aria-hidden="true"
+              />
+              <span>Newly Added</span>
+              <span className="filter-chip-badge">({newCount})</span>
+            </button>
+
+            {hasActiveFilters && (
+              <button
+                type="button"
+                className="filter-reset-btn"
+                onClick={handleClearFilters}
+                title="Reset all search queries and filters"
+              >
+                <ResetIcon />
+                <span>Reset filters</span>
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Row 2: Aesthetic Vibe Chips (Horizontal swipeable track on mobile) */}
+        <div
+          className="filter-chip-row"
+          role="group"
+          aria-label="Filter by design style"
+        >
+          {VIBE_FILTERS.map((vibe) => {
+            const isActive = activeVibe === vibe.id;
+            return (
+              <button
+                key={vibe.id}
+                type="button"
+                className={`filter-chip${isActive ? " active" : ""}`}
+                onClick={() => handleVibeChange(vibe.id)}
+                aria-pressed={isActive}
+              >
+                <span>{vibe.label}</span>
+                <span className="filter-chip-badge">({vibeCounts[vibe.id]})</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Card Grid or Empty State */}
       {filteredPrompts.length === 0 ? (
-        <p className="search-empty">
-          No design prompts match &ldquo;{searchQuery}&rdquo;.
-        </p>
+        <div
+          style={{
+            padding: "48px 24px",
+            textAlign: "center",
+            backgroundColor: "var(--color-surface)",
+            border: "1px dashed var(--color-border)",
+            borderRadius: "var(--radius-sm)",
+            marginTop: "24px",
+          }}
+        >
+          <p
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: "var(--text-sm)",
+              color: "var(--color-fg)",
+              marginBottom: "12px",
+            }}
+          >
+            No design prompts match your active search and filter criteria.
+          </p>
+          <button
+            type="button"
+            className="filter-reset-btn"
+            onClick={handleClearFilters}
+            style={{
+              borderColor: "var(--color-accent)",
+              color: "var(--color-accent)",
+              padding: "8px 16px",
+            }}
+          >
+            <ResetIcon />
+            <span>Clear all filters</span>
+          </button>
+        </div>
       ) : (
         <>
           <div className="prompt-grid">
@@ -261,4 +661,3 @@ const DesignPromptsPage = () => {
 };
 
 export default DesignPromptsPage;
-

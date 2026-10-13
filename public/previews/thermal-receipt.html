@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thermal Receipt — Live Design System Preview</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      border-radius: 0 !important;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    :root {
+      --desk: #1C1C1B;
+      --desk-text: #8C8C86;
+      --paper: #F6F4EC;
+      --ink: #222222;
+      --ink-muted: #6B6B66;
+      --stamp: #D6361F;
+      --error: #B3261E;
+      --line-height: 20px;
+    }
+
+    html, body {
+      background-color: var(--desk);
+      color: var(--ink);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 14px;
+      line-height: var(--line-height);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Fixed Thermal Printer slot at top */
+    .printer-head {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 48px;
+      background: var(--desk);
+      z-index: 40;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      border-bottom: 1px solid #282827;
+    }
+
+    .printer-slot {
+      height: 8px;
+      width: min(460px, calc(100vw - 16px));
+      background: #000000;
+      border-bottom: 2px solid #333330;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.8), inset 0 2px 4px rgba(0, 0, 0, 0.9);
+    }
+
+    /* Desk side annotations (>=1024px only) */
+    .desk-meta {
+      display: none;
+      position: fixed;
+      top: 72px;
+      font-size: 11px;
+      color: var(--desk-text);
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      pointer-events: none;
+      z-index: 20;
+    }
+
+    .desk-meta-left {
+      left: 32px;
+    }
+
+    .desk-meta-right {
+      right: 32px;
+      text-align: right;
+    }
+
+    @media (min-width: 1024px) {
+      .desk-meta {
+        display: block;
+      }
+    }
+
+    /* Receipt Canvas */
+    .receipt-wrapper {
+      padding-top: 56px;
+      padding-bottom: 80px;
+      display: flex;
+      justify-content: center;
+      filter: drop-shadow(0 20px 24px rgba(0, 0, 0, 0.5));
+    }
+
+    .receipt {
+      position: relative;
+      background-color: var(--paper);
+      color: var(--ink);
+      width: min(calc(100vw - 16px), calc(40ch + 56px));
+      padding: 40px 24px 32px;
+      background-image: repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.03) 0,
+        rgba(0, 0, 0, 0.03) 1px,
+        transparent 1px,
+        transparent 3px
+      );
+    }
+
+    /* Sawtooth bottom edge */
+    .receipt::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 100%;
+      height: 6px;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpolygon points='0,0 10,0 5,6' fill='%23F6F4EC'/%3E%3C/svg%3E") repeat-x;
+    }
+
+    /* Typography Utilities */
+    .text-center { text-align: center; }
+    .text-right { text-align: right; }
+    .tabular-nums { font-variant-numeric: tabular-nums; }
+    .uppercase { text-transform: uppercase; }
+    .text-muted { color: var(--ink-muted); }
+    .text-sm { font-size: 14px; line-height: 20px; }
+    .text-xs { font-size: 12px; line-height: 16px; }
+    .font-bold { font-weight: 700; }
+    .font-medium { font-weight: 500; }
+    .tracking-wide { letter-spacing: 0.12em; }
+    .tracking-widest { letter-spacing: 0.2em; }
+
+    .brand-h1 {
+      font-size: 26px;
+      line-height: 28px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-top: 8px;
+      margin-bottom: 4px;
+    }
+
+    /* Dividers (aria-hidden character lines) */
+    .divider {
+      user-select: none;
+      letter-spacing: 0;
+      white-space: pre;
+      overflow: hidden;
+      margin: 12px 0;
+      color: var(--ink);
+      font-size: 13px;
+      line-height: 16px;
+    }
+
+    /* Stamp */
+    .stamp-wrap {
+      position: absolute;
+      top: 36px;
+      right: 20px;
+      pointer-events: none;
+    }
+
+    .stamp {
+      display: inline-block;
+      transform: rotate(-8deg);
+      border: 3px solid var(--stamp);
+      color: var(--stamp);
+      font-weight: 700;
+      font-size: 18px;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      padding: 4px 10px;
+      mix-blend-mode: multiply;
+      opacity: 0.9;
+    }
+
+    /* Nav menu with dot leaders */
+    .menu-list {
+      list-style: none;
+      margin: 8px 0;
+    }
+
+    .menu-link {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      min-height: 38px;
+      padding: 6px 4px;
+      text-decoration: none;
+      color: var(--ink);
+      text-transform: uppercase;
+      cursor: pointer;
+      outline: none;
+      /* 0ms hover transition per spec */
+      transition: none;
+    }
+
+    .menu-link:hover,
+    .menu-link:focus-visible,
+    .menu-link.active {
+      background-color: var(--ink);
+      color: var(--paper);
+    }
+
+    .menu-link.active .dot-leader,
+    .menu-link:hover .dot-leader {
+      border-bottom-color: var(--paper);
+    }
+
+    .dot-leader {
+      flex: 1;
+      border-bottom: 2px dotted currentColor;
+      transform: translateY(-4px);
+    }
+
+    /* Line item rows */
+    .item-row {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      margin-top: 10px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .item-sub {
+      padding-left: 2ch;
+      font-size: 11px;
+      line-height: 16px;
+      color: var(--ink-muted);
+      margin-bottom: 6px;
+    }
+
+    /* Total block */
+    .total-block {
+      margin-top: 12px;
+    }
+
+    .total-main {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-size: 24px;
+      line-height: 28px;
+      font-weight: 700;
+      margin: 8px 0;
+    }
+
+    .total-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      line-height: 20px;
+      color: var(--ink);
+    }
+
+    /* Buttons */
+    .btn-receipt {
+      width: 100%;
+      height: 44px;
+      padding: 0 16px;
+      background: var(--ink);
+      color: var(--paper);
+      border: 2px solid var(--ink);
+      text-transform: uppercase;
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 0.18em;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: none;
+      margin-top: 12px;
+    }
+
+    .btn-receipt:hover {
+      background: var(--paper);
+      color: var(--ink);
+    }
+
+    .btn-receipt:active {
+      transform: translateY(1px);
+    }
+
+    .btn-receipt:focus-visible {
+      outline: 2px dashed var(--ink);
+      outline-offset: 4px;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--ink);
+      border: 2px dashed var(--ink);
+      margin-top: 8px;
+    }
+
+    .btn-secondary:hover {
+      background: var(--ink);
+      color: var(--paper);
+    }
+
+    /* Interactive Inputs (write on the line) */
+    .input-group {
+      margin-top: 12px;
+    }
+
+    .input-label {
+      display: block;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .input-line {
+      width: 100%;
+      height: 40px;
+      background: transparent;
+      border: none;
+      border-bottom: 2px dashed var(--ink);
+      font-family: inherit;
+      font-size: 14px;
+      color: var(--ink);
+      outline: none;
+      caret-color: var(--ink);
+      transition: none;
+    }
+
+    .input-line::placeholder {
+      color: var(--ink-muted);
+    }
+
+    .input-line:focus {
+      border-bottom: 2px solid var(--ink);
+      background-color: rgba(34, 34, 34, 0.04);
+    }
+
+    .input-line.has-error {
+      border-bottom: 2px solid var(--error);
+    }
+
+    .error-msg {
+      color: var(--error);
+      font-size: 11px;
+      font-weight: 700;
+      margin-top: 4px;
+      display: none;
+    }
+
+    .error-msg.visible {
+      display: block;
+    }
+
+    /* Checkbox */
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 12px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    /* Dithered Avatar Graphic */
+    .avatar-block {
+      width: 100%;
+      margin: 16px 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .dither-box {
+      width: 96px;
+      height: 96px;
+      border: 2px solid var(--ink);
+      background: repeating-conic-gradient(#222 0% 25%, #F6F4EC 0% 50%) 50% / 4px 4px;
+      image-rendering: pixelated;
+    }
+
+    /* Barcode & QR */
+    .barcode-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 16px;
+    }
+
+    .barcode-digits {
+      font-size: 11px;
+      letter-spacing: 0.35em;
+      margin-top: 4px;
+    }
+
+    .qr-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 16px 0;
+    }
+
+    /* Blinking cursor */
+    .cursor-blink {
+      display: inline-block;
+      animation: blink 1s steps(2) infinite;
+    }
+
+    @keyframes blink {
+      0%, 50% { opacity: 1; }
+      51%, 100% { opacity: 0; }
+    }
+
+    /* Toast slip */
+    .toast-slip {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--paper);
+      color: var(--ink);
+      border: 2px solid var(--ink);
+      padding: 10px 24px;
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.7);
+      transition: transform 0.2s steps(4);
+      z-index: 60;
+    }
+
+    .toast-slip.show {
+      transform: translateX(-50%) translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Thermal Printer Slot bar -->
+  <header class="printer-head" aria-hidden="true">
+    <div class="printer-slot"></div>
+  </header>
+
+  <!-- Desk metadata (>=1024px) -->
+  <aside class="desk-meta desk-meta-left" aria-hidden="true">
+    <div>ORDER #00417</div>
+    <div style="margin-top: 4px;" id="desk-time">14/10/2026 21:04</div>
+    <div style="margin-top: 8px; color: #555550;">TERMINAL 09</div>
+  </aside>
+
+  <aside class="desk-meta desk-meta-right" aria-hidden="true">
+    <div>PAPER FEED: 40-COL</div>
+    <div style="margin-top: 4px;" id="paper-progress">USED: 0%</div>
+    <div style="margin-top: 8px;">
+      <button id="sound-btn" style="background:transparent; border:1px dashed var(--desk-text); color:var(--desk-text); font-family:inherit; font-size:10px; padding:2px 8px; cursor:pointer;">
+        SOUND: OFF
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Thermal Receipt -->
+  <div class="receipt-wrapper">
+    <main class="receipt" id="receipt">
+
+      <!-- Tilted stamp -->
+      <div class="stamp-wrap" aria-hidden="true">
+        <span class="stamp">PAID</span>
+      </div>
+
+      <!-- Header -->
+      <header class="text-center">
+        <!-- ASCII Brand Glyphs -->
+        <pre role="img" aria-label="Studio Nine Monogram" style="font-size: 9px; line-height: 10px; margin: 0 auto; user-select: none; font-weight: bold;">
+ _____ _____ _   _ ____ ___ ___
+/ ___|_   _| | | |  _ \_ _/ _ \
+\___ \ | | | | | | | | | | | | |
+ ___) || | | |_| | |_| | | |_| |
+|____/ |_|  \___/|____/___\___/
+        </pre>
+        <h1 class="brand-h1">STUDIO NINE</h1>
+        <p class="text-xs uppercase text-muted">12 MILL LANE · BERLIN · OPEN 24/7</p>
+        <p class="text-xs uppercase" style="margin-top: 4px;">ORDER #00417 · 14/10/2026 21:04:12</p>
+      </header>
+
+      <!-- Section Start Star Divider -->
+      <p class="divider" aria-hidden="true">****************************************</p>
+
+      <!-- Nav Menu with Dot Leaders -->
+      <nav aria-label="Primary Receipt Navigation">
+        <ul class="menu-list">
+          <li>
+            <a class="menu-link active" href="#work">
+              <span>01 WORK</span>
+              <span class="dot-leader" aria-hidden="true"></span>
+              <span class="tabular-nums">P.01</span>
+            </a>
+          </li>
+          <li>
+            <a class="menu-link" href="#services">
+              <span>02 SERVICES</span>
+              <span class="dot-leader" aria-hidden="true"></span>
+              <span class="tabular-nums">P.02</span>
+            </a>
+          </li>
+          <li>
+            <a class="menu-link" href="#pricing">
+              <span>03 PRICING</span>
+              <span class="dot-leader" aria-hidden="true"></span>
+              <span class="tabular-nums">P.03</span>
+            </a>
+          </li>
+          <li>
+            <a class="menu-link" href="#contact">
+              <span>04 DISPATCH</span>
+              <span class="dot-leader" aria-hidden="true"></span>
+              <span class="tabular-nums">P.04</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <!-- Divider -->
+      <p class="divider" aria-hidden="true">----------------------------------------</p>
+
+      <!-- Section: Line items (Work & Services) -->
+      <section id="work" aria-labelledby="work-head">
+        <div style="display: flex; justify-content: space-between; align-items: baseline;">
+          <h2 id="work-head" class="text-xs uppercase font-bold tracking-wide">LINE ITEMS</h2>
+          <span class="text-xs text-muted uppercase">QTY · USD</span>
+        </div>
+
+        <div class="item-row">
+          <span>1x</span>
+          <span class="font-medium">DESIGN TOKEN AUDIT</span>
+          <span class="dot-leader" aria-hidden="true"></span>
+          <span class="tabular-nums font-bold">2,400.00</span>
+        </div>
+        <div class="item-sub">
+          ↳ 40-col character grid + tokens
+        </div>
+
+        <div class="item-row">
+          <span>2x</span>
+          <span class="font-medium">COMPONENT RIGGING</span>
+          <span class="dot-leader" aria-hidden="true"></span>
+          <span class="tabular-nums font-bold">3,600.00</span>
+        </div>
+        <div class="item-sub">
+          ↳ Monospaced layout primitives
+        </div>
+
+        <div class="item-row">
+          <span>1x</span>
+          <span class="font-medium">AI CODEGEN RULES</span>
+          <span class="dot-leader" aria-hidden="true"></span>
+          <span class="tabular-nums font-bold">1,850.00</span>
+        </div>
+        <div class="item-sub">
+          ↳ Non-drifting thermal constraints
+        </div>
+      </section>
+
+      <!-- Section: Dithered Avatar Graphic -->
+      <div class="avatar-block" aria-hidden="true">
+        <div class="dither-box"></div>
+        <span class="text-xs text-muted uppercase">FIG 1.1 · 1-BIT DITHER MATRIX</span>
+      </div>
+
+      <!-- Double Divider before Totals -->
+      <p class="divider" aria-hidden="true">========================================</p>
+
+      <!-- Total Block -->
+      <section id="pricing" aria-label="Totals">
+        <div class="total-main">
+          <span class="uppercase">TOTAL</span>
+          <span class="tabular-nums">7,850.00</span>
+        </div>
+        <div class="total-meta">
+          <span>CASH TENDERED</span>
+          <span class="dot-leader" style="margin: 0 8px;" aria-hidden="true"></span>
+          <span class="tabular-nums">8,000.00</span>
+        </div>
+        <div class="total-meta" style="margin-top: 4px;">
+          <span>CHANGE DUE</span>
+          <span class="dot-leader" style="margin: 0 8px;" aria-hidden="true"></span>
+          <span class="tabular-nums">150.00</span>
+        </div>
+      </section>
+
+      <!-- Divider -->
+      <p class="divider" aria-hidden="true">----------------------------------------</p>
+
+      <!-- Interactive Form: Write on the Line -->
+      <section id="contact" aria-labelledby="dispatch-head">
+        <h2 id="dispatch-head" class="text-xs uppercase font-bold tracking-wide">REQUEST TRANSMISSION</h2>
+
+        <div class="input-group">
+          <label class="input-label" for="client-name">01. CLIENT NAME</label>
+          <input type="text" id="client-name" class="input-line" placeholder="WRITE NAME HERE..." />
+        </div>
+
+        <div class="input-group">
+          <label class="input-label" for="client-email">02. CLIENT EMAIL</label>
+          <input type="email" id="client-email" class="input-line" placeholder="NAME@DOMAIN.COM" />
+          <div id="email-error" class="error-msg">** ERROR: EMAIL INVALID **</div>
+        </div>
+
+        <div class="checkbox-row" id="chk-toggle" role="checkbox" aria-checked="true" tabindex="0">
+          <span id="chk-box" class="font-bold">[X]</span>
+          <span class="text-xs uppercase font-medium">PRINT HARDCOPY DUPLICATE</span>
+        </div>
+
+        <!-- Tear line divider -->
+        <p class="divider" aria-hidden="true" style="margin-top: 20px;">✂ - - - - - - - - - - - - - - - - - - - </p>
+
+        <!-- Primary Button -->
+        <button type="button" class="btn-receipt" id="btn-print">
+          [ PRINT MY QUOTE ]
+        </button>
+        <button type="button" class="btn-receipt btn-secondary" id="btn-sample">
+          [ DOWNLOAD SLIP ]
+        </button>
+      </section>
+
+      <!-- Divider -->
+      <p class="divider" aria-hidden="true" style="margin-top: 24px;">****************************************</p>
+
+      <!-- Footer: Barcode & QR Code -->
+      <footer class="text-center">
+        <p class="font-bold uppercase tracking-wide">*** THANK YOU FOR VISITING ***</p>
+        <p class="text-xs uppercase text-muted" style="margin-top: 2px;">ALL SALES FINAL · RETAIN RECEIPT</p>
+
+        <!-- Deterministic SVG Barcode -->
+        <div class="barcode-wrap" aria-hidden="true">
+          <svg width="240" height="56" viewBox="0 0 240 56" fill="currentColor">
+            <!-- Deterministic barcode lines -->
+            <rect x="0" y="0" width="3" height="50"/>
+            <rect x="6" y="0" width="2" height="50"/>
+            <rect x="12" y="0" width="4" height="50"/>
+            <rect x="18" y="0" width="1" height="50"/>
+            <rect x="22" y="0" width="3" height="50"/>
+            <rect x="28" y="0" width="5" height="50"/>
+            <rect x="36" y="0" width="2" height="50"/>
+            <rect x="42" y="0" width="3" height="50"/>
+            <rect x="48" y="0" width="1" height="50"/>
+            <rect x="52" y="0" width="4" height="50"/>
+            <rect x="60" y="0" width="2" height="50"/>
+            <rect x="66" y="0" width="5" height="50"/>
+            <rect x="74" y="0" width="2" height="50"/>
+            <rect x="80" y="0" width="3" height="50"/>
+            <rect x="86" y="0" width="4" height="50"/>
+            <rect x="94" y="0" width="2" height="50"/>
+            <rect x="100" y="0" width="5" height="50"/>
+            <rect x="108" y="0" width="1" height="50"/>
+            <rect x="112" y="0" width="4" height="50"/>
+            <rect x="120" y="0" width="3" height="50"/>
+            <rect x="126" y="0" width="2" height="50"/>
+            <rect x="132" y="0" width="5" height="50"/>
+            <rect x="140" y="0" width="1" height="50"/>
+            <rect x="144" y="0" width="4" height="50"/>
+            <rect x="152" y="0" width="3" height="50"/>
+            <rect x="158" y="0" width="2" height="50"/>
+            <rect x="164" y="0" width="5" height="50"/>
+            <rect x="172" y="0" width="3" height="50"/>
+            <rect x="178" y="0" width="2" height="50"/>
+            <rect x="184" y="0" width="4" height="50"/>
+            <rect x="192" y="0" width="1" height="50"/>
+            <rect x="196" y="0" width="5" height="50"/>
+            <rect x="204" y="0" width="2" height="50"/>
+            <rect x="210" y="0" width="3" height="50"/>
+            <rect x="216" y="0" width="4" height="50"/>
+            <rect x="224" y="0" width="2" height="50"/>
+            <rect x="230" y="0" width="4" height="50"/>
+            <rect x="237" y="0" width="3" height="50"/>
+          </svg>
+          <div class="barcode-digits">4 0 0 9 1 2 7 8 8 2 0 1</div>
+        </div>
+
+        <!-- Scannable QR Code -->
+        <div class="qr-wrap">
+          <svg width="120" height="120" viewBox="0 0 33 33" fill="var(--ink)" shape-rendering="crispEdges">
+            <!-- 33x33 QR code matrix -->
+            <rect width="33" height="33" fill="var(--paper)"/>
+            <!-- Top-Left Finder -->
+            <rect x="2" y="2" width="7" height="7"/>
+            <rect x="3" y="3" width="5" height="5" fill="var(--paper)"/>
+            <rect x="4" y="4" width="3" height="3"/>
+            <!-- Top-Right Finder -->
+            <rect x="24" y="2" width="7" height="7"/>
+            <rect x="25" y="3" width="5" height="5" fill="var(--paper)"/>
+            <rect x="26" y="4" width="3" height="3"/>
+            <!-- Bottom-Left Finder -->
+            <rect x="2" y="24" width="7" height="7"/>
+            <rect x="3" y="25" width="5" height="5" fill="var(--paper)"/>
+            <rect x="4" y="26" width="3" height="3"/>
+            <!-- Timing patterns -->
+            <rect x="10" y="5" width="1" height="1"/>
+            <rect x="12" y="5" width="1" height="1"/>
+            <rect x="14" y="5" width="1" height="1"/>
+            <rect x="16" y="5" width="1" height="1"/>
+            <rect x="18" y="5" width="1" height="1"/>
+            <rect x="20" y="5" width="1" height="1"/>
+            <rect x="22" y="5" width="1" height="1"/>
+            <rect x="5" y="10" width="1" height="1"/>
+            <rect x="5" y="12" width="1" height="1"/>
+            <rect x="5" y="14" width="1" height="1"/>
+            <rect x="5" y="16" width="1" height="1"/>
+            <rect x="5" y="18" width="1" height="1"/>
+            <rect x="5" y="20" width="1" height="1"/>
+            <rect x="5" y="22" width="1" height="1"/>
+            <!-- Data modules -->
+            <rect x="10" y="10" width="3" height="2"/>
+            <rect x="15" y="11" width="2" height="3"/>
+            <rect x="19" y="10" width="3" height="1"/>
+            <rect x="11" y="15" width="4" height="2"/>
+            <rect x="17" y="16" width="2" height="3"/>
+            <rect x="21" y="14" width="3" height="2"/>
+            <rect x="10" y="20" width="2" height="4"/>
+            <rect x="14" y="22" width="4" height="2"/>
+            <rect x="20" y="21" width="2" height="3"/>
+            <rect x="25" y="12" width="3" height="3"/>
+            <rect x="26" y="17" width="2" height="4"/>
+            <rect x="12" y="27" width="3" height="2"/>
+            <rect x="17" y="26" width="2" height="3"/>
+            <rect x="22" y="27" width="4" height="2"/>
+          </svg>
+          <span class="text-xs text-muted uppercase" style="margin-top: 6px;">SCAFFOLD.SWARSHINDE.DEV</span>
+        </div>
+
+        <p class="text-xs font-bold uppercase tracking-widest" style="margin-top: 12px;">** CUSTOMER COPY **</p>
+      </footer>
+    </main>
+  </div>
+
+  <!-- Toast slip -->
+  <div class="toast-slip" id="toast">** QUOTE PRINTED & LOGGED **</div>
+
+  <script>
+    // Audio Context for 60ms printer chirp
+    let soundEnabled = false;
+    let audioCtx = null;
+
+    const soundBtn = document.getElementById('sound-btn');
+    soundBtn.addEventListener('click', () => {
+      soundEnabled = !soundEnabled;
+      soundBtn.textContent = soundEnabled ? 'SOUND: ON' : 'SOUND: OFF';
+      soundBtn.style.color = soundEnabled ? 'var(--paper)' : 'var(--desk-text)';
+      soundBtn.style.borderColor = soundEnabled ? 'var(--paper)' : 'var(--desk-text)';
+      if (soundEnabled && !audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+    });
+
+    function playPrinterChirp() {
+      if (!soundEnabled || !audioCtx) return;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(880, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(220, audioCtx.currentTime + 0.06);
+      gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.06);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.06);
+    }
+
+    // Scroll progress on desk annotation
+    const paperProgress = document.getElementById('paper-progress');
+    window.addEventListener('scroll', () => {
+      const scrollY = window.scrollY;
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      if (maxScroll > 0) {
+        const pct = Math.min(100, Math.round((scrollY / maxScroll) * 100));
+        paperProgress.textContent = `USED: ${pct}%`;
+      }
+    }, { passive: true });
+
+    // Interactive Checkbox
+    const chkToggle = document.getElementById('chk-toggle');
+    const chkBox = document.getElementById('chk-box');
+    let isChecked = true;
+
+    function toggleCheckbox() {
+      isChecked = !isChecked;
+      chkBox.textContent = isChecked ? '[X]' : '[ ]';
+      chkToggle.setAttribute('aria-checked', String(isChecked));
+    }
+
+    chkToggle.addEventListener('click', toggleCheckbox);
+    chkToggle.addEventListener('keydown', (e) => {
+      if (e.key === ' ' || e.key === 'Enter') {
+        e.preventDefault();
+        toggleCheckbox();
+      }
+    });
+
+    // Form validation & print button action
+    const btnPrint = document.getElementById('btn-print');
+    const btnSample = document.getElementById('btn-sample');
+    const clientEmail = document.getElementById('client-email');
+    const emailError = document.getElementById('email-error');
+    const toast = document.getElementById('toast');
+    let isPrinting = false;
+
+    function showToast(msg) {
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
+    btnPrint.addEventListener('click', () => {
+      if (isPrinting) return;
+
+      const emailVal = clientEmail.value.trim();
+      if (emailVal && !emailVal.includes('@')) {
+        clientEmail.classList.add('has-error');
+        emailError.classList.add('visible');
+        return;
+      } else {
+        clientEmail.classList.remove('has-error');
+        emailError.classList.remove('visible');
+      }
+
+      isPrinting = true;
+      btnPrint.innerHTML = 'PRINTING<span class="cursor-blink">▌</span>';
+      playPrinterChirp();
+
+      setTimeout(() => {
+        btnPrint.innerHTML = '[ PRINT MY QUOTE ]';
+        isPrinting = false;
+        showToast('** QUOTE TRANSMITTED **');
+        playPrinterChirp();
+      }, 1200);
+    });
+
+    btnSample.addEventListener('click', () => {
+      showToast('** SLIP DOWNLOADED **');
+      playPrinterChirp();
+    });
+
+    // Active nav link behavior
+    const links = document.querySelectorAll('.menu-link');
+    links.forEach(link => {
+      link.addEventListener('click', (e) => {
+        links.forEach(l => l.classList.remove('active'));
+        link.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>

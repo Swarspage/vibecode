@@ -34,6 +34,8 @@ import aurelPrompt from "./prompts/Aurel Quiet Luxury Wealth.md?raw";
 import aurelLightPrompt from "./prompts/Aurel Quiet Luxury Wealth Light.md?raw";
 import xDarkLightsOutPrompt from "./prompts/X Dark Lights Out.md?raw";
 import obsidianStudio3dPrompt from "./prompts/Obsidian Studio 3D.md?raw";
+import thermalReceiptPrompt from "./prompts/Thermal Receipt.md?raw";
+import hardwareInstrumentPanelPrompt from "./prompts/Hardware Instrument Panel.md?raw";
 
 export const designPrompts = [
   {
@@ -768,5 +770,51 @@ export const designPrompts = [
     previewUrl: "/previews/obsidian-studio-3d.html",
     isNew: true,
     prompt: obsidianStudio3dPrompt
+  },
+  {
+    id: "thermal-receipt",
+    name: "Thermal Receipt",
+    slug: "thermal-receipt",
+    summary: "Mechanical, monospaced 40-column thermal receipt on a dark desk with ruled line items, dot leaders, stamped totals, and barcodes.",
+    tags: ["thermal", "receipt", "monospaced", "40-col", "print", "minimal", "mechanical", "retro"],
+    palette: {
+      background: "#1C1C1B",
+      foreground: "#222222",
+      muted: "#F6F4EC",
+      accent: "#D6361F",
+      border: "#222222"
+    },
+    typography: {
+      heading: "IBM Plex Mono",
+      body: "IBM Plex Mono",
+      ui: "IBM Plex Mono",
+      mono: "IBM Plex Mono"
+    },
+    previewUrl: "/previews/thermal-receipt.html",
+    isNew: true,
+    prompt: thermalReceiptPrompt
+  },
+  {
+    id: "hardware-instrument-panel",
+    name: "Hardware Instrument Panel",
+    slug: "hardware-instrument-panel",
+    summary: "Tactile synth-style hardware instrument panel with cream chassis, silkscreened modules, physical latching keys, rotatable knobs, faders, and green pixel LCD screens.",
+    tags: ["hardware", "tactile", "instrument", "synth", "modular", "skeuomorphic", "retro-tech"],
+    palette: {
+      background: "#CFC9B8",
+      foreground: "#1A1A18",
+      muted: "#E2DCCB",
+      accent: "#FF4D00",
+      border: "#BDB6A2"
+    },
+    typography: {
+      heading: "Space Grotesk",
+      body: "Space Grotesk",
+      ui: "Space Grotesk",
+      mono: "DotGothic16"
+    },
+    previewUrl: "/previews/hardware-instrument-panel.html",
+    isNew: true,
+    prompt: hardwareInstrumentPanelPrompt
   }
 ];

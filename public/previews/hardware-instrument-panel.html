@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hardware Instrument Panel — Live Design System Preview</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    :root {
+      --desk: #CFC9B8;
+      --chassis: #E9E4D6;
+      --module: #E2DCCB;
+      --chassis-dark: #BDB6A2;
+      --key-white: #F7F5EE;
+      --key-edge: #A9A390;
+      --ink: #1A1A18;
+      --ink-muted: #5E5C54;
+      --orange: #FF4D00;
+      --orange-edge: #B33600;
+      --lcd-bg: #C5CFA8;
+      --lcd-text: #1D2615;
+      --led-red: #FF2A1A;
+      --led-green: #3DFF7A;
+      --led-amber: #FFB020;
+      --led-off: #4A2A1E;
+    }
+
+    html, body {
+      background-color: var(--desk);
+      color: var(--ink);
+      font-family: 'Space Grotesk', sans-serif;
+      min-height: 100vh;
+      padding: 16px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    @media (min-width: 640px) {
+      body {
+        padding: 32px 24px;
+      }
+    }
+
+    /* Main Chassis */
+    .chassis {
+      position: relative;
+      width: 100%;
+      max-width: 1120px;
+      background-color: var(--chassis);
+      border-radius: 28px;
+      padding: 24px;
+      box-shadow:
+        inset 0 2px 0 #ffffff,
+        inset 0 -4px 0 var(--chassis-dark),
+        0 30px 50px -24px rgba(0, 0, 0, 0.45);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    @media (min-width: 768px) {
+      .chassis {
+        padding: 32px;
+        gap: 20px;
+      }
+    }
+
+    /* Corner Screws */
+    .screw {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background-color: var(--chassis-dark);
+      box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.4), 0 1px 0 #ffffff;
+      pointer-events: none;
+    }
+    .screw::after {
+      content: "";
+      position: absolute;
+      top: 5px;
+      left: 1px;
+      right: 1px;
+      height: 1.5px;
+      background-color: rgba(26, 26, 24, 0.45);
+    }
+    .screw-tl { top: 12px; left: 16px; }
+    .screw-tl::after { transform: rotate(34deg); }
+    .screw-tr { top: 12px; right: 16px; }
+    .screw-tr::after { transform: rotate(112deg); }
+    .screw-bl { bottom: 12px; left: 16px; }
+    .screw-bl::after { transform: rotate(70deg); }
+    .screw-br { bottom: 12px; right: 16px; }
+    .screw-br::after { transform: rotate(155deg); }
+
+    /* Modules */
+    .module {
+      position: relative;
+      background-color: var(--module);
+      border-radius: 12px;
+      padding: 16px 20px;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.7),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.12),
+        0 1px 2px rgba(0, 0, 0, 0.08);
+      outline: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    /* Silkscreen Labels */
+    .silkscreen-label {
+      font-size: 10px;
+      line-height: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--ink-muted);
+      user-select: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .silkscreen-label::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background-color: rgba(26, 26, 24, 0.2);
+    }
+
+    /* LED Indicators */
+    .led {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: var(--led-off);
+      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.6);
+      transition: background-color 80ms ease, box-shadow 80ms ease;
+      display: inline-block;
+    }
+    .led.led-red.is-on {
+      background-color: var(--led-red);
+      box-shadow: 0 0 8px 2px rgba(255, 42, 26, 0.8), inset 0 1px 1px #fff;
+    }
+    .led.led-green.is-on {
+      background-color: var(--led-green);
+      box-shadow: 0 0 8px 2px rgba(61, 255, 122, 0.8), inset 0 1px 1px #fff;
+    }
+    .led.led-amber.is-on {
+      background-color: var(--led-amber);
+      box-shadow: 0 0 8px 2px rgba(255, 176, 32, 0.8), inset 0 1px 1px #fff;
+    }
+
+    /* Navigation Keys */
+    .key-cluster {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .key-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .key {
+      position: relative;
+      width: 58px;
+      height: 58px;
+      border-radius: 8px;
+      background-color: var(--key-white);
+      color: var(--ink);
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow:
+        0 4px 0 var(--key-edge),
+        0 6px 10px rgba(0, 0, 0, 0.25),
+        inset 0 1px 0 #ffffff;
+      border: none;
+      cursor: pointer;
+      user-select: none;
+      transition: transform 75ms ease-out, box-shadow 75ms ease-out;
+      text-decoration: none;
+      outline: none;
+    }
+    .key:hover {
+      filter: brightness(1.03);
+    }
+    .key:active, .key.is-pressed {
+      transform: translateY(3px);
+      box-shadow:
+        0 1px 0 var(--key-edge),
+        inset 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+    .key:focus-visible {
+      outline: 3px solid var(--ink);
+      outline-offset: 4px;
+    }
+    .key-number {
+      position: absolute;
+      top: 4px;
+      left: 6px;
+      font-size: 10px;
+      line-height: 1;
+      font-weight: 700;
+      color: var(--ink-muted);
+    }
+    .key-legend {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--ink-muted);
+      margin-top: 2px;
+      user-select: none;
+    }
+
+    /* Orange Key Variant */
+    .key.key-orange {
+      background-color: var(--orange);
+      color: var(--ink);
+      box-shadow:
+        0 4px 0 var(--orange-edge),
+        0 6px 10px rgba(0, 0, 0, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    }
+    .key.key-orange:active, .key.key-orange.is-pressed {
+      transform: translateY(3px);
+      box-shadow:
+        0 1px 0 var(--orange-edge),
+        inset 0 2px 4px rgba(0, 0, 0, 0.25);
+    }
+
+    /* Wide Primary CTA Key */
+    .btn-cta {
+      height: 54px;
+      padding: 0 28px;
+      border-radius: 8px;
+      background-color: var(--orange);
+      color: var(--ink);
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      border: none;
+      box-shadow:
+        0 4px 0 var(--orange-edge),
+        0 6px 10px rgba(0, 0, 0, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.35);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      transition: transform 75ms ease-out, box-shadow 75ms ease-out;
+      user-select: none;
+      outline: none;
+    }
+    .btn-cta:hover {
+      filter: brightness(1.03);
+    }
+    .btn-cta:active, .btn-cta.is-pressed {
+      transform: translateY(3px);
+      box-shadow:
+        0 1px 0 var(--orange-edge),
+        inset 0 2px 4px rgba(0, 0, 0, 0.25);
+    }
+    .btn-cta:focus-visible {
+      outline: 3px solid var(--ink);
+      outline-offset: 4px;
+    }
+
+    /* LCD Screen */
+    .lcd-bezel {
+      background-color: var(--ink);
+      border-radius: 8px;
+      padding: 8px;
+      box-shadow: 0 1px 0 #ffffff, inset 0 2px 5px rgba(0, 0, 0, 0.8);
+    }
+    .lcd-screen {
+      background-color: var(--lcd-bg);
+      color: var(--lcd-text);
+      font-family: 'DotGothic16', monospace;
+      border-radius: 6px;
+      padding: 16px;
+      box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.4), 0 1px 0 #ffffff;
+      background-image: repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.06) 0,
+        rgba(0, 0, 0, 0.06) 1px,
+        transparent 1px,
+        transparent 4px
+      );
+    }
+    .lcd-headline {
+      font-size: clamp(20px, 3.5vw, 32px);
+      line-height: 1.1;
+      font-weight: 400;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 8px;
+    }
+    .lcd-subline {
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      opacity: 0.85;
+      text-transform: uppercase;
+    }
+
+    /* Rotary Knobs */
+    .knob-cluster {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      align-items: center;
+      justify-content: flex-start;
+      margin-top: 16px;
+    }
+
+    .knob-unit {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      user-select: none;
+    }
+
+    .knob-tick-ring {
+      position: relative;
+      width: 72px;
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .knob-body {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 25%, #4A4A46, #1A1A18 60%);
+      box-shadow:
+        0 4px 0 #000000,
+        0 8px 12px rgba(0, 0, 0, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+      position: relative;
+      cursor: ns-resize;
+      touch-action: none;
+      outline: none;
+    }
+    .knob-body:focus-visible {
+      outline: 3px solid var(--ink);
+      outline-offset: 4px;
+    }
+
+    .knob-indicator {
+      position: absolute;
+      top: 5px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 3.5px;
+      height: 14px;
+      border-radius: 4px;
+      background-color: var(--orange);
+      box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+      pointer-events: none;
+    }
+
+    .knob-legend {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--ink-muted);
+    }
+
+    /* Fader */
+    .fader-cluster {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 0;
+    }
+
+    .fader-unit {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      user-select: none;
+    }
+
+    .fader-track {
+      position: relative;
+      width: 10px;
+      height: 120px;
+      background-color: var(--ink);
+      border-radius: 6px;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.7);
+    }
+
+    .fader-cap {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 36px;
+      height: 44px;
+      border-radius: 6px;
+      background-color: var(--key-white);
+      box-shadow:
+        0 3px 0 var(--key-edge),
+        0 5px 8px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 #ffffff;
+      cursor: ns-resize;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .fader-cap::after {
+      content: "";
+      width: 22px;
+      height: 2px;
+      background-color: var(--orange);
+    }
+
+    /* Toggle Switch */
+    .toggle-unit {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      user-select: none;
+    }
+
+    .toggle-track {
+      width: 54px;
+      height: 30px;
+      border-radius: 6px;
+      background-color: var(--ink);
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6);
+      position: relative;
+      border: none;
+      cursor: pointer;
+      outline: none;
+    }
+    .toggle-track:focus-visible {
+      outline: 2px solid var(--ink);
+      outline-offset: 3px;
+    }
+
+    .toggle-lever {
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 24px;
+      height: 24px;
+      border-radius: 4px;
+      background-color: var(--key-white);
+      box-shadow: 0 2px 0 var(--key-edge), inset 0 1px 0 #ffffff;
+      transition: transform 100ms ease;
+    }
+    .toggle-track.is-on .toggle-lever {
+      transform: translateX(24px);
+    }
+
+    .toggle-label-row {
+      display: flex;
+      justify-content: space-between;
+      width: 54px;
+      font-size: 9px;
+      font-weight: 700;
+      color: var(--ink-muted);
+      letter-spacing: 0.1em;
+    }
+
+    /* Speaker Grille */
+    .speaker-grille {
+      height: 36px;
+      border-radius: 4px;
+      background: radial-gradient(circle, #1A1A18 1.5px, transparent 2px);
+      background-size: 10px 10px;
+      opacity: 0.65;
+    }
+
+    /* Grid Layout */
+    .layout-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    @media (min-width: 900px) {
+      .layout-grid {
+        grid-template-columns: 8fr 4fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Chassis container -->
+  <main class="chassis" id="chassis" aria-label="Hardware Synthesizer Panel">
+    <!-- Corner Screws -->
+    <div class="screw screw-tl" aria-hidden="true"></div>
+    <div class="screw screw-tr" aria-hidden="true"></div>
+    <div class="screw screw-bl" aria-hidden="true"></div>
+    <div class="screw screw-br" aria-hidden="true"></div>
+
+    <!-- Header Module: Branding & Navigation Keys -->
+    <header class="module" aria-label="Control Strip">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 8px;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="font-weight: 700; font-size: 16px; letter-spacing: 0.16em;">INSTRUMENT 01</span>
+          <span style="width: 8px; height: 8px; border-radius: 50%; background-color: var(--orange);" aria-hidden="true"></span>
+          <span style="font-size: 10px; font-weight: 700; color: var(--ink-muted); letter-spacing: 0.14em; text-transform: uppercase;">SOLID STATE MK-II</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span id="snd-led" class="led led-amber" aria-hidden="true"></span>
+          <button id="snd-btn" type="button" style="background: transparent; border: 1px solid var(--chassis-dark); font-family: inherit; font-size: 10px; font-weight: 700; color: var(--ink); padding: 2px 8px; border-radius: 4px; cursor: pointer;">
+            SND: OFF
+          </button>
+        </div>
+      </div>
+
+      <nav aria-label="Panel Navigation">
+        <div class="key-cluster">
+          <div class="key-col">
+            <span class="led led-green is-on" id="led-01" aria-hidden="true"></span>
+            <button class="key is-pressed" data-target="01" aria-current="page">
+              <span class="key-number">01</span>
+              <span>OSC</span>
+            </button>
+            <span class="key-legend">MAIN</span>
+          </div>
+
+          <div class="key-col">
+            <span class="led led-red" id="led-02" aria-hidden="true"></span>
+            <button class="key" data-target="02">
+              <span class="key-number">02</span>
+              <span>FLT</span>
+            </button>
+            <span class="key-legend">FILTER</span>
+          </div>
+
+          <div class="key-col">
+            <span class="led led-red" id="led-03" aria-hidden="true"></span>
+            <button class="key" data-target="03">
+              <span class="key-number">03</span>
+              <span>ENV</span>
+            </button>
+            <span class="key-legend">ENVELOPE</span>
+          </div>
+
+          <div class="key-col">
+            <span class="led led-red" id="led-04" aria-hidden="true"></span>
+            <button class="key" data-target="04">
+              <span class="key-number">04</span>
+              <span>LFO</span>
+            </button>
+            <span class="key-legend">MOD</span>
+          </div>
+
+          <div class="key-col">
+            <span class="led led-red" id="led-05" aria-hidden="true"></span>
+            <button class="key key-orange" data-target="05">
+              <span class="key-number">05</span>
+              <span>REC</span>
+            </button>
+            <span class="key-legend">DISPATCH</span>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <!-- Two-column Hardware Layout -->
+    <div class="layout-grid">
+      <!-- Main Engine Module: LCD Display & Knobs -->
+      <section class="module" aria-labelledby="mod-01-title">
+        <div class="silkscreen-label" id="mod-01-title">01 ─── DUAL ENGINE OSCILLATOR</div>
+
+        <!-- Green Dot Matrix LCD Screen -->
+        <div class="lcd-bezel">
+          <div class="lcd-screen" id="lcd-display">
+            <div class="lcd-headline" id="lcd-head">SYSTEM ACTIVE // ENGINE 01</div>
+            <div class="lcd-subline" id="lcd-readout">VOL: 75% | CUTOFF: 4.2 kHz | RES: 50% | MOD: OFF</div>
+          </div>
+        </div>
+
+        <!-- 3 Rotary Knobs with live rotation drag -->
+        <div class="knob-cluster">
+          <div class="knob-unit">
+            <span class="silkscreen-label" style="margin-bottom:0;">PARAM 01</span>
+            <div class="knob-tick-ring">
+              <div class="knob-body" id="knob-vol" tabindex="0" role="slider" aria-label="Output Volume" aria-valuemin="0" aria-valuemax="100" aria-valuenow="75">
+                <div class="knob-indicator" id="ind-vol" style="transform: translateX(-50%) rotate(45deg);"></div>
+              </div>
+            </div>
+            <span class="knob-legend">VOLUME</span>
+          </div>
+
+          <div class="knob-unit">
+            <span class="silkscreen-label" style="margin-bottom:0;">PARAM 02</span>
+            <div class="knob-tick-ring">
+              <div class="knob-body" id="knob-cut" tabindex="0" role="slider" aria-label="Filter Cutoff" aria-valuemin="0" aria-valuemax="100" aria-valuenow="55">
+                <div class="knob-indicator" id="ind-cut" style="transform: translateX(-50%) rotate(12deg);"></div>
+              </div>
+            </div>
+            <span class="knob-legend">CUTOFF</span>
+          </div>
+
+          <div class="knob-unit">
+            <span class="silkscreen-label" style="margin-bottom:0;">PARAM 03</span>
+            <div class="knob-tick-ring">
+              <div class="knob-body" id="knob-res" tabindex="0" role="slider" aria-label="Resonance" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
+                <div class="knob-indicator" id="ind-res" style="transform: translateX(-50%) rotate(0deg);"></div>
+              </div>
+            </div>
+            <span class="knob-legend">RESONANCE</span>
+          </div>
+        </div>
+
+        <!-- Primary Action Button -->
+        <div style="margin-top: 24px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+          <button type="button" class="btn-cta" id="cta-btn">
+            <span>TRIGGER PULSE ▶</span>
+          </button>
+          <span id="pulse-led" class="led led-red" aria-hidden="true"></span>
+          <span style="font-size: 11px; font-weight: 700; color: var(--ink-muted); text-transform: uppercase; letter-spacing: 0.12em;">CV GATE 1V/OCT</span>
+        </div>
+      </section>
+
+      <!-- Side Rack Module: Faders & Toggles -->
+      <section class="module" aria-labelledby="mod-02-title">
+        <div class="silkscreen-label" id="mod-02-title">02 ─── ANALOG FILTERS</div>
+
+        <div class="fader-cluster">
+          <!-- Fader 1 -->
+          <div class="fader-unit">
+            <span class="key-legend">ATTACK</span>
+            <div class="fader-track" id="fader-1">
+              <div class="fader-cap" id="cap-1" style="top: 25px;"></div>
+            </div>
+            <span style="font-size: 10px; font-weight: 700; color: var(--ink);">0.25s</span>
+          </div>
+
+          <!-- Fader 2 -->
+          <div class="fader-unit">
+            <span class="key-legend">DECAY</span>
+            <div class="fader-track" id="fader-2">
+              <div class="fader-cap" id="cap-2" style="top: 60px;"></div>
+            </div>
+            <span style="font-size: 10px; font-weight: 700; color: var(--ink);">1.20s</span>
+          </div>
+
+          <!-- Toggle Switches -->
+          <div style="display: flex; flex-direction: column; gap: 18px; margin-left: 8px;">
+            <div class="toggle-unit">
+              <div class="toggle-label-row">
+                <span>OFF</span>
+                <span>ON</span>
+              </div>
+              <button type="button" class="toggle-track is-on" id="toggle-1" role="switch" aria-checked="true" aria-label="Sub-Oscillator">
+                <div class="toggle-lever"></div>
+              </button>
+              <div style="display:flex; align-items:center; gap:4px; margin-top:2px;">
+                <span class="led led-green is-on" id="tled-1" aria-hidden="true"></span>
+                <span class="key-legend">SUB-OSC</span>
+              </div>
+            </div>
+
+            <div class="toggle-unit">
+              <div class="toggle-label-row">
+                <span>OFF</span>
+                <span>ON</span>
+              </div>
+              <button type="button" class="toggle-track" id="toggle-2" role="switch" aria-checked="false" aria-label="Drive Circuit">
+                <div class="toggle-lever"></div>
+              </button>
+              <div style="display:flex; align-items:center; gap:4px; margin-top:2px;">
+                <span class="led led-red" id="tled-2" aria-hidden="true"></span>
+                <span class="key-legend">DRIVE</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Footer Module: Speaker Grille & Serial Stamp -->
+    <footer class="module" style="padding: 12px 20px;" aria-label="Machine Specifications">
+      <div class="speaker-grille" aria-hidden="true"></div>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-muted); flex-wrap: wrap; gap: 6px;">
+        <span>SER NO. AGY-808-MKII // LOT 2026-X</span>
+        <span>TACTILE INSTRUMENT CHASSIS · 100% DISCRETE</span>
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    // Web Audio synthesizer clicks & detent ticks
+    let soundEnabled = false;
+    let audioCtx = null;
+
+    const sndBtn = document.getElementById('snd-btn');
+    const sndLed = document.getElementById('snd-led');
+
+    sndBtn.addEventListener('click', () => {
+      soundEnabled = !soundEnabled;
+      sndBtn.textContent = soundEnabled ? 'SND: ON' : 'SND: OFF';
+      sndLed.classList.toggle('is-on', soundEnabled);
+      if (soundEnabled && !audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+    });
+
+    function playKeyClick(freq = 440, dur = 0.015) {
+      if (!soundEnabled || !audioCtx) return;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+      gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + dur);
+    }
+
+    // LCD Readout updater
+    const lcdHead = document.getElementById('lcd-head');
+    const lcdReadout = document.getElementById('lcd-readout');
+
+    let state = {
+      vol: 75,
+      cutoff: 4.2,
+      res: 50,
+      sub: true,
+      drive: false
+    };
+
+    function updateLcd() {
+      lcdReadout.textContent = `VOL: ${state.vol}% | CUTOFF: ${state.cutoff} kHz | RES: ${state.res}% | SUB: ${state.sub ? 'ON' : 'OFF'}`;
+    }
+
+    // Rotary Knobs Interaction
+    function setupKnob(bodyId, indId, paramKey, minVal, maxVal, unit = '', scale = 1) {
+      const body = document.getElementById(bodyId);
+      const ind = document.getElementById(indId);
+      let isDragging = false;
+      let startY = 0;
+      let startVal = state[paramKey];
+
+      function setVal(v) {
+        state[paramKey] = Math.max(minVal, Math.min(maxVal, Math.round(v * 10) / 10));
+        const pct = (state[paramKey] - minVal) / (maxVal - minVal);
+        const deg = -135 + pct * 270;
+        ind.style.transform = `translateX(-50%) rotate(${deg}deg)`;
+        body.setAttribute('aria-valuenow', state[paramKey]);
+        updateLcd();
+        playKeyClick(600 + pct * 400, 0.01);
+      }
+
+      body.addEventListener('pointerdown', (e) => {
+        isDragging = true;
+        startY = e.clientY;
+        startVal = state[paramKey];
+        body.setPointerCapture(e.pointerId);
+      });
+
+      body.addEventListener('pointermove', (e) => {
+        if (!isDragging) return;
+        const delta = (startY - e.clientY) * 0.7;
+        const range = maxVal - minVal;
+        setVal(startVal + (delta / 100) * range);
+      });
+
+      body.addEventListener('pointerup', (e) => {
+        isDragging = false;
+        try { body.releasePointerCapture(e.pointerId); } catch(err) {}
+      });
+
+      body.addEventListener('keydown', (e) => {
+        const step = (maxVal - minVal) / 10;
+        if (e.key === 'ArrowUp' || e.key === 'ArrowRight') {
+          e.preventDefault();
+          setVal(state[paramKey] + step);
+        } else if (e.key === 'ArrowDown' || e.key === 'ArrowLeft') {
+          e.preventDefault();
+          setVal(state[paramKey] - step);
+        }
+      });
+    }
+
+    setupKnob('knob-vol', 'ind-vol', 'vol', 0, 100);
+    setupKnob('knob-cut', 'ind-cut', 'cutoff', 0.2, 12.0);
+    setupKnob('knob-res', 'ind-res', 'res', 0, 100);
+
+    // Toggle Switches
+    const tog1 = document.getElementById('toggle-1');
+    const tled1 = document.getElementById('tled-1');
+    tog1.addEventListener('click', () => {
+      state.sub = !state.sub;
+      tog1.classList.toggle('is-on', state.sub);
+      tog1.setAttribute('aria-checked', String(state.sub));
+      tled1.classList.toggle('is-on', state.sub);
+      updateLcd();
+      playKeyClick(state.sub ? 520 : 380);
+    });
+
+    const tog2 = document.getElementById('toggle-2');
+    const tled2 = document.getElementById('tled-2');
+    tog2.addEventListener('click', () => {
+      state.drive = !state.drive;
+      tog2.classList.toggle('is-on', state.drive);
+      tog2.setAttribute('aria-checked', String(state.drive));
+      tled2.classList.toggle('is-on', state.drive);
+      tled2.className = `led ${state.drive ? 'led-red is-on' : 'led-off'}`;
+      lcdHead.textContent = state.drive ? 'DRIVE SATURATION ENGAGED' : 'SYSTEM ACTIVE // ENGINE 01';
+      playKeyClick(state.drive ? 700 : 350);
+    });
+
+    // Faders drag
+    function setupFader(trackId, capId, name) {
+      const track = document.getElementById(trackId);
+      const cap = document.getElementById(capId);
+      let isDragging = false;
+
+      function updateFader(clientY) {
+        const rect = track.getBoundingClientRect();
+        const y = Math.max(0, Math.min(rect.height - 44, clientY - rect.top - 22));
+        cap.style.top = `${y}px`;
+        const pct = Math.round((1 - y / (rect.height - 44)) * 100);
+        lcdReadout.textContent = `${name}: ${pct}% RATE`;
+        playKeyClick(300 + pct * 5, 0.008);
+      }
+
+      cap.addEventListener('pointerdown', (e) => {
+        isDragging = true;
+        cap.setPointerCapture(e.pointerId);
+      });
+      cap.addEventListener('pointermove', (e) => {
+        if (!isDragging) return;
+        updateFader(e.clientY);
+      });
+      cap.addEventListener('pointerup', (e) => {
+        isDragging = false;
+        try { cap.releasePointerCapture(e.pointerId); } catch(err) {}
+      });
+    }
+
+    setupFader('fader-1', 'cap-1', 'ATTACK TIME');
+    setupFader('fader-2', 'cap-2', 'DECAY TIME');
+
+    // Nav Keys Selection
+    const keys = document.querySelectorAll('.key[data-target]');
+    keys.forEach(k => {
+      k.addEventListener('click', () => {
+        keys.forEach(other => other.classList.remove('is-pressed'));
+        document.querySelectorAll('.key-col .led').forEach(l => {
+          l.classList.remove('is-on');
+          l.className = 'led led-red';
+        });
+
+        k.classList.add('is-pressed');
+        const parent = k.closest('.key-col');
+        if (parent) {
+          const led = parent.querySelector('.led');
+          if (led) {
+            led.className = 'led led-green is-on';
+          }
+        }
+
+        const target = k.getAttribute('data-target');
+        lcdHead.textContent = `MODULE ${target} SELECTED`;
+        playKeyClick(480 + parseInt(target, 10) * 80);
+      });
+    });
+
+    // Primary CTA Pulse Button
+    const ctaBtn = document.getElementById('cta-btn');
+    const pulseLed = document.getElementById('pulse-led');
+    ctaBtn.addEventListener('click', () => {
+      ctaBtn.classList.add('is-pressed');
+      pulseLed.className = 'led led-amber is-on';
+      lcdHead.textContent = 'GATE TRIGGER TRANSMITTED';
+      playKeyClick(880, 0.08);
+
+      setTimeout(() => {
+        ctaBtn.classList.remove('is-pressed');
+        pulseLed.className = 'led led-red';
+        lcdHead.textContent = 'SYSTEM ACTIVE // ENGINE 01';
+      }, 400);
+    });
+  </script>
+</body>
+</html>
