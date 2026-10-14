@@ -94,17 +94,64 @@ const Footer = () => {
             gap: "24px",
           }}
         >
-          <div style={{ display: "flex", alignItems: "center", gap: "24px", flexWrap: "wrap" }}>
-            <span
-              style={{
-                fontFamily: "var(--font-mono)",
-                fontSize: "var(--text-2xs)",
-                color: "var(--color-muted)",
-                letterSpacing: "0.06em",
-              }}
-            >
-              Built by Swar Shinde
-            </span>
+          <div style={{ display: "flex", alignItems: "center", gap: "20px", flexWrap: "wrap" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
+              <span
+                style={{
+                  fontFamily: "var(--font-mono)",
+                  fontSize: "var(--text-2xs)",
+                  color: "var(--color-muted)",
+                  letterSpacing: "0.06em",
+                }}
+              >
+                Built by Swar Shinde
+              </span>
+              <a
+                href="https://swarshinde.dev"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Swar Shinde's Portfolio Website"
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "4px",
+                  padding: "2px 8px",
+                  fontFamily: "var(--font-mono)",
+                  fontSize: "11px",
+                  color: "var(--color-fg)",
+                  backgroundColor: "var(--color-surface)",
+                  border: "1px solid var(--color-border)",
+                  borderRadius: "var(--radius-sm)",
+                  textDecoration: "none",
+                  transition: "border-color 160ms ease, color 160ms ease",
+                  lineHeight: "1.4",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = "var(--color-accent)";
+                  e.currentTarget.style.color = "var(--color-accent)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = "var(--color-border)";
+                  e.currentTarget.style.color = "var(--color-fg)";
+                }}
+              >
+                <span>Portfolio</span>
+                <svg
+                  width="10"
+                  height="10"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <line x1="7" y1="17" x2="17" y2="7" />
+                  <polyline points="7 7 17 7 17 17" />
+                </svg>
+              </a>
+            </div>
             
             <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
               {/* Discord Button */}

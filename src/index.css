@@ -911,6 +911,52 @@ button:focus-visible {
   opacity: 0;
 }
 
+/* ─── Premium Page Skeleton ─────────────────────────────────────── */
+
+.premium-skeleton-shimmer {
+  position: relative;
+  overflow: hidden;
+  background-color: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: var(--radius-sm);
+}
+
+.premium-skeleton-shimmer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.04) 25%,
+    rgba(201, 162, 39, 0.12) 50%,
+    rgba(255, 255, 255, 0.04) 75%,
+    transparent 100%
+  );
+  animation: premium-skeleton-sweep 2.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+.premium-skeleton-card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+@keyframes premium-skeleton-sweep {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .premium-skeleton-shimmer::after {
+    animation: none;
+    opacity: 0.4;
+  }
+}
+
 /* ─── Mobile sidebar toggle ─────────────────────────────────────── */
 .mobile-sidebar-toggle {
   display: none;

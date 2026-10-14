@@ -2,6 +2,7 @@ import { lazy, Suspense } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Layout from "./components/Layout";
 import GlobalSearch from "./components/GlobalSearch";
+import PageSkeleton from "./components/PageSkeleton";
 
 const HomePage = lazy(() => import("./pages/HomePage"));
 const DesignPromptsPage = lazy(() => import("./pages/DesignPromptsPage"));
@@ -14,26 +15,11 @@ const PublicApisPage = lazy(() => import("./pages/PublicApisPage"));
 const MyKitPage = lazy(() => import("./pages/MyKitPage"));
 const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
 
-const PageFallback = () => (
-  <div style={{ minHeight: "50vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
-    <div
-      style={{
-        width: "24px",
-        height: "24px",
-        borderRadius: "50%",
-        border: "2px solid var(--color-border)",
-        borderTopColor: "var(--color-accent)",
-        animation: "badgePulse 1.2s ease-in-out infinite",
-      }}
-    />
-  </div>
-);
-
 const App = () => {
   return (
     <>
       <GlobalSearch />
-      <Suspense fallback={<PageFallback />}>
+      <Suspense fallback={<PageSkeleton />}>
         <Routes>
           <Route element={<Layout />}>
             <Route path="/" element={<HomePage />} />
