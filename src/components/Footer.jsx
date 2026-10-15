@@ -15,7 +15,8 @@ const Footer = () => {
       })
       .then((d) => {
         if (isMounted && d && d.count != null) {
-          setVisits(String(d.count));
+          const num = Number(d.count);
+          setVisits(!isNaN(num) ? num.toLocaleString() : String(d.count));
         }
       })
       .catch(() => {});
