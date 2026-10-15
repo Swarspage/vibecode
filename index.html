@@ -33,12 +33,12 @@
   </head>
   <body>
     <div id="root"></div>
-    <!-- Analytics (GoatCounter) -->
+    <!-- Analytics (GoatCounter via first-party proxy) -->
     <script
-      data-goatcounter="https://scaffold.goatcounter.com/count"
+      data-goatcounter="/api/gc/count"
       data-goatcounter-settings='{"no_onload": true, "allow_local": true}'
       async
-      src="//gc.zgo.at/count.js"
+      src="/gc.js"
     ></script>
     <script type="module" src="/src/main.jsx"></script>
   </body>
