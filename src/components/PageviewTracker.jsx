@@ -1,6 +1,8 @@
 import { useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 
+const GOATCOUNTER_CODE = import.meta.env.VITE_GOATCOUNTER_CODE || "scaffold";
+
 export default function PageviewTracker() {
   const location = useLocation();
   const pollIntervalRef = useRef(null);
@@ -8,8 +10,12 @@ export default function PageviewTracker() {
   useEffect(() => {
     const track = () => {
       if (window.goatcounter && typeof window.goatcounter.count === "function") {
-        window.goatcounter.endpoint = "/api/gc/count";
-        window.goatcounter.allow_local = true;
+        if (GOATCOUNTER_CODE) {
+          window.goatcounter.endpoint = `https://${GOATCOUNTER_CODE}.goatcounter.com/count`;
+        }
+        if (import.meta.env.DEV) {
+          window.goatcounter.allow_local = true;
+        }
         window.goatcounter.count({
           path: location.pathname + location.search,
         });

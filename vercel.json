@@ -1,14 +1,6 @@
 {
   "rewrites": [
     {
-      "source": "/api/gc/count",
-      "destination": "https://scaffold.goatcounter.com/count"
-    },
-    {
-      "source": "/api/gc/counter/:path*",
-      "destination": "https://scaffold.goatcounter.com/counter/:path*"
-    },
-    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
