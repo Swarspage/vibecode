@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import Layout from "./components/Layout";
 import GlobalSearch from "./components/GlobalSearch";
 import PageSkeleton from "./components/PageSkeleton";
+import PageviewTracker from "./components/PageviewTracker";
 
 const HomePage = lazy(() => import("./pages/HomePage"));
 const DesignPromptsPage = lazy(() => import("./pages/DesignPromptsPage"));
@@ -18,6 +19,7 @@ const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
 const App = () => {
   return (
     <>
+      <PageviewTracker />
       <GlobalSearch />
       <Suspense fallback={<PageSkeleton />}>
         <Routes>
