@@ -16,8 +16,8 @@ const Footer = () => {
         return r.json();
       })
       .then((d) => {
-        if (isMounted && d && d.count) {
-          setVisits(d.count);
+        if (isMounted && d && d.count != null) {
+          setVisits(String(d.count));
         }
       })
       .catch(() => {});
@@ -173,7 +173,7 @@ const Footer = () => {
                   <polyline points="7 7 17 7 17 17" />
                 </svg>
               </a>
-              {visits && (
+              {visits !== null && (
                 <span
                   style={{
                     display: "inline-flex",
