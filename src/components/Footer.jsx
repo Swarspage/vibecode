@@ -1,7 +1,5 @@
 import { useState, useEffect } from "react";
 
-const GOATCOUNTER_CODE = import.meta.env.VITE_GOATCOUNTER_CODE || "scaffold";
-
 const Footer = () => {
   const [discordCopied, setDiscordCopied] = useState(false);
   const [upiCopied, setUpiCopied] = useState(false);
@@ -10,9 +8,9 @@ const Footer = () => {
 
   useEffect(() => {
     let isMounted = true;
-    fetch(`https://${GOATCOUNTER_CODE}.goatcounter.com/counter/TOTAL.json`)
+    fetch("/api/visits")
       .then((r) => {
-        if (!r.ok) throw new Error("GoatCounter count unavailable");
+        if (!r.ok) throw new Error("Visits unavailable");
         return r.json();
       })
       .then((d) => {
