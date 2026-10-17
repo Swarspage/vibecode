@@ -19,7 +19,7 @@ function devApiPlugin() {
 						// Fallback if network unavailable
 					}
 					res.setHeader("Content-Type", "application/json");
-					return res.end(JSON.stringify({ count: "0", count_unique: "0" }));
+					return res.end(JSON.stringify({ count: 0, up_count: 0 }));
 				}
 				if (req.url?.startsWith("/api/track")) {
 					console.log(`[Dev Server] Track hit: ${req.url}`);

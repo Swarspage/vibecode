@@ -1,30 +1,12 @@
 import { useState, useEffect } from "react";
+import VisitorCounter from "./VisitorCounter";
 
 const Footer = () => {
   const [discordCopied, setDiscordCopied] = useState(false);
   const [upiCopied, setUpiCopied] = useState(false);
   const [isSupportOpen, setIsSupportOpen] = useState(false);
-  const [visits, setVisits] = useState(null);
 
-  useEffect(() => {
-    let isMounted = true;
-    fetch("/api/visits")
-      .then((r) => {
-        if (!r.ok) throw new Error("Visits unavailable");
-        return r.json();
-      })
-      .then((d) => {
-        if (isMounted && d && d.count != null) {
-          const num = Number(d.count);
-          setVisits(!isNaN(num) ? num.toLocaleString() : String(d.count));
-        }
-      })
-      .catch(() => {});
 
-    return () => {
-      isMounted = false;
-    };
-  }, []);
 
   useEffect(() => {
     if (isSupportOpen) {
@@ -172,35 +154,7 @@ const Footer = () => {
                   <polyline points="7 7 17 7 17 17" />
                 </svg>
               </a>
-              {visits !== null && (
-                <span
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: "6px",
-                    padding: "2px 8px",
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "11px",
-                    color: "var(--color-muted)",
-                    backgroundColor: "var(--color-surface)",
-                    border: "1px solid var(--color-border)",
-                    borderRadius: "var(--radius-sm)",
-                    lineHeight: "1.4",
-                  }}
-                  title="Total pageviews (via GoatCounter)"
-                >
-                  <span
-                    style={{
-                      width: "6px",
-                      height: "6px",
-                      borderRadius: "50%",
-                      backgroundColor: "#4ADE80",
-                      display: "inline-block",
-                    }}
-                  />
-                  <span>{visits} visits</span>
-                </span>
-              )}
+              <VisitorCounter />
             </div>
             
             <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
